@@ -72,7 +72,7 @@
     /* ==============================================
      CONTACT -->
      =============================================== */
-    jQuery(document).ready(function() {
+    /* jQuery(document).ready(function() {
         $('#contactform').submit(function() {
             var action = $(this).attr('action');
             $("#message").slideUp(750, function() {
@@ -103,7 +103,7 @@
             });
             return false;
         });
-    });
+    }); */
 
     /* ==============================================
      CODE WRAPPER -->
