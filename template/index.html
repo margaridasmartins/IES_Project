@@ -29,6 +29,98 @@
    <!-- Modernizer for Portfolio -->
    <script src="js/modernizer.js"></script>
    <!-- [if lt IE 9] -->
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   <script type="text/javascript">
+      google.charts.load('current', {packages: ['corechart', 'line']});
+      google.charts.setOnLoadCallback(drawBackgroundColor);
+
+function drawBackgroundColor() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('number', 'X');
+      data.addColumn('number', 'Beats');
+
+      data.addRows([
+        [0, 0],   [0.9, 0], 
+        [1, 10],  [1.1, 0],  [1.9, 0],  
+        [2, 10],  [2.1, 0], [2.9, 0],  
+        [3, 10],  [3.1, 0], [3.9, 0],
+        [4, 10],  [4.1, 0], [4.9, 0], 
+        [5, 10],  [5.1, 0], [5.9, 0], 
+        [6, 10],  [6.1, 0], [6.9, 0],   
+
+      ]);
+
+      var options = {
+        hAxis: {
+          title: 'Time'
+        },
+        vAxis: {
+          title: 'Heart Beats'
+        },
+        backgroundColor: '#f1f8e9'
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+    }
+   </script>
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   <script type="text/javascript">
+     google.charts.load('current', {'packages':['corechart']});
+     google.charts.setOnLoadCallback(drawChart);
+
+     function drawChart() {
+       var data = google.visualization.arrayToDataTable([
+         ['Time', 'Blood Presure'],
+         ['1',  130],
+         ['5',  133],
+         ['10',  135],
+         ['15',  132],
+         ['20',  130],
+         ['25',  127]
+       ]);
+
+       var options = {
+         title: 'Blood Presure',
+         curveType: 'function',
+         legend: { position: 'bottom' }
+       };
+
+       var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+       chart.draw(data, options);
+     }
+   </script>
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   <script type="text/javascript">
+     google.charts.load('current', {'packages':['corechart']});
+     google.charts.setOnLoadCallback(drawChart);
+
+     function drawChart() {
+       var data = google.visualization.arrayToDataTable([
+         ['Time',  'Temp'],
+         ['1',  35.7],
+         ['2',  35.3],
+         ['3',  35.2],
+         ['4',  35.6],
+         ['5',  36.1],
+         ['6',  36.5]
+       ]);
+
+       var options = {
+         vAxis: {title: 'Body Temperature'},
+
+         isStacked: true
+       };
+
+       var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div2'));
+
+       chart.draw(data, options);
+     }
+   </script>
+
+  </head>
+
    </head>
    <body class="clinic_version">
       <!-- LOADER -->
@@ -71,6 +163,7 @@
                         <li><a data-scroll href="#about">About us</a></li>
                         <li><a data-scroll href="#service">Services</a></li>
                         <li><a data-scroll href="#doctors">Doctors</a></li>
+                        <li><a data-scroll href="#utente">Patient</a></li>
                         <li><a data-scroll href="#price">Price</a></li>
 						<li><a data-scroll href="#testimonials">Testimonials</a></li>
                         <li><a data-scroll href="#getintouch">Contact</a></li>
@@ -360,10 +453,12 @@
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.2s" style="visibility: visible; animation-duration: 1s; animation-delay: 0.2s; animation-name: fadeIn;">
                     <div class="widget clearfix">
                         <img src="images/doctor_01.jpg" alt="" class="img-responsive img-rounded">
-                        <div class="widget-title">
-                            <h3>Soren Bo Bostian</h3>
-                            <small>Clinic Owner</small>
-                        </div>
+                        <a data-scroll href="#utente" >
+                           <div class="widget-title">
+                              <h3>Soren Bo Bostian</h3>
+                              <small>Clinic Owner</small>
+                           </div>
+                        </a>
                         <!-- end title -->
                         <p>Hello guys, I am Soren from Sirbistana. I am senior art director and founder of Violetta.</p>
 
@@ -666,6 +761,83 @@
             </div>
             <div id="googleMap" style="width:100%;height:450px;"></div>
          </div>
+      </div>
+      <div id="utente" class="section wow fadeIn">
+         <div class="container">
+            <div class="heading">
+               <span class="icon-logo"><img src="images/icon-logo.png" alt="#"></span>
+               <h2>António Silva</h2>
+            </div>
+            <!-- end title -->
+            <div class="row">
+               <div class="col-12 col-md-8">
+                  <div class="message-box">
+                     <h4>Personal Data</h4>
+                     <h1></h1>
+                     <div class="row">
+                        <div class="col-6 col-md-4">
+                           <p><b>Name: </b>António Silva</p>
+                        </div>
+                        <div class="col-6 col-md-4">
+                           <p><b>Age: </b>78</p>
+                        </div>
+                        <div class="col-6 col-md-4">
+                           <p><b>Genre: </b>Male</p>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-6 col-md-4">
+                           <p><b>Weight: </b>60 Kg</p>
+                        </div>
+                        <div class="col-6 col-md-4">
+                           <p><b>Height: </b>168 cm</p>
+                        </div>
+                     </div>
+                     <h1></h1>
+                     <h1></h1>
+                     <div class="row">
+                        <div class="col-md-6">
+                           <p><b>Diseases and Conditions: </b></p>
+                           <ul>
+                              <li>Asthma</li>
+                              <li>Cholesterol</li>
+                              <li>Diabetes</li>
+                            </ul>  
+                        </div>
+                        <div class="col-md-6">
+                           <p><b>Medication: </b></p>
+                           <ul>
+                              <li>Medicamento X</li>
+                              <li>Medicamento Y</li>
+                            </ul>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- end messagebox -->
+               </div>
+               <!-- end col -->
+               <div class="col-6 col-md-4">
+                  <div class="post-media wow fadeIn" style="height: 50%; width: 50%;">
+                     <img src="images/oldman.png" alt="" class="img-responsive" > 
+                  </div>
+                  <!-- end media -->
+               </div>
+               <!-- end col -->
+            </div>
+            <!-- end row -->
+            <hr class="hr1">
+            
+            <div class="row">
+               <div id="chart_div"></div>
+
+               <div id="curve_chart"></div>
+
+               <div id="chart_div2"></div>
+
+            </div>
+            <!-- end row -->
+         </div>
+         <!-- end container -->
       </div>
       <footer id="footer" class="footer-area wow fadeIn">
          <div class="container">
