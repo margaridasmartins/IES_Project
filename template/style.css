@@ -213,6 +213,24 @@ blockquote {
     margin: 5px 20px 20px 0;
 }
 
+.alignitems {
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+}
+
+.alignitems-right {
+    display: flex; 
+    justify-content: right; 
+    align-items: right;
+}
+
+.alignitems-left {
+    display: flex; 
+    justify-content: left; 
+    align-items: left;
+}
+
 .aligncenter,
 div.aligncenter {
     display: block;
