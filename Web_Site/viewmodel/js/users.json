@@ -3,8 +3,14 @@
         "email": "user@teste.pt",
         "password": "teste",
         "username": "johndoe123",
-        "name": "John Doe",
+        "full_name": "John Doe",
+        "age": 35,
+        "genre": "M",
+        "weight": 75,
+        "height": 1.80,
+        "type": "Patient",
         "health_data": {
+            "conditions": ["asthma", "cholesterol", "diabetes"],
             "heart_rate": [
                 { 
                     "when": "2020-05-31T19:00:00",
@@ -25,5 +31,13 @@
                 }
             ]
         }
+    },
+    {
+        "email": "medic@teste.pt",
+        "password": "teste",
+        "username": "medic123",
+        "full_name": "Thomas Wallace",
+        "type": "Medic",
+        "assigned_patients": ["user@teste.pt", "user2@teste.pt"]
     }
 ]

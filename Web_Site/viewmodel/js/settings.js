@@ -7,13 +7,13 @@ $(document).ready(function () {
         $('#cstatus').attr('href','medic_fp.html');
     }
     else{
-        $('#cstatus').text("Clinic Status");
+        $('#cstatus').text("Clinical Status");
         $('#cstatus').attr('href','utente.html');
     }
     // Add content to HTML
-    $("#userName").text(userLogin['email']);
+    $("#userFullName").text(userLogin['full_name']);
     $("#userId").text(userLogin['username']);
-    $("#userEmail").text(userLogin['name']);
+    $("#userEmail").text(userLogin['email']);
     
     // Functionality not implemented yet
     $(".notImplemented").click(function () {
