@@ -1,0 +1,1 @@
+//data de recolha, id paciente, high and low values

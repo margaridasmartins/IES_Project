@@ -1,0 +1,1 @@
+//data de recolha, id paciente, mg/dL value
