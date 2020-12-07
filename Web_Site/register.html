@@ -70,13 +70,12 @@
          <div class="container">
             <div class="row">
                <!-- LOGIN-->
-               <div class=".col-6 .col-md-4" style="width:36%;">
+               <div class=".col-6 .col-md-4" style="width:36%; float: left">
                <section class="left-section">
                     <div id="left-cover" class="cover cover-hide" style="display: block;">
-                    <div class="appointment-form">
-                        <h3>REGISTAR ASSISTENTE DE SAÚDE</h3>
+                    <div class="appointment-form2">
                         <div class="center">
-                            <input type="button" value="REGISTAR" name="loginButton" id="loginButton" class="switch-btn" onclick="switchSignupAssistente()">
+                            <input type="button" value="REGISTAR ASSISTENTE DE SAÚDE" name="loginButton" id="registerButtom" class="switch-btn" onclick="switchSignupAssistente()">
                         </div>
                     </div>
                     </div>
@@ -93,7 +92,7 @@
                                             <input type="email" name="loginEmail" id="loginEmail" value="" placeholder="Email">
                                             <input type="password" name="loginPassword" id="loginPassword" value="" placeholder="Password">
                                             <div class="center">
-                                                <input type="button" value="REGISTAR" name="loginButton" id="loginButton">
+                                                <input type="button" value="REGISTAR" name="loginButton" id="register">
                                             </div>
                                             <p class="text-danger mt-5 mb-0 d-none" id="loginError"></p>
                                             </div>
@@ -106,17 +105,13 @@
                     </div>
                 </section>
                 </div>
-                <div class=".col-6 .col-md-4">
-
-                </div>
                <!-- FINAL LOGIN-->
                <div class=".col-6 .col-md-4" style="width:36%; float: right;">
                <section class="right-section">
-                    <div id="right-cover" class="cover fade-in-element" style="display: block;">
-                        <div class="appointment-form">
-                            <h3>REGISTAR UTENTE</h3>
+                    <div id="right-cover" style="display: block;">
+                        <div class="appointment-form2">
                             <div class="center">
-                                <input type="button" value="REGISTAR" name="loginButton" id="loginButton"  class="switch-btn" onclick="switchSignupPaciente()">
+                                <input type="button" value="REGISTAR PACIENTE" name="loginButton" id="registerButtom"  class="switch-btn" onclick="switchSignupPaciente()">
                             </div>
                         </div>
                     </div>
@@ -133,7 +128,7 @@
                                             <input type="email" name="loginEmail" id="loginEmail" value="" placeholder="Email">
                                             <input type="password" name="loginPassword" id="loginPassword" value="" placeholder="Password">
                                             <div class="center">
-                                                <input type="button" value="REGISTAR" name="loginButton" id="loginButton">
+                                                <input type="button" value="REGISTAR" name="loginButton" id="register">
                                             </div>
                                             <p class="text-danger mt-5 mb-0 d-none" id="loginError"></p>
                                         </div>
@@ -146,7 +141,11 @@
                     </div>
                 </section>
             </div>
+            
             </div>
+            <div style="width: 40%; margin:0 auto; padding: 50px;">
+                     <input type="button" value="Já tem uma conta?" name="loginButton" id="toLoginButton"  class="switch-btn" onclick="location.href='login.html'">
+                </div>
          </div>
          <br>
       </div>
@@ -154,10 +153,7 @@
 
       <!-- FOOTER-->
       <footer id="footer" class="footer-area wow fadeIn">
-        <div class="row">
-            <div class="col-sm-6"><p>OLA</p></div>
-            <div class="col-sm-6"><p>OLA</p></div>
-          </div>
+      
          <div class="container" id="getintouch">
             <div class="row">
                <div class="col-md-4">
