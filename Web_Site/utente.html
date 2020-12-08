@@ -30,39 +30,8 @@
       <!-- Modernizer for Portfolio -->
       <script src="js/modernizer.js"></script>
       <!-- [if lt IE 9] -->
+      <!-- GOOGLE CHARTS -->
       <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-      
-      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-      <script type="text/javascript">
-         
-      </script>
-      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-      <script type="text/javascript">
-         google.charts.load('current', {'packages':['corechart']});
-         google.charts.setOnLoadCallback(drawChart);
-   
-         function drawChart() {
-         var data = google.visualization.arrayToDataTable([
-            ['Time',  'Temp'],
-            ['1',  35.7],
-            ['2',  35.3],
-            ['3',  35.2],
-            ['4',  35.6],
-            ['5',  36.1],
-            ['6',  36.5]
-         ]);
-   
-         var options = {
-            vAxis: {title: 'Body Temperature'},
-   
-            isStacked: true
-         };
-   
-         var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div2'));
-   
-         chart.draw(data, options);
-         }
-      </script>
    </head>
    <body class="clinic_version">
       <header>
@@ -136,18 +105,11 @@
                      <div class="row">
                         <div class="col-md-6">
                            <p><b>Diseases and Conditions: </b></p>
-                           <ul>
-                              <li id="userCOndition">Asthma</li>
-                              <li id="userCOndition">Cholesterol</li>
-                              <li id="userCOndition">Diabetes</li>
-                              </ul>  
+                           <ul id="userConditionList"></ul>  
                         </div>
                         <div class="col-md-6">
                            <p><b>Medication: </b></p>
-                           <ul>
-                              <li>Medicamento X</li>
-                              <li>Medicamento Y</li>
-                              </ul>
+                           <ul id="userMedicationList"></ul>
                         </div>
                      </div>
                   </div>

@@ -24,6 +24,18 @@ $(document).ready(function () {
     $("#userWeight").text(userLogin['weight']);
     $("#userHeight").text(userLogin['height']);
 
+    var condArray = userLogin['health_data']['conditions'];
+    $.each(condArray, function(index, value) {
+        //console.log(value);
+        $("#userConditionList").append("<li>" + value + "</li>");
+    });
+
+    var medicationArray = userLogin['health_data']['medication'];
+    $.each(medicationArray, function(index, value) {
+        //console.log(value);
+        $("#userMedicationList").append("<li>" + value + "</li>");
+    });
+
     // Functionality not implemented yet
     $(".notImplemented").click(function () {
         alert("Sorry, but this functionality has not been implemented yet! :(");
