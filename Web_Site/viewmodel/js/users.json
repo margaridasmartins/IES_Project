@@ -16,6 +16,14 @@
                 { 
                     "when": "2020-05-31T19:00:00",
                     "value": 75
+                },
+                { 
+                    "when": "2020-06-02T19:00:00",
+                    "value": 80
+                },
+                { 
+                    "when": "2020-06-05T19:00:00",
+                    "value": 72
                 }
             ],
             "blood_pressure": [
@@ -23,6 +31,16 @@
                     "when": "2020-05-31T19:00:00",
                     "value_diast": 82,
                     "value_sys": 130
+                },
+                {
+                    "when": "2020-06-02T19:00:00",
+                    "value_diast": 70,
+                    "value_sys": 110
+                },
+                {
+                    "when": "2020-06-05T19:00:00",
+                    "value_diast": 95,
+                    "value_sys": 135
                 }
             ],
             "body_temperature": [

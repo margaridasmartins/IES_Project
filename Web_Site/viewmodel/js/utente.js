@@ -46,23 +46,25 @@ $(document).ready(function () {
 // Heart Rate
 google.charts.load('current', {packages: ['corechart', 'line']});
 google.charts.setOnLoadCallback(draw_HeartRateChart);
-   
+var userLogin = localStorage.getItem('login');
+console.log(userLogin);
 function draw_HeartRateChart() {
     var data = new google.visualization.DataTable();
-    data.addColumn('number', 'X');
-    data.addColumn('number', 'Beats');
-   
-    data.addRows([
-        [0, 0],   [0.9, 0], 
-        [1, 10],  [1.1, 0],  [1.9, 0],  
-        [2, 10],  [2.1, 0], [2.9, 0],  
-        [3, 10],  [3.1, 0], [3.9, 0],
-        [4, 10],  [4.1, 0], [4.9, 0], 
-        [5, 10],  [5.1, 0], [5.9, 0], 
-        [6, 10],  [6.1, 0], [6.9, 0],   
-   ]);
+    data.addColumn('date', 'Day');
+    data.addColumn('number', 'Beats Per Minute');
+    // Get users data
+    (userLogin['health_data']['heart_rate']).forEach(element => {
+        var date = element['when'].split("T")[0].split("-");
+        var value = element['value'];
+        //console.log(date, value);
+        data.addRows([
+            [new Date(date[0], date[1]-1, date[2]), value]
+        ]);
+    });
    
     var options = {
+        title: 'Resting Heart Rate',
+        height: 450,
         hAxis: { title: 'Time' },
         vAxis: { title: 'Heart Rate' }
     };
@@ -72,28 +74,36 @@ function draw_HeartRateChart() {
 }
 
 // Blood Pressure
-google.charts.load('current', {'packages':['corechart']});
+google.charts.load('current', {'packages':['bar']});
 google.charts.setOnLoadCallback(draw_BloodPressureChart);
-   
 function draw_BloodPressureChart() {
-    var data = google.visualization.arrayToDataTable([
-        ['Time', 'Blood Pressure'],
-        ['1',  130],
-        ['5',  133],
-        ['10',  135],
-        ['15',  132],
-        ['20',  130],
-        ['25',  127]
-    ]);
+    var data = new google.visualization.DataTable();
+    data.addColumn('date', 'Day');
+    data.addColumn('number', 'Diastolic');
+    data.addColumn('number', 'Systolic');
+
+    // Get users data
+    (userLogin['health_data']['blood_pressure']).forEach(element => {
+        var date = element['when'].split("T")[0].split("-");
+        var value_diast = element['value_diast'];
+        var value_sys = element['value_sys'];
+        console.log(date, value_diast, value_sys);
+        data.addRows([
+            [new Date(date[0], date[1]-1, date[2]), value_diast, value_sys]
+        ]);
+    });
 
     var options = {
-        title: 'Blood Pressure',
-        curveType: 'function',
-        legend: { position: 'bottom' }
+        char: {
+            title: 'Blood Pressure',
+            subtitle: 'Diastolic, Systolic: 2020'
+        },
+        height: 350,
+        hAxis: { title: 'Day' },
+        vAxis: { title: 'Blood Pressure' }
     };
-
-    var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-    chart.draw(data, options);
+    var chart = new google.charts.Bar(document.getElementById('bloodpressure_chart'));
+    chart.draw(data, google.charts.Bar.convertOptions(options));
 }
 
 // Temperatue
