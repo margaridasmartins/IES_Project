@@ -2,14 +2,16 @@
 package ies.g25.aLIVE.model;
 
 import java.sql.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
-import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
@@ -31,14 +33,14 @@ public class SugarLevel{
 
     //Patient Id
     @ManyToOne()
-    @JoinColumn(name = "id")
-    private Long patient_id;
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
 
     public SugarLevel(){}
 
-    public SugarLevel(double sugar_level, long patient_id){
+    public SugarLevel(double sugar_level, Patient patient){
         this.sugar_level=sugar_level;
-        this.patient_id=patient_id;
+        this.patient=patient;
     }
 
     public void setSugarLevel(double sugar_level){
@@ -51,7 +53,7 @@ public class SugarLevel{
     public Date getDate(){
         return this.date;
     }
-    public double getPatientId(){
-        return this.patient_id;
+    public Patient getPatientId(){
+        return this.patient;
     }
 }

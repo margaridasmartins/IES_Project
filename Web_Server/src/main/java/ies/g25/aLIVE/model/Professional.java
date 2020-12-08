@@ -41,6 +41,7 @@ public class Professional extends User {
     @Column(name = "type")  //Doctor or Caretaker
     private String type;
 
+    //Patients assigned to professional
     @OneToMany(mappedBy = "professional", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -50,9 +51,9 @@ public class Professional extends User {
 
     }
 
-    public Professional(long id, String password, String username, String email, String fullname, 
+    public Professional(String password, String username, String email, String fullname, 
     int age, String workplace, String speciality, String type) {
-        super(id, password, username, email, fullname, age);
+        super(password, username, email, fullname, age);
         this.workplace = workplace;
         this.speciality = speciality;
         this.type = type;
