@@ -43,6 +43,8 @@ $(document).ready(function () {
 
 });
 
+// CHARTS
+
 // Heart Rate
 google.charts.load('current', {packages: ['corechart', 'line']});
 google.charts.setOnLoadCallback(draw_HeartRateChart);
@@ -87,7 +89,7 @@ function draw_BloodPressureChart() {
         var date = element['when'].split("T")[0].split("-");
         var value_diast = element['value_diast'];
         var value_sys = element['value_sys'];
-        console.log(date, value_diast, value_sys);
+        //console.log(date, value_diast, value_sys);
         data.addRows([
             [new Date(date[0], date[1]-1, date[2]), value_diast, value_sys]
         ]);
@@ -109,24 +111,29 @@ function draw_BloodPressureChart() {
 // Temperatue
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(draw_TemperatureChart);
-
 function draw_TemperatureChart() {
-    var data = google.visualization.arrayToDataTable([
-        ['Time',  'Temp'],
-        ['1',  35.7],
-        ['2',  35.3],
-        ['3',  35.2],
-        ['4',  35.6],
-        ['5',  36.1],
-        ['6',  36.5]
-    ]);
+    var data = new google.visualization.DataTable();
+    data.addColumn('date', 'Day');
+    data.addColumn('number', 'Temperature');
+
+    // Get users data
+    (userLogin['health_data']['body_temperature']).forEach(element => {
+        var date = element['when'].split("T")[0].split("-");
+        var value = element['value'];
+        console.log(date, value);
+        data.addRows([
+            [new Date(date[0], date[1]-1, date[2]), value]
+        ]);
+    });
 
     var options = {
-    vAxis: {title: 'Body Temperature'}, 
-    isStacked: true
+        title: 'Body Temperature',
+        height: 350,
+        hAxis: { title: 'Day' },
+        vAxis: { title: 'Temperature' }
     };
 
-    var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div2'));
+    var chart = new google.visualization.LineChart(document.getElementById('chart_div2'));
     chart.draw(data, options);
 }
 
