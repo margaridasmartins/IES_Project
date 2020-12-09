@@ -11,7 +11,7 @@ channel.basic_publish(exchange='logs',
                       routing_key='',
                       body=message)
 
-result = channel.queue_declare(queue='', exclusive=True)
+result = channel.queue_declare(queue='health_data', exclusive=True)
 
 channel.queue_bind(exchange='logs',
                    queue=result.method.queue)

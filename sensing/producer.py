@@ -12,7 +12,7 @@ class Generator:
         self.hearbeat = heartbeat
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         self.channel = self.connection.channel()
-        self.channel.exchange_declare(exchange='logs', exchange_type='fanout')
+        self.channel.exchange_declare(exchange='logs', exchange_type='direct')
 
     def gen_heart_beats(self, heartbeat):
         mu = heartbeat
@@ -20,7 +20,7 @@ class Generator:
         x = 0
         while x < 10:
             hb = np.random.randn(1) * sigma + mu
-            self.channel.basic_publish(exchange='logs', routing_key='', body="Heart beats per minute: " + str(hb))
+            self.channel.basic_publish(exchange='logs', routing_key='heart_beat', body= str(int(hb[0])))
             x+=1
 
     def gen_blood_pressure(self):
@@ -32,7 +32,7 @@ class Generator:
             systolic = np.random.randn(1) * sigma + systolic_mu
             diastolic = np.random.randn(1) * sigma + diastolic_mu
             if ((systolic - diastolic) > 30) and (systolic > 90) and (diastolic > 50):
-                self.channel.basic_publish(exchange='logs', routing_key='', body="Blood pressure per minute: " + str(systolic) + " - " + str(diastolic))
+                self.channel.basic_publish(exchange='logs', routing_key='blood_pressure', body=str(systolic[0]) + " - " + str(diastolic[0]))
             x+=1
     
     def gen_body_temp(self):
@@ -42,7 +42,7 @@ class Generator:
         while x < 10:
             temperature = np.random.randn(1) * sigma + mu
             if(34 < temperature < 42):
-                self.channel.basic_publish(exchange='logs', routing_key='', body="Body temperature per minute: " + str(temperature))
+                self.channel.basic_publish(exchange='logs', routing_key='body_temp', body= str(temperature[0]))
             x+=1
 
 

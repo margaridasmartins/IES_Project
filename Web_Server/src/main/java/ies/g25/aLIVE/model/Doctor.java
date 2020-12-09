@@ -1,1 +1,0 @@
-//Doctor tem de ter username, nome, mail, id, pass, specialty, 
