@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ies.g25.aLIVE.exception.ResourceNotFoundException;
 import ies.g25.aLIVE.model.*;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
@@ -58,16 +59,22 @@ public class HealthDataRestController{
 
     @GetMapping("/sugarlevel/{pid}")
     @ResponseBody
-    public List<SugarLevel> getSugarLevel(@PathVariable(value = "pid") long pid) {
+    public List<SugarLevel> getSugarLevel(@PathVariable(value = "pid") long pid) throws ResourceNotFoundException {
         Optional<Patient> op=patientRepository.findById(pid);
-        return sugarLevelRepository.findByPatient(op.get());
+        if(op.isPresent()){
+            return sugarLevelRepository.findByPatient(op.get());
+        }
+        throw new ResourceNotFoundException("Patient not found for this id: " + pid);
     }
 
     @PostMapping("/sugarlevel/{pid}")
-    public SugarLevel createSugarLevel(@PathVariable(value = "pid") long pid, @Valid @RequestBody SugarLevel sl) {
+    public SugarLevel createSugarLevel(@PathVariable(value = "pid") long pid, @Valid @RequestBody SugarLevel sl) throws ResourceNotFoundException {
         Optional<Patient> op=patientRepository.findById(pid);
-        sl.setPatient(op.get());
-        return sugarLevelRepository.save(sl);
+        if(op.isPresent()){
+            sl.setPatient(op.get());
+            return sugarLevelRepository.save(sl);
+        }
+        throw new ResourceNotFoundException("Patient not found for this id: " + pid);
     }
 
     @GetMapping("/heartrate")
@@ -78,16 +85,22 @@ public class HealthDataRestController{
 
     @GetMapping("/heartrate/{pid}")
     @ResponseBody
-    public List<HeartRate> getHeartRate(@PathVariable(value = "pid") long pid) {
+    public List<HeartRate> getHeartRate(@PathVariable(value = "pid") long pid) throws ResourceNotFoundException {
         Optional<Patient> op=patientRepository.findById(pid);
-        return heartRateRepository.findByPatient(op.get());
+        if(op.isPresent()){
+            return heartRateRepository.findByPatient(op.get());
+        }
+        throw new ResourceNotFoundException("Patient not found for this id: " + pid);
     }
 
     @PostMapping("/heartrate/{pid}")
-    public HeartRate createHeartRate( @PathVariable(value = "pid") long pid, @Valid @RequestBody HeartRate hr) {
+    public HeartRate createHeartRate( @PathVariable(value = "pid") long pid, @Valid @RequestBody HeartRate hr) throws ResourceNotFoundException {
         Optional<Patient> op=patientRepository.findById(pid);
-        hr.setPatient(op.get());
-        return heartRateRepository.save(hr);
+        if(op.isPresent()){
+            hr.setPatient(op.get());
+            return heartRateRepository.save(hr);
+        }
+        throw new ResourceNotFoundException("Patient not found for this id: " + pid);
     }
 
     @GetMapping("/bloodpressure")
@@ -98,16 +111,22 @@ public class HealthDataRestController{
 
     @GetMapping("/bloodpressure/{pid}")
     @ResponseBody
-    public List<BloodPressure> getBloodPressure(@PathVariable(value = "pid") long pid) {
+    public List<BloodPressure> getBloodPressure(@PathVariable(value = "pid") long pid) throws ResourceNotFoundException{
         Optional<Patient> op=patientRepository.findById(pid);
-        return bloodPressureRepository.findByPatient(op.get());
+        if(op.isPresent()){
+            return bloodPressureRepository.findByPatient(op.get());
+        }
+        throw new ResourceNotFoundException("Patient not found for this id: " + pid);
     }
 
     @PostMapping("/bloodpressure/{pid}")
-    public BloodPressure createBloodPressure(@Valid @RequestBody BloodPressure bp, @PathVariable(value = "pid") long pid) {
+    public BloodPressure createBloodPressure(@Valid @RequestBody BloodPressure bp, @PathVariable(value = "pid") long pid) throws ResourceNotFoundException{
         Optional<Patient> op=patientRepository.findById(pid);
-        bp.setPatient(op.get());
-        return bloodPressureRepository.save(bp);
+        if(op.isPresent()){
+            bp.setPatient(op.get());
+            return bloodPressureRepository.save(bp);
+        }       
+        throw new ResourceNotFoundException("Patient not found for this id: " + pid);
     }
 
 
@@ -119,16 +138,22 @@ public class HealthDataRestController{
 
     @GetMapping("/bodytemperature/{pid}")
     @ResponseBody
-    public List<BodyTemperature> getBodyTemperature(@PathVariable(value = "pid") long pid) {
+    public List<BodyTemperature> getBodyTemperature(@PathVariable(value = "pid") long pid)throws ResourceNotFoundException {
         Optional<Patient> op=patientRepository.findById(pid);
-        return bodyTemperatureRepository.findByPatient(op.get());
+        if(op.isPresent()){
+            return bodyTemperatureRepository.findByPatient(op.get());
+        }
+        throw new ResourceNotFoundException("Patient not found for this id: " + pid);
     }
 
     @PostMapping("/bodytemperature/{pid}")
-    public BodyTemperature createBloodPressure(@Valid @RequestBody BodyTemperature bt, @PathVariable(value = "pid") long pid) {
+    public BodyTemperature createBloodPressure(@Valid @RequestBody BodyTemperature bt, @PathVariable(value = "pid") long pid)  throws ResourceNotFoundException{
         Optional<Patient> op=patientRepository.findById(pid);
-        bt.setPatient(op.get());
-        return bodyTemperatureRepository.save(bt);
+        if(op.isPresent()){
+            bt.setPatient(op.get());
+            return bodyTemperatureRepository.save(bt);
+        }
+        throw new ResourceNotFoundException("Patient not found for this id: " + pid);
     }
     
 

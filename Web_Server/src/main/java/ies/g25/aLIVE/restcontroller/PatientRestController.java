@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ies.g25.aLIVE.exception.ResourceNotFoundException;
 import ies.g25.aLIVE.model.Patient;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.HeartRateRepository;
@@ -52,17 +53,23 @@ public class PatientRestController{
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Patient> getPatientById(@PathVariable(value = "id") Long patientId) {
+    public ResponseEntity<Patient> getPatientById(@PathVariable(value = "id") Long patientId) throws ResourceNotFoundException {
         Optional<Patient> op=  patientRepository.findById(patientId);
-        Patient p = op.get();
-        return ResponseEntity.ok().body(p);
+        if(op.isPresent()){
+            Patient p = op.get();
+            return ResponseEntity.ok().body(p);
+        }
+        throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
     }
 
     @GetMapping("/status/{id}")
-    public ResponseEntity<Patient> getLastDataById(@PathVariable(value = "id") Long patientId) {
+    public ResponseEntity<Patient> getLastDataById(@PathVariable(value = "id") Long patientId) throws ResourceNotFoundException {
         Optional<Patient> op=  patientRepository.findById(patientId);
-        Patient p = op.get();
-        return ResponseEntity.ok().body(p);
+        if(op.isPresent()){
+            Patient p = op.get();
+            return ResponseEntity.ok().body(p);
+        }
+        throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
     }
 
 }
