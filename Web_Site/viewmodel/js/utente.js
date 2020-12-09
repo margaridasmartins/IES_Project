@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     userLogin = JSON.parse(localStorage.getItem('login'));
 
-    if (userLogin['type']== "medic"){
+    if (userLogin['type']== "Medic"){
         $('#cstatus').text("Dashboard");
         $('#cstatus').attr('href','medic_fp.html');
     }
