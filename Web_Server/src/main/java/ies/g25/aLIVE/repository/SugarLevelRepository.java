@@ -10,4 +10,5 @@ import ies.g25.aLIVE.model.*;
 @Repository
 public interface SugarLevelRepository extends JpaRepository<SugarLevel, Long>{
 
+    List<SugarLevel> findByPatient(Patient p);
 }

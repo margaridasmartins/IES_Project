@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ies.g25.aLIVE.model.*;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
+import ies.g25.aLIVE.repository.BodyTemperatureRepository;
 import ies.g25.aLIVE.repository.HeartRateRepository;
 import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.SugarLevelRepository;
@@ -37,18 +38,29 @@ public class HealthDataRestController{
     @Autowired
     public BloodPressureRepository bloodPressureRepository;
 
+    @Autowired
+    public BodyTemperatureRepository bodyTemperatureRepository;
+
     public HealthDataRestController(PatientRepository patientRepository, HeartRateRepository heartRateRepository,
-      SugarLevelRepository sugarLevelRepository,BloodPressureRepository bloodPressureRepository) {
+      SugarLevelRepository sugarLevelRepository,BloodPressureRepository bloodPressureRepository, BodyTemperatureRepository bodyTemperatureRepository) {
         this.patientRepository=patientRepository;
         this.heartRateRepository=heartRateRepository;
         this.sugarLevelRepository=sugarLevelRepository;
         this.bloodPressureRepository=bloodPressureRepository;
+        this.bodyTemperatureRepository= bodyTemperatureRepository;
     }
 
     @GetMapping("/sugarlevel")
     @ResponseBody
     public List<SugarLevel> getAllSugarLevels() {
         return sugarLevelRepository.findAll();
+    }
+
+    @GetMapping("/sugarlevel/{pid}")
+    @ResponseBody
+    public List<SugarLevel> getSugarLevel(@PathVariable(value = "pid") long pid) {
+        Optional<Patient> op=patientRepository.findById(pid);
+        return sugarLevelRepository.findByPatient(op.get());
     }
 
     @PostMapping("/sugarlevel/{pid}")
@@ -64,6 +76,13 @@ public class HealthDataRestController{
         return heartRateRepository.findAll();
     }
 
+    @GetMapping("/heartrate/{pid}")
+    @ResponseBody
+    public List<HeartRate> getHeartRate(@PathVariable(value = "pid") long pid) {
+        Optional<Patient> op=patientRepository.findById(pid);
+        return heartRateRepository.findByPatient(op.get());
+    }
+
     @PostMapping("/heartrate/{pid}")
     public HeartRate createHeartRate( @PathVariable(value = "pid") long pid, @Valid @RequestBody HeartRate hr) {
         Optional<Patient> op=patientRepository.findById(pid);
@@ -77,11 +96,39 @@ public class HealthDataRestController{
         return bloodPressureRepository.findAll();
     }
 
+    @GetMapping("/bloodpressure/{pid}")
+    @ResponseBody
+    public List<BloodPressure> getBloodPressure(@PathVariable(value = "pid") long pid) {
+        Optional<Patient> op=patientRepository.findById(pid);
+        return bloodPressureRepository.findByPatient(op.get());
+    }
+
     @PostMapping("/bloodpressure/{pid}")
     public BloodPressure createBloodPressure(@Valid @RequestBody BloodPressure bp, @PathVariable(value = "pid") long pid) {
         Optional<Patient> op=patientRepository.findById(pid);
         bp.setPatient(op.get());
         return bloodPressureRepository.save(bp);
+    }
+
+
+    @GetMapping("/bodytemperature")
+    @ResponseBody
+    public List<BodyTemperature> getAllBodyTemperature() {
+        return bodyTemperatureRepository.findAll();
+    }
+
+    @GetMapping("/bodytemperature/{pid}")
+    @ResponseBody
+    public List<BodyTemperature> getBodyTemperature(@PathVariable(value = "pid") long pid) {
+        Optional<Patient> op=patientRepository.findById(pid);
+        return bodyTemperatureRepository.findByPatient(op.get());
+    }
+
+    @PostMapping("/bodytemperature/{pid}")
+    public BodyTemperature createBloodPressure(@Valid @RequestBody BodyTemperature bt, @PathVariable(value = "pid") long pid) {
+        Optional<Patient> op=patientRepository.findById(pid);
+        bt.setPatient(op.get());
+        return bodyTemperatureRepository.save(bt);
     }
     
 

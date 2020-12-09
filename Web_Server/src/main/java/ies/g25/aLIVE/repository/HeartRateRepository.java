@@ -10,4 +10,5 @@ import ies.g25.aLIVE.model.*;
 @Repository
 public interface HeartRateRepository extends JpaRepository<HeartRate, Long>{
 
+    List<HeartRate> findByPatient(Patient p);
 }

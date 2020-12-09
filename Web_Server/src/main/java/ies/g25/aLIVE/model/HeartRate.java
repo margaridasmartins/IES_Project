@@ -1,6 +1,7 @@
 //data de recolha, id paciente, beats per minute
 package ies.g25.aLIVE.model;
 
+
 import java.sql.Date;
 
 import javax.persistence.Column;

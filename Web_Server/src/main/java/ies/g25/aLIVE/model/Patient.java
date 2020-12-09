@@ -44,14 +44,22 @@ public class Patient extends User {
     private Set<BloodPressure> bloodPressure;
 
     @OneToMany(mappedBy = "patient")
+    @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<SugarLevel> sugarLevel;
 
     @OneToMany(mappedBy = "patient")
+    @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<HeartRate> heartRate;
+
+    @OneToMany(mappedBy = "patient")
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<BodyTemperature> bodyTemp;
     
     public Patient(){
 

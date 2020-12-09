@@ -11,5 +11,5 @@ import ies.g25.aLIVE.model.*;
 @Repository
 public interface BloodPressureRepository extends JpaRepository<BloodPressure, Long>{
 
-
+    List<BloodPressure> findByPatient(Patient p);
 }
