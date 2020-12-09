@@ -41,10 +41,9 @@ public class BloodPressure{
 
     public BloodPressure(){}
 
-    public BloodPressure(double high_value, double low_value, Patient patient){
+    public BloodPressure(double high_value, double low_value){
         this.high_value=high_value;
         this.low_value=low_value;
-        this.patient=patient;
     }
 
     public void setHigh_value(double high_value){
@@ -66,5 +65,8 @@ public class BloodPressure{
     }
     public Patient getPatient(){
         return this.patient;
+    }
+    public void setPatient(Patient p){
+        this.patient=p;
     }
 }

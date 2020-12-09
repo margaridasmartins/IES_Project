@@ -28,32 +28,35 @@ public class HeartRate{
     private Date date;
 
     // Hert Rate values
-    @Column(name="heart_rate")
-    private int heart_rate;
+    @Column(name="heartRate",nullable = false)
+    private int heartRate;
 
     //Patient Id
     @ManyToOne()
-    @JoinColumn(name = "patient_id")
+    @JoinColumn(name = "patient")
     private Patient patient;
 
     public HeartRate(){}
 
     public HeartRate(int heart_rate, Patient patient){
-        this.heart_rate=heart_rate;
+        this.heartRate=heart_rate;
         this.patient=patient;
     }
 
     public void setHeartRate(int heart_rate){
-        this.heart_rate=heart_rate;
+        this.heartRate=heart_rate;
     }
     public int getHeartRate(){
-        return this.heart_rate;
+        return this.heartRate;
     }
 
     public Date getDate(){
         return this.date;
     }
-    public Patient getPatientId(){
+    public Patient getPatient(){
         return this.patient;
+    }
+    public void setPatient(Patient patient){
+        this.patient=patient;
     }
 }
