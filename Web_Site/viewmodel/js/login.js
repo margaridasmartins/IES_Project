@@ -50,7 +50,7 @@ $(document).ready(function () {
 
         if (registered) {
 
-            if (type == "medic"){
+            if (type == "Medic"){
                 window.location.replace("medic_fp.html");
             }
             else{
