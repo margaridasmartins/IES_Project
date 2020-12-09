@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ies.g25.aLIVE.model.Patient;
-import ies.g25.aLIVE.model.User;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.HeartRateRepository;
 import ies.g25.aLIVE.repository.PatientRepository;
@@ -56,14 +55,14 @@ public class PatientRestController{
     public ResponseEntity<Patient> getPatientById(@PathVariable(value = "id") Long patientId) {
         Optional<Patient> op=  patientRepository.findById(patientId);
         Patient p = op.get();
-        return ResponseEntity.ok().body(u);
+        return ResponseEntity.ok().body(p);
     }
 
     @GetMapping("/status/{id}")
     public ResponseEntity<Patient> getLastDataById(@PathVariable(value = "id") Long patientId) {
         Optional<Patient> op=  patientRepository.findById(patientId);
         Patient p = op.get();
-        return ResponseEntity.ok().body(u);
+        return ResponseEntity.ok().body(p);
     }
 
 }

@@ -11,4 +11,5 @@ import ies.g25.aLIVE.model.*;
 @Repository
 public interface BloodPressureRepository extends JpaRepository<BloodPressure, Long>{
 
+
 }

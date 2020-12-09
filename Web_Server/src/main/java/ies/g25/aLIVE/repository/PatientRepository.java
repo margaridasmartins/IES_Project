@@ -14,8 +14,5 @@ import org.springframework.data.jpa.repository.Query;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long>{
 
-    public List<Patient> findAll();
 
-    @Query(value = "SELECT username FROM Patient WHERE id=?1") 
-    public Patient findById(long id);
 }

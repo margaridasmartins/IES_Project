@@ -53,7 +53,10 @@ public class SugarLevel{
     public Date getDate(){
         return this.date;
     }
-    public Patient getPatientId(){
+    public Patient getPatient(){
         return this.patient;
+    }
+    public void setPatient(Patient patient){
+        this.patient=patient;
     }
 }
