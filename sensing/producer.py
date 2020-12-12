@@ -3,6 +3,7 @@ import pika
 import sys
 import argparse
 import numpy as np
+import json
 
 #---------------------------------------------------------------------
 
@@ -20,7 +21,8 @@ class Generator:
         x = 0
         while x < 10:
             hb = np.random.randn(1) * sigma + mu
-            self.channel.basic_publish(exchange='logs', routing_key='', body="Heart beats per minute: " + str(hb))
+            json_text = {'heartbeat': float(hb)}
+            self.channel.basic_publish(exchange='logs', routing_key='', body= json.dumps(json_text))
             x+=1
 
     def gen_blood_pressure(self):
@@ -32,8 +34,9 @@ class Generator:
             systolic = np.random.randn(1) * sigma + systolic_mu
             diastolic = np.random.randn(1) * sigma + diastolic_mu
             if ((systolic - diastolic) > 30) and (systolic > 90) and (diastolic > 50):
-                self.channel.basic_publish(exchange='logs', routing_key='', body="Blood pressure per minute: " + str(systolic) + " - " + str(diastolic))
-            x+=1
+                json_text = {'systolic': float(systolic), 'diastolic': float(diastolic)}
+                self.channel.basic_publish(exchange='logs', routing_key='', body= json.dumps(json_text))
+                x+=1
     
     def gen_body_temp(self):
         mu = 37
@@ -42,8 +45,22 @@ class Generator:
         while x < 10:
             temperature = np.random.randn(1) * sigma + mu
             if(34 < temperature < 42):
-                self.channel.basic_publish(exchange='logs', routing_key='', body="Body temperature per minute: " + str(temperature))
-            x+=1
+                json_text = {'temperature': float(temperature)}
+                self.channel.basic_publish(exchange='logs', routing_key='', body= json.dumps(json_text))
+                x+=1
+    
+    def gen_sugar_level(self):
+        before_mu = 5.0
+        after_mu = 6.9
+        sigma = 1.0
+        x = 0
+        while x < 10:
+            before = np.random.randn(1) * sigma + before_mu
+            after = np.random.randn(1) * sigma + after_mu
+            if(4 < before < 5.9) and (6 < after < 7.8):
+                json_text = {'after': float(after), 'before': float(before)}
+                self.channel.basic_publish(exchange='logs', routing_key='', body= json.dumps(json_text))
+                x+=1
 
 
 if __name__ == "__main__":
@@ -57,3 +74,4 @@ if __name__ == "__main__":
     g.gen_heart_beats(g.hearbeat)
     g.gen_blood_pressure()
     g.gen_body_temp()
+    g.gen_sugar_level()
