@@ -1,13 +1,10 @@
 package ies.g25.aLIVE.rabbitmq;
 
-import org.springframework.amqp.core.*;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 @Configuration
 public class RabbitConfig {
-
+    /*
     @Bean
     public TopicExchange exchange() {
         return new TopicExchange("logs");
@@ -75,5 +72,6 @@ public class RabbitConfig {
             return new SensorReceiver();
         }
     }
+    */
 
 }

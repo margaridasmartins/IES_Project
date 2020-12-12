@@ -1,10 +1,7 @@
 package ies.g25.aLIVE.rabbitmq;
-//https://stackoverflow.com/questions/49512910/how-to-create-a-spring-boot-rabbitmq-consumer-for-a-python-sender
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.util.StopWatch;
 
 public class SensorReceiver {
-
+    /*
     @RabbitListener(queues = "#{sugarLevelQueue.name}")
     public void receive1(String in) throws InterruptedException {
         receive(in, 1);
@@ -42,5 +39,8 @@ public class SensorReceiver {
             }
         }
     }
+    */
+
+    
 
 }
