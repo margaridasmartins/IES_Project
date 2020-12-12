@@ -4,7 +4,10 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ies.g25.aLIVE.exception.ResourceNotFoundException;
+import ies.g25.aLIVE.model.BloodPressure;
+import ies.g25.aLIVE.model.BodyTemperature;
 import ies.g25.aLIVE.model.HeartRate;
+import ies.g25.aLIVE.model.SugarLevel;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
 import ies.g25.aLIVE.repository.HeartRateRepository;
@@ -66,15 +69,23 @@ public class SensorReceiver {
                 break;
 
             case 2:
-                
+                SugarLevel sl = new SugarLevel();
+                sl.setSugarLevel(Double.parseDouble(in));
+                controller.createSugarLevel(1, sl);
                 break;
 
             case 3:
-                
+                BloodPressure bp = new BloodPressure();
+                String[] val = in.split("-");
+                bp.setHigh_value(Double.parseDouble(val[0]));
+                bp.setLow_value(Double.parseDouble(val[1]));
+                controller.createBloodPressure(1, bp);
                 break;
 
             case 4:
-                
+                BodyTemperature bt = new BodyTemperature();
+                bt.setbodyTemp(Double.parseDouble(in));
+                controller.createBodyTemperature(1, bt);
                 break;
         
             default:
@@ -82,15 +93,5 @@ public class SensorReceiver {
         }
     }
 
-    private void doWork(String in) throws InterruptedException {
-        for (char ch : in.toCharArray()) {
-            if (ch == '.') {
-                Thread.sleep(1000);
-            }
-        }
-    }
-    
-
-    
 
 }
