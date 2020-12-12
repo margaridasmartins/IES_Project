@@ -1,35 +1,33 @@
 package ies.g25.aLIVE.rabbitmq;
-
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 public class SensorReceiver {
-    /*
-    @RabbitListener(queues = "#{sugarLevelQueue.name}")
+
+
+
+    @RabbitListener(queues = "heart_beat")
     public void receive1(String in) throws InterruptedException {
         receive(in, 1);
     }
 
-    @RabbitListener(queues = "#{bodyTemperatureQueue.name}")
+    @RabbitListener(queues = "sugar_level")
     public void receive2(String in) throws InterruptedException {
         receive(in, 2);
     }
 
-    @RabbitListener(queues = "#{heartRateQueue.name}")
+    @RabbitListener(queues = "blood_pressure")
     public void receive3(String in) throws InterruptedException {
         receive(in, 3);
     }
-
-    @RabbitListener(queues = "#{bloodPressureQueue.name}")
+    
+    @RabbitListener(queues = "body_temp")
     public void receive4(String in) throws InterruptedException {
         receive(in, 4);
     }
-
+    
     public void receive(String in, int receiver) throws InterruptedException {
-        StopWatch watch = new StopWatch();
-        watch.start();
         System.out.println("instance " + receiver + " [x] Received '" + in + "'");
         doWork(in);
-        watch.stop();
-        System.out.println("instance " + receiver + " [x] Done in " + 
-            watch.getTotalTimeSeconds() + "s");
+        System.out.println("instance " + receiver + " [x] Done in ");
     }
 
     private void doWork(String in) throws InterruptedException {
@@ -39,7 +37,7 @@ public class SensorReceiver {
             }
         }
     }
-    */
+    
 
     
 

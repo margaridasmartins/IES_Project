@@ -1,40 +1,32 @@
 package ies.g25.aLIVE.rabbitmq;
 
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.Binding.DestinationType;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitConfig {
-    /*
+public  class RabbitConfig {
+     /*
     @Bean
-    public TopicExchange exchange() {
-        return new TopicExchange("logs");
+    public DirectExchange exchange() {
+        return new DirectExchange("logs");
     }
 
-    @Profile("receiver")
-    private static class ReceiverConfig {
 
+    @Bean
+    public Queue queue() {
+        return new Queue("health_data");
+    }
 
-
-        @Bean
-        public Queue sugarLevelQueue() {
-            return new Queue("health_data");
-        }
-
-        @Bean
-        public Queue bodyTemperatureQueue() {
-            return new Queue("health_data");
-        }
-
-        @Bean
-        public Queue bloodPressureQueue() {
-            return new Queue("health_data");
-        }
-
-        @Bean
-        public Queue heartRateQueue() {
-            return new Queue("health_data");
-        }
-
+       
         @Bean
         public Binding bindingSL(DirectExchange direct, 
             Queue  sugarLevelQueue){
@@ -58,19 +50,17 @@ public class RabbitConfig {
                 .to(direct)
                 .with("blood_pressure");
         }
+        
+    @Bean
+    public Binding bindingHR() {
+        return BindingBuilder.bind(queue())
+            .to(exchange())
+            .with("heart_beat");
+    }
 
-        @Bean
-        public Binding bindingHR(DirectExchange direct, 
-            Queue heartRateQueue) {
-            return BindingBuilder.bind(heartRateQueue)
-                .to(direct)
-                .with("heart_beat");
-        }
-
-        @Bean
-        public SensorReceiver receiver() {
-            return new SensorReceiver();
-        }
+    @Bean
+    public SensorReceiver receiver() {
+        return new SensorReceiver();
     }
     */
 

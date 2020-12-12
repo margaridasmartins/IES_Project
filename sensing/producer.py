@@ -12,7 +12,7 @@ class Generator:
         self.hearbeat = heartbeat
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         self.channel = self.connection.channel()
-        self.channel.exchange_declare(exchange='logs', exchange_type='direct')
+        #self.channel.exchange_declare(exchange='logs', exchange_type='direct')
 
     def gen_heart_beats(self, heartbeat):
         mu = heartbeat
