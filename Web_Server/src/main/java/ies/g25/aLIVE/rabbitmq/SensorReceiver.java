@@ -62,7 +62,7 @@ public class SensorReceiver {
             case 1:
                 HeartRate hr = new HeartRate();
                 hr.setHeartRate(Integer.parseInt(in));
-                controller.createHeartrate(0, hr);
+                controller.createHeartrate(1, hr);
                 break;
 
             case 2:

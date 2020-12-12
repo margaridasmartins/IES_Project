@@ -90,7 +90,7 @@ public class SensorRestController {
 
     @PostMapping("/{id}/bloodpressure")
     public BloodPressure createBloodPressure(@PathVariable(value = "id") long id, @Valid @RequestBody BloodPressure bp) throws ResourceNotFoundException {
-        Optional<BloodPressure> op = bloodPressureRepository.findById(id);
+        Optional<Sensor> op = sensorRepository.findById(id);
         if(op.isPresent()){
             bp.setPatient(op.get().getPatient());
             return bloodPressureRepository.save(bp);
@@ -100,7 +100,7 @@ public class SensorRestController {
 
     @PostMapping("/{id}/heartrate")
     public HeartRate createHeartrate(@PathVariable(value = "id") long id, @Valid @RequestBody HeartRate hr) throws ResourceNotFoundException {
-        Optional<HeartRate> op = heartRateRepository.findById(id);
+        Optional<Sensor> op = sensorRepository.findById(id);
         if(op.isPresent()){
             hr.setPatient(op.get().getPatient());
             return heartRateRepository.save(hr);
