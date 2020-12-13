@@ -31,8 +31,7 @@ public class Sensor {
 
     }
 
-    public Sensor(long id, Patient patient){
-        this.id=id;
+    public Sensor(Patient patient){
         this.patient=patient;
     }
 

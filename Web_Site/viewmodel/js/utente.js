@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     userLogin = JSON.parse(localStorage.getItem('login'));
 
-    if (userLogin['type']== "medic"){
+    if (userLogin['type']== "Medic"){
         $('#cstatus').text("Dashboard");
         $('#cstatus').attr('href','medic_fp.html');
     }
@@ -46,10 +46,10 @@ $(document).ready(function () {
 // CHARTS
 
 // Heart Rate
-google.charts.load('current', {packages: ['corechart', 'line']});
+google.charts.load('current', {packages: ['line']});
 google.charts.setOnLoadCallback(draw_HeartRateChart);
 var userLogin = localStorage.getItem('login');
-console.log(userLogin);
+//console.log(userLogin);
 function draw_HeartRateChart() {
     var data = new google.visualization.DataTable();
     data.addColumn('date', 'Day');
@@ -66,13 +66,16 @@ function draw_HeartRateChart() {
    
     var options = {
         title: 'Resting Heart Rate',
-        height: 450,
+        height: 350,
         hAxis: { title: 'Time' },
-        vAxis: { title: 'Heart Rate' }
+        vAxis: { title: 'Heart Raten in BPM' },
+        legend: { position: "none" },
+        tooltip: {isHtml: true}
     };
    
     var chart = new google.visualization.LineChart(document.getElementById('heartrate_chart'));
     chart.draw(data, options);
+    
 }
 
 // Blood Pressure
@@ -81,8 +84,8 @@ google.charts.setOnLoadCallback(draw_BloodPressureChart);
 function draw_BloodPressureChart() {
     var data = new google.visualization.DataTable();
     data.addColumn('date', 'Day');
-    data.addColumn('number', 'Diastolic');
-    data.addColumn('number', 'Systolic');
+    data.addColumn('number', 'Diastolic, mm Hg');
+    data.addColumn('number', 'Systolic, mm Hg');
 
     // Get users data
     (userLogin['health_data']['blood_pressure']).forEach(element => {
@@ -96,13 +99,14 @@ function draw_BloodPressureChart() {
     });
 
     var options = {
-        char: {
+        chart: {
             title: 'Blood Pressure',
-            subtitle: 'Diastolic, Systolic: 2020'
+            subtitle: 'Diastolic and Systolic'
         },
         height: 350,
         hAxis: { title: 'Day' },
-        vAxis: { title: 'Blood Pressure' }
+        vAxis: { title: 'Blood Pressure, in mm Hg' },
+        legend: { position: "top" }
     };
     var chart = new google.charts.Bar(document.getElementById('bloodpressure_chart'));
     chart.draw(data, google.charts.Bar.convertOptions(options));
@@ -114,7 +118,7 @@ google.charts.setOnLoadCallback(draw_TemperatureChart);
 function draw_TemperatureChart() {
     var data = new google.visualization.DataTable();
     data.addColumn('date', 'Day');
-    data.addColumn('number', 'Temperature');
+    data.addColumn('number', 'C*');
 
     // Get users data
     (userLogin['health_data']['body_temperature']).forEach(element => {
@@ -130,10 +134,41 @@ function draw_TemperatureChart() {
         title: 'Body Temperature',
         height: 350,
         hAxis: { title: 'Day' },
-        vAxis: { title: 'Temperature' }
+        vAxis: { title: 'Temperature, in C*' },
+        legend: { position: "none" },
+        tooltip: {isHtml: true}
     };
 
-    var chart = new google.visualization.LineChart(document.getElementById('chart_div2'));
+    var chart = new google.visualization.LineChart(document.getElementById('bodytemperature_chart'));
     chart.draw(data, options);
 }
 
+// Blood Sugar
+google.charts.load('current', {packages: ['corechart', 'bar']});
+google.charts.setOnLoadCallback(draw_BloodSugarChart);
+function draw_BloodSugarChart() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('date', 'Day');
+    data.addColumn('number', 'mg/dL');
+
+    // Get users data
+    (userLogin['health_data']['blood_glucose']).forEach(element => {
+        var date = element['when'].split("T")[0].split("-");
+        var value = element['value'];
+        console.log(date, value);
+        data.addRows([
+            [new Date(date[0], date[1]-1, date[2]), value]
+        ]);
+    });
+
+    var options = {
+        title: "Blood Glucose Level",
+        height: 350,
+        hAxis: { title: 'Day' },
+        vAxis: { title: 'Blood Glucose, in mg/dL' },
+        legend: { position: "none" },
+        tooltip: {isHtml: true}
+    };
+    var chart = new google.visualization.ColumnChart(document.getElementById('bloodglucose_chart'));
+    chart.draw(data, options);
+}

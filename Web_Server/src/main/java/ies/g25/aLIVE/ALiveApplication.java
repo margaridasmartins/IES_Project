@@ -67,10 +67,5 @@ public class ALiveApplication {
     public SensorReceiver receiver() {
         return new SensorReceiver();
     }
-    /*
-    @RabbitListener(queues = "health_data")
-    public void listener(String in) {
-        System.out.println(in);
-    }
-    */
+
 }

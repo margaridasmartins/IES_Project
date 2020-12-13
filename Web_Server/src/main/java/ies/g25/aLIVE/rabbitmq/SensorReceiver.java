@@ -1,5 +1,8 @@
 package ies.g25.aLIVE.rabbitmq;
 
+import org.json.JSONArray; 
+import org.json.JSONObject;
+
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -63,29 +66,38 @@ public class SensorReceiver {
     public void receive(String in, int receiver) throws InterruptedException, ResourceNotFoundException {
         switch (receiver) {
             case 1:
+                JSONObject jo = new JSONObject(in);
+                String val = (String) jo.get("heartbeat"); 
                 HeartRate hr = new HeartRate();
-                hr.setHeartRate(Integer.parseInt(in));
+                hr.setHeartRate(Integer.parseInt(val));
                 controller.createHeartrate(1, hr);
                 break;
 
             case 2:
+                /*
                 SugarLevel sl = new SugarLevel();
                 sl.setSugarLevel(Double.parseDouble(in));
                 controller.createSugarLevel(1, sl);
+                */
                 break;
 
+
             case 3:
+                /*
                 BloodPressure bp = new BloodPressure();
                 String[] val = in.split("-");
                 bp.setHigh_value(Double.parseDouble(val[0]));
                 bp.setLow_value(Double.parseDouble(val[1]));
                 controller.createBloodPressure(1, bp);
+                */
                 break;
 
             case 4:
+                /*
                 BodyTemperature bt = new BodyTemperature();
                 bt.setbodyTemp(Double.parseDouble(in));
                 controller.createBodyTemperature(1, bt);
+                */
                 break;
         
             default:
