@@ -27,7 +27,7 @@ $(document).ready(function () {
         if (new Date(p['last_check']).toLocaleDateString() < today ){
             $("#patientSection").append(`<div class="row" style="margin-top: 3%;">
                                     <div class="col-md-12">
-                                        <a href="#" id="currentPatient" value="${p['id']}" onHover="myFunction();">
+                                        <a href="#" id="currentPatient" value="${p['id']}">
                                             <div class="card " style="background-color: lightgreen;" >
                                                 <div class="card-body">
                                                     <div class="row ">
