@@ -69,32 +69,4 @@ $(document).ready(function () {
     });
     
 
-    /* $.each(allPatientsArray, function(index, value) {
-        $("#patientDiv").fadeIn();
-        console.log(value[0]);
-        $("#patientDiv").append("<li>" + value[index]['full_name'] + "</li>");
-    }); */
-
-
-
-
-    $("#userFullName").text(userLogin['full_name']);
-    $("#userId").text(userLogin['username']);
-    $("#userEmail").text(userLogin['email']);
-    $("#userAge").text(userLogin['age']);
-    if (userLogin['genre']== "M"){
-        $("#userGenre").text("Male");
-    }
-    else{
-        $("#userGenre").text("Female");
-    }
-    $("#userWeight").text(userLogin['weight']);
-    $("#userHeight").text(userLogin['height']);
-
-   
-    // Functionality not implemented yet
-    $(".notImplemented").click(function () {
-        alert("Sorry, but this functionality has not been implemented yet! :(");
-    });
-
 });
