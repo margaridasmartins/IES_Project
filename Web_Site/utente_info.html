@@ -8,7 +8,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="viewport" content="initial-scale=1, maximum-scale=1">
       <!-- Site Metas -->
-      <title>Life Care - Responsive HTML5 Multi Page Template</title>
+      <title>aLIVE - Monitoring of clinical and eldery care patients</title>
       <meta name="keywords" content="">
       <meta name="description" content="">
       <meta name="author" content="">
@@ -62,11 +62,12 @@
       </header>
       <br></br>
       <br></br>
-      <div id="utente" class="section wow fadeIn">
+      <div id="home" class="section wow fadeIn">
          <div class="container">
             <div class="heading">
                <span class="icon-logo"><img src="images/icon-logo.png" alt="#"></span>
                <h2>Personal Clinical Status</h2>
+               <span><img src="images/oldman.png"></span>
                <br>
             </div>
             <!-- end title -->
@@ -79,46 +80,74 @@
                         <div class="col-4 col-md-2">
                            <b>Name: </b>
                            <em id ="patientFullName"></em>
+                           <p></p>
+                           <input hidden="true">
                         </div>
                         <div class="col-4 col-md-2">
                            <b>Age: </b>
                            <em id="patientAge"></em>
+                           <p></p>
+                           <input hidden="true">
                         </div>
                         <div class="col-4 col-md-2">
                            <b>Genre:</b>
                            <em id="patientGenre"></em>
+                           <p></p>
+                           <input hidden="true">
                         </div>
                         <div class="col-4 col-md-2">
                            <b>Weight: </b>
                            <em id="patientWeight"></em>
                            <em> kg</em>
+                           <p></p>
+                           <input type="text" name="demo-name" id="patientNewWeight" value="" placeholder="Weight" hidden="true">
                         </div>
                         <div class="col-4 col-md-2">
                            <b>Height: </b>
                            <em id="patientHeight"></em>
                            <em> m</em>
+                           <p></p>
+                           <input type="text" name="demo-name" id="patientNewHeight" value="" placeholder="Height" hidden="true">
                         </div>
                      </div>
+                     <br>
                      <div class="row alignitems">
-                           <button type="button" class="btn">Edit Information</button>
+                           <button type="button" class="btn" id="editInformation">Edit Information</button>
+                           <button type="button" class="btn" id="editInformationDone" style="display: none;">Done</button>
+                           <p class="text-danger mt-5 mb-0 d-none" id="editInformationError"></p>
+                           
                      </div>
-                     <h1></h1>
-                     <h1></h1>
+                     <br><br><br><br><br>
                      <div class="row">
                            <h4>Diseases and Conditions: </h4>
                            <h1></h1>
                            <div class="row col-6 col-md-6">
                               <ul id="patientConditionList"></ul>  
+                              <ul>
+                                 <input type="text" name="demo-name" id="patientNewDisease" value="" placeholder="New Disease" hidden="true">
+                              </ul>
+                              <ul>
+                                 <input type="text" name="demo-name" id="patientRemovedDisease" value="" placeholder="Removed Disease" hidden="true">
+                              </ul>
+                              <div class="col-6 col-md-12" style="margin-bottom: 10px;">
+                                 <button type="button" class="btn" id="addDiseaseDone" style="display: none;">Done</button>
+                              </div>
+                              <div class="col-6 col-md-12" style="margin-bottom: 10px;">
+                                 <button type="button" class="btn" id="removeDiseaseDone" style="display: none;">Done</button>
+                              </div>
+                              <p class="text-danger mt-5 mb-0 d-none" id="addDiseaseError"></p>
+                              <p class="text-danger mt-5 mb-0 d-none" id="removeDiseaseError"></p>
                            </div>
                            <div class="row col-6 col-md-6">
                               <div class="col-6 col-md-12" style="margin-bottom: 10px;">
-                                 <button type="button" class="btn">Add Disease</button>
+                                 <button type="button" class="btn" id="addDisease">Add Disease</button>
                               </div>
                               <div class="col-6 col-md-12">
-                                 <button type="button" class="btn">Remove Disease</button>
+                                 <button type="button" class="btn" id="removeDisease">Remove Disease</button>
                               </div>
                            </div>
                      </div>
+                     <br><br><br>
                      <div class="row">
                            <h4>Medication: </h4>
                            <h1></h1>
@@ -138,12 +167,7 @@
                   <!-- end messagebox -->
                </div>
                <!-- end col -->
-               <div class="col-6 col-md-4">
-                  <div class="post-media wow fadeIn" style="height: 50%; width: 50%;">
-                     <img src="images/oldman.png" alt="" class="img-responsive" > 
-                  </div>
-                  <!-- end media -->
-               </div>
+
                <!-- end col -->
             </div>
             <!-- end row -->
