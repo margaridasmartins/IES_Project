@@ -1,5 +1,6 @@
 [
     {
+        "id": "P01",
         "email": "user@teste.pt",
         "password": "teste",
         "username": "johndoe123",
@@ -71,14 +72,16 @@
                     "value": 72
                 }
             ]
-        }
+        }, 
+        "doctorID": "M01"
     },
     {
+        "id": "M01",
         "email": "medic@teste.pt",
         "password": "teste",
         "username": "medic123",
         "full_name": "Thomas Wallace",
         "type": "Medic",
-        "assigned_patients": ["user@teste.pt", "user2@teste.pt"]
+        "assigned_patients": ["P01", "P02"]
     }
 ]
