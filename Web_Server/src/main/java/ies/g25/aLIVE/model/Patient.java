@@ -60,6 +60,12 @@ public class Patient extends User {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<BodyTemperature> bodyTemp;
+
+    @OneToMany(mappedBy = "patient")
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Sensor> sensors;
     
     public Patient(){
 

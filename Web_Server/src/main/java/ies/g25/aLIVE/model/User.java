@@ -23,7 +23,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "password")
     @ToString.Exclude
@@ -53,6 +53,13 @@ public class User {
         this.age = age;
     }
 
+    public String getEmail(){
+        return this.email;
+    }
+
+    public Long getId(){
+        return this.id;
+    }
 }
 
 

@@ -19,12 +19,12 @@ import org.hibernate.annotations.CreationTimestamp;
 public class Sensor {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     //Patient Id
     @ManyToOne()
-    @JoinColumn(name = "patient_id")
+    @JoinColumn(name = "patient")
     private Patient patient;
 
     public Sensor(){
@@ -37,5 +37,8 @@ public class Sensor {
 
     public Patient getPatient(){
         return this.patient;
+    }
+    public Long getId(){
+        return this.id;
     }
 }

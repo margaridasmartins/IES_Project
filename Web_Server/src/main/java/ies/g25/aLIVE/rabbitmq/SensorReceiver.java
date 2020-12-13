@@ -1,5 +1,6 @@
 package ies.g25.aLIVE.rabbitmq;
 
+import java.math.BigDecimal;
 import org.json.JSONArray; 
 import org.json.JSONObject;
 
@@ -67,9 +68,9 @@ public class SensorReceiver {
         switch (receiver) {
             case 1:
                 JSONObject jo = new JSONObject(in);
-                String val = (String) jo.get("heartbeat"); 
+                Integer val = (Integer) jo.get("heartbeat"); 
                 HeartRate hr = new HeartRate();
-                hr.setHeartRate(Integer.parseInt(val));
+                hr.setHeartRate(val);
                 controller.createHeartrate(1, hr);
                 break;
 
@@ -83,6 +84,14 @@ public class SensorReceiver {
 
 
             case 3:
+                JSONObject jo1 = new JSONObject(in);
+                Double high = (Double) jo1.get("systolic"); 
+                Double low = (Double) jo1.get("diastolic"); 
+                BloodPressure bp = new BloodPressure();
+                bp.setLow_value(low);
+                bp.setLow_value(high);
+                controller.createBloodPressure(1, bp);
+                break;
                 /*
                 BloodPressure bp = new BloodPressure();
                 String[] val = in.split("-");
@@ -90,9 +99,13 @@ public class SensorReceiver {
                 bp.setLow_value(Double.parseDouble(val[1]));
                 controller.createBloodPressure(1, bp);
                 */
-                break;
 
             case 4:
+                JSONObject jo2 = new JSONObject(in);
+                Double body_temp = (Double) jo2.get("temperature"); 
+                BodyTemperature bt = new BodyTemperature();
+                bt.setbodyTemp(body_temp);
+                controller.createBodyTemperature(1, bt);
                 /*
                 BodyTemperature bt = new BodyTemperature();
                 bt.setbodyTemp(Double.parseDouble(in));

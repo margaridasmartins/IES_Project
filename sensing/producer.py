@@ -20,7 +20,7 @@ class Generator:
         x = 0
         while x < 10:
             hb = np.random.randn(1) * sigma + mu
-            json_text = {'heartbeat': float(hb)}
+            json_text = {'heartbeat': int(hb)}
             self.channel.basic_publish(exchange='logs', routing_key='heart_beat', body= json.dumps(json_text))
             x+=1
 
