@@ -69,9 +69,10 @@ public class SensorReceiver {
             case 1:
                 JSONObject jo = new JSONObject(in);
                 Integer val = (Integer) jo.get("heartbeat"); 
+                Integer id = (Integer) jo.get("id");
                 HeartRate hr = new HeartRate();
                 hr.setHeartRate(val);
-                controller.createHeartrate(1, hr);
+                controller.createHeartrate(Long.valueOf(id), hr);
                 break;
 
             case 2:
@@ -85,12 +86,13 @@ public class SensorReceiver {
 
             case 3:
                 JSONObject jo1 = new JSONObject(in);
-                Double high = (Double) jo1.get("systolic"); 
-                Double low = (Double) jo1.get("diastolic"); 
+                BigDecimal high = (BigDecimal) jo1.get("systolic"); 
+                BigDecimal low = (BigDecimal) jo1.get("diastolic");
+                Integer id1 = (Integer) jo1.get("id"); 
                 BloodPressure bp = new BloodPressure();
-                bp.setLow_value(low);
-                bp.setLow_value(high);
-                controller.createBloodPressure(1, bp);
+                bp.setLow_value(low.doubleValue());
+                bp.setLow_value(high.doubleValue());
+                controller.createBloodPressure(Long.valueOf(id1), bp);
                 break;
                 /*
                 BloodPressure bp = new BloodPressure();
@@ -102,10 +104,11 @@ public class SensorReceiver {
 
             case 4:
                 JSONObject jo2 = new JSONObject(in);
-                Double body_temp = (Double) jo2.get("temperature"); 
+                BigDecimal body_temp = (BigDecimal) jo2.get("temperature"); 
                 BodyTemperature bt = new BodyTemperature();
-                bt.setbodyTemp(body_temp);
-                controller.createBodyTemperature(1, bt);
+                Integer id2 = (Integer) jo2.get("id");
+                bt.setbodyTemp(body_temp.doubleValue());
+                controller.createBodyTemperature(Long.valueOf(id2), bt);
                 /*
                 BodyTemperature bt = new BodyTemperature();
                 bt.setbodyTemp(Double.parseDouble(in));
