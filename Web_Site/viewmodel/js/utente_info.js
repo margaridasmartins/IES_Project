@@ -90,7 +90,6 @@ $(document).ready(function () {
         //$("#addDisease").fadeIn();
         window.location.reload();
     }); 
-
     // REMOVE DISEASE
     $("#removeDisease").click(function(){
         $("#patientRemovedDisease").fadeIn();
@@ -109,7 +108,7 @@ $(document).ready(function () {
             return;
         }
 
-        var old = $("#patientNewDisease").val();
+        var old = $("#patientRemovedDisease").val();
         var index = currentPatient['health_data']['conditions'].indexOf(old);
         currentPatient['health_data']['conditions'].splice(index, 1);
         localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
@@ -118,6 +117,60 @@ $(document).ready(function () {
         //$("#removeDisease").fadeIn();
         window.location.reload();
     }); 
+
+    // ADD MEDICATION
+    $("#addMedication").click(function(){
+        $("#patientNewMedication").fadeIn();
+        $("#addMedication").attr('style', 'display: none;');
+        $("#addMedicationDone").fadeIn();
+        // Get data from "db"
+        console.log(currentPatient)
+    }); 
+    $("#addMedicationDone").click(function(){
+        // Get data from "db"
+        console.log(currentPatient)
+        // Validate user data
+        if ($("#patientNewMedication").val().trim()=="") {
+            $("#addMedicationError").text("Please enter new data");
+            $("#addMedicationError").fadeIn();
+            return;
+        }
+        currentPatient['health_data']['medication'].push($("#patientNewMedication").val());
+        localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
+
+        $("#patientNewMedication").fadeOut();
+        $("#addMedicationDone").fadeOut();
+        //$("#addDisease").fadeIn();
+        window.location.reload();
+    });
+    // REMOVE MEDICATION
+    $("#removeMedication").click(function(){
+        $("#patientRemovedMedication").fadeIn();
+        $("#removeMedication").attr('style', 'display: none;');
+        $("#removeMedicationDone").fadeIn();
+        // Get data from "db"
+        console.log(currentPatient)
+    }); 
+    $("#removeMedicationDone").click(function(){
+        // Get data from "db"
+        console.log(currentPatient)
+        // Validate user data
+        if ($("#patientRemovedMedication").val().trim()=="") {
+            $("#removeMedicationError").text("Please enter new data");
+            $("#removeMedicationError").fadeIn();
+            return;
+        }
+
+        var old = $("#patientRemovedDisease").val();
+        var index = currentPatient['health_data']['medication'].indexOf(old);
+        currentPatient['health_data']['medication'].splice(index, 1);
+        localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
+        $("#patientRemovedMedication").fadeOut();
+        $("#removeMedicationDone").fadeOut();
+        //$("#removeDisease").fadeIn();
+        window.location.reload();
+    }); 
+
 
     // Functionality not implemented yet
     $(".notImplemented").click(function () {

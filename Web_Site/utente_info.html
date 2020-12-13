@@ -153,13 +153,27 @@
                            <h1></h1>
                            <div class="row col-6 col-md-6">
                               <ul id="patientMedicationList"></ul>
+                              <ul>
+                                 <input type="text" name="demo-name" id="patientNewMedication" value="" placeholder="New Medication" hidden="true">
+                              </ul>
+                              <ul>
+                                 <input type="text" name="demo-name" id="patientRemovedMedication" value="" placeholder="Removed Medication" hidden="true">
+                              </ul>
+                              <div class="col-6 col-md-12" style="margin-bottom: 10px;">
+                                 <button type="button" class="btn" id="addMedicationDone" style="display: none;">Done</button>
+                              </div>
+                              <div class="col-6 col-md-12" style="margin-bottom: 10px;">
+                                 <button type="button" class="btn" id="removeMedicationDone" style="display: none;">Done</button>
+                              </div>
+                              <p class="text-danger mt-5 mb-0 d-none" id="addMedicationError"></p>
+                              <p class="text-danger mt-5 mb-0 d-none" id="removeMedicationError"></p>
                            </div>
                            <div class="row col-6 col-md-6">
                               <div class="col-6 col-md-12" style="margin-bottom: 10px;">
-                                 <button type="button" class="btn">Add Medication</button>
+                                 <button type="button" class="btn" id="addMedication">Add Medication</button>
                               </div>
                               <div class="col-6 col-md-12">
-                                 <button type="button" class="btn">Remove Medication</button>
+                                 <button type="button" class="btn" id="removeMedication">Remove Medication</button>
                               </div>
                            </div>
                      </div>
