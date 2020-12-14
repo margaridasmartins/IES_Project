@@ -30,7 +30,7 @@
       <!-- Modernizer for Portfolio -->
       <script src="js/modernizer.js"></script>
       <!-- [if lt IE 9] -->
-      <script src="js/login_register.js"></script>
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
    </head>
    <body class="clinic_version">
       <!-- LOADER -->
@@ -70,7 +70,7 @@
          <div class="container">
             <div class="row">
                <!-- LOGIN-->
-               <div class=".col-6 .col-md-4" style="width:36%; float: left">
+               <div class=".col-6 .col-md-4" style="width:50%; float: left">
                <section class="left-section">
                     <div id="left-cover" style="display: block;">
                     <div class="appointment-form2">
@@ -109,7 +109,7 @@
                 </section>
                 </div>
                <!-- FINAL LOGIN-->
-               <div class=".col-6 .col-md-4" style="width:36%; float: right;">
+               <div class=".col-6 .col-md-4" style="width:50%; float: right;">
                <section class="right-section">
                     <div id="right-cover" style="display: block;">
                         <div class="appointment-form2">
@@ -163,7 +163,12 @@
                                              <label for="medication"> Medication:</label>
 
                                              <textarea id="medication" name="medication" rows="4" cols="50"></textarea>
-
+                                             <div>
+                                                <input list="brow">
+                                                <datalist id="brow">
+                                                   <option value="medic@teste.pt - Thomas Wallace"></option>
+                                                 </datalist> 
+                                             </div>
                                              <input type="password" name="registerPass" id="registePass" value="" placeholder="Type a Password">
                                             <input type="password" name="registerPass2" id="registerPass2" value="" placeholder="Repeat Password">
                                           </div>
@@ -271,5 +276,6 @@
       <script src="js/custom.js"></script>
       <!-- LOGIN JS -->
      <script src="viewmodel/js/login.js"></script>
+     <script src="js/login_register.js"></script>
    </body>
 </html>

@@ -4,20 +4,18 @@ $(document).ready(function () {
     if (localStorage.getItem('login')!=null)
         window.location.replace('user.html'); */
 
-    /*
     // Load users database
-    $.getJSON("http://itskikat.github.io/ies_itskikat/DB/users.json", function(json) {
+    $.getJSON("https://itskikat.github.io/ies_itskikat/DB/users.json", function(json) {
         console.log(json)
         localStorage.setItem('users', JSON.stringify(json));
     });
-    */
 
-    localStorage.setItem('users',JSON.stringify([{
-        "email": "user@teste.pt", "password": "teste", "username": "johndoe123","type":"patient"},{
-        "email": "medic@teste.pt", "password":"teste", "username": "medic","type":"medic"
-        }]
+    /* localStorage.setItem('users',JSON.stringify([
+        {"email": "user@teste.pt", "password": "teste", "username": "johndoe123","type":"patient", "full_name": "John"},
+        {"email": "medic@teste.pt", "password":"teste", "username": "medic","type":"medic", "full_name": "Sample Medic"}
+    ]
         
-    ));
+    )); */
 
     // Login
     $("#loginButton").click(function(){
@@ -52,7 +50,7 @@ $(document).ready(function () {
 
         if (registered) {
 
-            if (type == "medic"){
+            if (type == "Medic"){
                 window.location.replace("medic_fp.html");
             }
             else{

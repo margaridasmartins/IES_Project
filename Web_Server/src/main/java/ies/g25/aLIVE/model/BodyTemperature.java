@@ -1,6 +1,4 @@
-//data de recolha, id paciente, beats per minute
 package ies.g25.aLIVE.model;
-
 
 import java.sql.Date;
 
@@ -16,8 +14,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name="HEART_RATE")
-public class HeartRate{
+@Table(name="BOODY_TEMP")
+public class BodyTemperature{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,27 +26,26 @@ public class HeartRate{
     @CreationTimestamp
     private Date date;
 
-    // Hert Rate values
-    @Column(name="heartRate",nullable = false)
-    private int heartRate;
+    // Blood Temperature values
+    @Column(name = "bodytemp")
+    private double bodyTemp;
 
     //Patient Id
     @ManyToOne()
-    @JoinColumn(name = "patient")
+    @JoinColumn(name = "patient_id")
     private Patient patient;
 
-    public HeartRate(){}
+    public BodyTemperature(){}
 
-    public HeartRate(int heart_rate, Patient patient){
-        this.heartRate=heart_rate;
-        this.patient=patient;
+    public BodyTemperature(double bodytemp){
+        this.bodyTemp=bodytemp;
     }
 
-    public void setHeartRate(int heart_rate){
-        this.heartRate=heart_rate;
+    public void setbodyTemp(double bodytemp){
+        this.bodyTemp=bodytemp;
     }
-    public int getHeartRate(){
-        return this.heartRate;
+    public double getbodyTemp(){
+        return this.bodyTemp;
     }
 
     public Date getDate(){
@@ -57,7 +54,7 @@ public class HeartRate{
     public Patient getPatient(){
         return this.patient;
     }
-    public void setPatient(Patient patient){
-        this.patient=patient;
+    public void setPatient(Patient p){
+        this.patient=p;
     }
 }
