@@ -31,17 +31,18 @@ $("#registerPatient").click(function(){
     data["email"]=email;
     data["age"]=age;
     data["password"]=pass1;
-    data["professional"]=assistant;
+    //data["professional"]=assistant;
     
-    console.log(JSON.stringify(data))
+    console.log(JSON.stringify(data)    )
     $.ajax({
         type: "POST",
         url: "http://localhost:8080/api/users",
         data: JSON.stringify(data),
         dataType: "json",
+        contentType: "application/json; charset=utf-8",
         success: function (data, status, jqXHR) {
 
-                 alert(success);
+                 alert(status);
              },
 
              error: function (jqXHR, status) {
