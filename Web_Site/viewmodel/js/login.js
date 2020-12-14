@@ -18,9 +18,14 @@ $(document).ready(function () {
     )); */
 
     // Login
+
     $("#loginButton").click(function(){
+        getUsers(function(users){
+            console.log(users)
+        });
+
         $("#loginError").removeClass("d-none");
-        $("#loginError").hide();
+            $("#loginError").hide();
         // Get data from "db"
         users = JSON.parse(localStorage.getItem('users'));
         console.log(users)
@@ -66,3 +71,11 @@ $(document).ready(function () {
     });
 
 });
+// Get users from API
+function getUsers(handleData){
+    $.ajax({
+        url: "http://localhost:8080/api/users"
+    }).then(function(data) {
+        handleData(data);
+    });
+};

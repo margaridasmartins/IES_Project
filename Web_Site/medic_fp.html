@@ -93,9 +93,9 @@
                </div>
                <div class="input-group col-md-3 offset-1 d-flex justify-content-end" >
                   <!-- ORDER BY SELECTION -->
-                  <select class="form-control d-flex align-self-center">
-                     <option>Order by Last Checked</option>
-                     <option>Order by Health status</option>
+                  <select class="form-control d-flex align-self-center" onchange="sortPositions();">
+                     <option value="last">Order by Last Checked</option>
+                     <option value="status">Order by Health status</option>
                   </select>
                </div>
             </div>

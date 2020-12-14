@@ -15,25 +15,67 @@ function switchSignupPaciente() {
 }
 //Patient Register
 $("#registerPatient").click(function(){
-    
-    var data={}
+    $("#registerError").removeClass("d-none");
+    $("#registerError").hide();
+    var data_post={}
     
     var name = $("#registerName").val();
     var email = $("#registerEmail").val();
     var age = $("#registerAge").val();
     var genre = $("#registerGenre").val();
-    var pass1 = $("#registePass").val();
-    var pass2 = $("#registePass2").val();
+    var pass1 = $("#registerPass").val();
+    var pass2 = $("#registerPass2").val();
     var assistant = $("#assis").val();
     
-    data["fullname"]=name;
-    data["username"]=email;
-    data["email"]=email;
-    data["age"]=age;
-    data["password"]=pass1;
-    //data["professional"]=assistant;
+    data_post["fullname"]=name;
+    data_post["username"]=email;
+    data_post["email"]=email;
+    data_post["age"]=age;
+    data_post["password"]=pass1;
+    //data_post["professional"]=assistant;
+
+    if(name == "" || email == "" || age == ""){
+        $("#registerError").text("Fill all the fields!");
+        $("#registerError").fadeIn();
+        return;
+    }
+
+    if(pass1 != pass2){
+        $("#registerError").text("The passwords don't match!");
+        $("#registerError").fadeIn();
+        return;
+    }
+
     
-    console.log(JSON.stringify(data)    )
+
+    $.ajax({
+        url: "http://localhost:8080/api/users"
+    }).then(function(data) {
+        var email_exists=false;
+        for(u in data){
+            if(data[u].email == email){
+                email_exists = true;
+            };
+        };
+        if(email_exists == true){
+            $("#registerError").text("This email is already registered!");
+            $("#registerError").fadeIn();
+            return;
+        }
+        else{
+            //"Everything" is legal
+            //console.log(data_post)
+            
+            postData(data_post);
+            window.location.replace("login.html");
+        };
+    });
+    
+  });
+
+//Post Users
+function postData(data){
+
     $.ajax({
         type: "POST",
         url: "http://localhost:8080/api/users",
@@ -51,4 +93,4 @@ $("#registerPatient").click(function(){
                  alert('fail' + status.code);
              }
       });
-  });
+}
