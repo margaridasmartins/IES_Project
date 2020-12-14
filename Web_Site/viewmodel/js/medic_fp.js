@@ -11,8 +11,64 @@ $(document).ready(function () {
         $('#cstatus').text("Clinical Status");
         $('#cstatus').attr('href','utente.html');
     }
+
+
+    $.ajax({
+        url: "http://localhost:8080/api/users"
+    }).then(function(data) {
+
+        data.forEach(p=>{
+            //console.log(p)
+
+            var currentState=p['current_state'];
+            console.log(currentState);
+            var color;
+            if(currentState=="good"){
+                color="lightgreen";
+            }
+            if(currentState=="very good"){
+                color="Chartreuse";
+            }
+            if(currentState=="bad"){
+                color="#FFFF66";
+            }
+            if(currentState=="very bad"){
+                color="red";
+            }
+                $("#patientSection").append(`<div class="row" style="margin-top: 3%;">
+                                        <div class="col-md-12">
+                                            <a href="#" id="currentPatient" value="${p['id']}">
+                                                <div class="card " style="background-color: ${color};" >
+                                                    <div class="card-body">
+                                                        <div class="row ">
+                                                            <div class="col-md-2 my-auto">
+                                                                <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
+                                                            </div>
+                                                            <div class="col-md-4 my-auto"> 
+                                                                <b>Name: </b> 
+                                                                <em>${p['fullname']} </em>
+                                                            </div>
+                                                            <div class="col-md-2 my-auto">
+                                                                <b>Age: </b>
+                                                                <em>${p['age']} </em>
+                                                            </div>
+                                                            <div class="col-md-4 my-auto">
+                                                                <b>Last Check: </b>
+                                                                <em>${new Date(p['last_check']).toLocaleDateString()} </em>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>`);
+            
+        })
+        
+       
+    });
     // FIlter patients
-    var allPatientsArray = [];
+    /*var allPatientsArray = [];
     $.each(allUsers, function(index, value) {
         if (value['type'] == "Patient" && value['doctorID'] == userLogin['id']){
             console.log(value);
@@ -53,11 +109,10 @@ $(document).ready(function () {
                                     </div>
                                 </div>`);
         }
-    });
+    });*/
     
     
     $("#currentPatient").click(function() {
-        //console.log("#currentPatient");
         var id = document.getElementById("currentPatient").getAttribute("value");
         for(var i in allPatientsArray){
             if (allPatientsArray[i]['id'] == id){
