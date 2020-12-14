@@ -13,11 +13,41 @@ function switchSignupPaciente() {
     document.getElementById("left-cover").style.display = "block";
 
 }
- 
-$(document).ready(function() {
+//Patient Register
+$("#registerPatient").click(function(){
+    
+    var data={}
+    
+    var name = $("#registerName").val();
+    var email = $("#registerEmail").val();
+    var age = $("#registerAge").val();
+    var genre = $("#registerGenre").val();
+    var pass1 = $("#registePass").val();
+    var pass2 = $("#registePass2").val();
+    var assistant = $("#assis").val();
+    
+    data["fullname"]=name;
+    data["username"]=email;
+    data["email"]=email;
+    data["age"]=age;
+    data["password"]=pass1;
+    data["professional"]=assistant;
+    
+    console.log(JSON.stringify(data))
     $.ajax({
-        url: "http://localhost:8080/api/users"
-    }).then(function(data) {
-       console.log(data)
-    });
-});
+        type: "POST",
+        url: "http://localhost:8080/api/users",
+        data: JSON.stringify(data),
+        dataType: "json",
+        success: function (data, status, jqXHR) {
+
+                 alert(success);
+             },
+
+             error: function (jqXHR, status) {
+                 // error handler
+                 console.log(jqXHR);
+                 alert('fail' + status.code);
+             }
+      });
+  });

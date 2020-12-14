@@ -89,13 +89,13 @@
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="row">
                                             <div class="form-group">
-                                             <input type="name" name="registerName" id="registerName" value="" placeholder="Full Name">
-                                             <input type="email" name="registerEmail" id="registerEmail" value="" placeholder="Email">
+                                             <input type="name" name="regName" id="regName" value="" placeholder="Full Name">
+                                             <input type="email" name="regEmail" id="regEmail" value="" placeholder="Email">
                                                  
-                                             <input type="password" name="registerPass" id="registePass" value="" placeholder="Type a Password">
-                                             <input type="password" name="registerPass2" id="registerPass2" value="" placeholder="Repeat Password">
+                                             <input type="password" name="regPass" id="regPass" value="" placeholder="Type a Password">
+                                             <input type="password" name="regPass2" id="regPass2" value="" placeholder="Repeat Password">
                                             <div class="center">
-                                                <input type="button" value="REGISTER" name="resButton" id="register" onclick="location.href='login.html'; alert('Successfully registered!');">
+                                                <input type="button" value="REGISTER" name="resButton" id="registerAssis">
                                             </div>
                                             <p class="text-danger mt-5 mb-0 d-none" id="loginError"></p>
                                             </div>
@@ -137,9 +137,9 @@
                                                    </div>
                                                    <div class ="col-md-6 col-sm-6">
                                                          
-                                                         <select name="genre" id="genre">
-                                                            <option value="male">Male</option>
-                                                            <option value="female">Female</option>
+                                                         <select name="genre" id="registerGenre">
+                                                            <option value="Male">Male</option>
+                                                            <option value="Female">Female</option>
                                                          </select>
                                                    </div>
                                                 </div>
@@ -163,17 +163,12 @@
                                              <label for="medication"> Medication:</label>
 
                                              <textarea id="medication" name="medication" rows="4" cols="50"></textarea>
-                                             <div>
-                                                <input list="brow">
-                                                <datalist id="brow">
-                                                   <option value="medic@teste.pt - Thomas Wallace"></option>
-                                                 </datalist> 
-                                             </div>
+                                             <input type="asis" name="assis" id="assis" value="" placeholder="Type Assistent email">
                                              <input type="password" name="registerPass" id="registePass" value="" placeholder="Type a Password">
                                             <input type="password" name="registerPass2" id="registerPass2" value="" placeholder="Repeat Password">
                                           </div>
                                             <div class="center">
-                                                <input type="button" value="REGISTER" name="resButton2" id="register2" onclick="location.href='login.html'; alert('Successfully registered!');">
+                                                <input type="button" value="REGISTER" name="resButton2" id="registerPatient">
                                             </div>
                                             
                                             <p class="text-danger mt-5 mb-0 d-none" id="loginError"></p>
