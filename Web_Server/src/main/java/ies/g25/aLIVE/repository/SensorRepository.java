@@ -7,5 +7,8 @@ import java.util.List;
 import ies.g25.aLIVE.model.*;
 
 public interface SensorRepository extends JpaRepository<Sensor, Long> {
+
+    @Query("select id from Sensor")
+    List<Long> getAllIds();
     
 }

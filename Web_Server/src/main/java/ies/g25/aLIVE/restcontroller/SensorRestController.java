@@ -107,5 +107,10 @@ public class SensorRestController {
         }
         throw new ResourceNotFoundException("Sensor not found for this id: " + id);
     }
+
+    @GetMapping("/ids")
+    public List<Long> getNumberOfSensors(){
+        return sensorRepository.getAllIds();
+    }
     
 }
