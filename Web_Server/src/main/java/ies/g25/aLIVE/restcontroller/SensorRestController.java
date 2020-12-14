@@ -67,7 +67,11 @@ public class SensorRestController {
         throw new ResourceNotFoundException("Sensor not found for this id: " + id);
     }
 
-
+    @GetMapping("/ids")
+    public List<Long> getNumberOfSensors(){
+        return sensorRepository.getAllIds();
+    }
+    
     @PostMapping("/{id}/sugarlevel")
     public SugarLevel createSugarLevel(@PathVariable(value = "id") long id, @Valid @RequestBody SugarLevel sl) throws ResourceNotFoundException {
         Optional<Sensor> op = sensorRepository.findById(id);
