@@ -23,9 +23,10 @@ class Generator:
 
         while True:
             hb = np.random.randn(1) * sigma + mu
-            json_text = {'id': 1, 'heartbeat': float(hb)}
+            json_text = {'id': 1, 'heartbeat': int(hb)}
             self.channel.basic_publish(exchange='logs', routing_key='heart_beat', body= json.dumps(json_text))
             await asyncio.sleep(2)
+
 
     async def gen_blood_pressure(self):
         systolic_mu = 130
@@ -34,22 +35,22 @@ class Generator:
 
         while True:
             systolic = np.random.randn(1) * sigma + systolic_mu
-            diastolic = np.random.randn(1) * sigma + diastolic_mu
-            
-            json_text = {'id': 1, 'systolic': float(systolic), 'diastolic': float(diastolic)}
+            diastolic = np.random.randn(1) * sigma + diastolic_mu            
+            json_text = {'id': 1, 'systolic': round(float(systolic),2), 'diastolic': round(float(diastolic),2)}
             self.channel.basic_publish(exchange='logs', routing_key='blood_pressure', body= json.dumps(json_text))
             await asyncio.sleep(2)
+
     
     async def gen_body_temp(self):
         mu = 37
         sigma = 1.0
 
         while True:
-            temperature = np.random.randn(1) * sigma + mu
-        
-            json_text = {'id': 1, 'temperature': float(temperature)}
+            temperature = np.random.randn(1) * sigma + mu        
+            json_text = {'id': 1, 'temperature': round(float(temperature),2)}
             self.channel.basic_publish(exchange='logs', routing_key='body_temp', body= json.dumps(json_text))
             await asyncio.sleep(2)
+
     
     async def gen_sugar_level(self):
         before_mu = 5.0
@@ -63,6 +64,7 @@ class Generator:
             json_text = {'id': 1, 'after': float(after), 'before': float(before)}
             self.channel.basic_publish(exchange='logs', routing_key='sugar_level', body= json.dumps(json_text))
             await asyncio.sleep(2)
+
 
 
 
