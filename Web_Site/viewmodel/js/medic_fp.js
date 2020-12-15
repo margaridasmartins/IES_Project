@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
     userLogin = JSON.parse(localStorage.getItem('login'));
+    console.log(userLogin);
     allUsers = JSON.parse(localStorage.getItem('users'));
 
 
@@ -84,7 +85,7 @@ $(document).ready(function () {
                                                                 </div>
                                                                 <div class="col-md-3 my-auto"> 
                                                                     <b>Name: </b> 
-                                                                    <em>${p['fullname']} </em>
+                                                                    <em>${p['full_name']} </em>
                                                                 </div>
                                                                 <div class="col-md-2 my-auto">
                                                                     <b>Age: </b>
@@ -110,62 +111,6 @@ $(document).ready(function () {
         
        
     });
-    // FIlter patients
-    /*var allPatientsArray = [];
-    $.each(allUsers, function(index, value) {
-        if (value['type'] == "Patient" && value['doctorID'] == userLogin['id']){
-            console.log(value);
-            allPatientsArray.push(value);
-        } 
-    });
-    console.log(allPatientsArray);
-
-    allPatientsArray.forEach(p => {
-        console.log(p);
-        var today = new Date().toLocaleDateString(); 
-        if (new Date(p['last_check']).toLocaleDateString() < today ){
-            $("#patientSection").append(`<div class="row" style="margin-top: 3%;">
-                                    <div class="col-md-12">
-                                        <a href="#" id="currentPatient" value="${p['id']}">
-                                            <div class="card " style="background-color: lightgreen;" >
-                                                <div class="card-body">
-                                                    <div class="row ">
-                                                        <div class="col-md-2 my-auto">
-                                                            <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
-                                                        </div>
-                                                        <div class="col-md-4 my-auto"> 
-                                                            <b>Name: </b> 
-                                                            <em>${p['full_name']} </em>
-                                                        </div>
-                                                        <div class="col-md-2 my-auto">
-                                                            <b>Age: </b>
-                                                            <em>${p['age']} </em>
-                                                        </div>
-                                                        <div class="col-md-4 my-auto">
-                                                            <b>Last Check: </b>
-                                                            <em>${new Date(p['last_check']).toLocaleDateString()} </em>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>`);
-        }
-    });*/
-    
-    
-    /*$("#currentPatient").click(function() {
-        console.log("press")
-        var id = document.getElementById("currentPatient").getAttribute("value");
-        for(var i in allPatientsArray){
-            if (allPatientsArray[i]['id'] == id){
-                localStorage.setItem('currentPatient', JSON.stringify(allPatientsArray[i]));
-            }
-        }
-        console.log(localStorage.getItem('currentPatient'))
-        document.getElementById("currentPatient").setAttribute('href', 'utente_info.html');
-    });*/
     
 });
 
@@ -173,19 +118,86 @@ function sortPositions(){
 
     console.log("sort")
 }
-function selectPatient(id){
 
+function search_patient(){
+    console.log("search_patient");
+    var input, filter, patientName, li;
+    input = document.getElementById("searchbox_patient");
+    filter = input.value.toUpperCase();
+    myPatientsArray = filter_doctorPatients();
+
+    myPatientsArray.forEach(p => {
+        patientName = p['full_name'].toUpperCase();
+        if(patientName.indexOf(filter) > -1){
+            $("#newPatientsDiv").fadeOut();
+            $("#allPatientsDiv").fadeOut();
+            $("#patientFilter").append(`<div class="row" style="margin-top: 3%;">
+                                            <div class="col-md-12">
+                                                <a class="currentP" href="#" value="${p['id']}">
+                                                    <div class="card " style="background-color: lightgreen;" >
+                                                        <div class="card-body">
+                                                            <div class="row ">
+                                                                <div class="col-md-2 my-auto">
+                                                                    <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
+                                                                </div>
+                                                                <div class="col-md-3 my-auto"> 
+                                                                    <b>Name: </b> 
+                                                                    <em>${p['full_name']} </em>
+                                                                </div>
+                                                                <div class="col-md-2 my-auto">
+                                                                    <b>Age: </b>
+                                                                    <em>${p['age']} </em>
+                                                                </div>
+                                                                
+                                                                <div class="col-md-3 my-auto" id="date">
+                                                                    <b>Last Check: </b>
+                                                                    <em>${new Date(p['last_check']).toLocaleDateString()} </em>
+                                                                </div>
+                                                                <div class="col-md-1 my-auto">
+                                                                    <img src="./images/danger.png" style="max-width:50px; max-height:50px;">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>`);
+        }
+    });
+
+    
+};
+
+function selectPatient(id){
     $.ajax({
         url: "http://localhost:8080/api/users"
     }).then(function(data) {
         data.forEach(p=>{
             if(p.id == id){
                 localStorage.setItem('currentPatient', JSON.stringify(p));
-                console.log(localStorage.getItem('currentPatient'))
-                console.log("currentPatient"+id)
+                console.log(localStorage.getItem('currentPatient'));
+                console.log("currentPatient"+id);
                 document.getElementById("currentPatient"+id).setAttribute('href', 'utente_info.html');
             }
             
         })
     })
-}
+};
+
+
+function filter_doctorPatients(){
+    $.ajax({
+        url: "http://localhost:8080/api/users"
+    }).then(function(data) {
+        data.forEach(p=>{
+            if(p.doctorID == userLogin['id']){
+                var myPatients = [];
+                myPatients.push(p);
+                console.log(myPatients);
+            }
+            
+        });
+        return myPatients;
+    });
+}; 
+

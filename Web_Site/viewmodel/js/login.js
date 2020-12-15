@@ -10,13 +10,6 @@ $(document).ready(function () {
         localStorage.setItem('users', JSON.stringify(json));
     });
 
-    /* localStorage.setItem('users',JSON.stringify([
-        {"email": "user@teste.pt", "password": "teste", "username": "johndoe123","type":"patient", "full_name": "John"},
-        {"email": "medic@teste.pt", "password":"teste", "username": "medic","type":"medic", "full_name": "Sample Medic"}
-    ]
-        
-    )); */
-
     // Login
 
     $("#loginButton").click(function(){

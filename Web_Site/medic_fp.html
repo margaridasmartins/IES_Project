@@ -33,11 +33,6 @@
       <!-- Modernizer for Portfolio -->
       <script src="js/modernizer.js"></script>
       <!-- [if lt IE 9] -->
-      <script>
-         function show_result(){
-            $('#patients').html($('#joao').html());
-         }
-      </script>
       <style>
          p {margin:0;}
       </style>
@@ -84,9 +79,9 @@
             <div class="row">
                <div class="input-group col-md-8" >
                   <!-- SEARCH BOX -->
-                  <input type="text" class="form-control input-lg" placeholder="Search for patient" />
+                  <input type="text" class="form-control input-lg" placeholder="Search for patient" id="searchbox_patient"/>
                   <span class="input-group-btn">
-                     <button class="btn btn-info btn-lg" type="button" onclick="show_result()">
+                     <button class="btn btn-info btn-lg" type="button" onclick="search_patient();">
                         <i class="fa fa-search" aria-hidden="true"></i>
                      </button>
                   </span>
@@ -105,19 +100,20 @@
 
          <div class="container" id="patients" style="margin-top: 5%;">
             <!-- NEW ADDED PATIENTS DIV -->
-            <div class="row" style="margin-top: 5%;">
+            <div class="row" style="margin-top: 5%;" id="newPatientsDiv">
                   <div class="col-md-12" align="center" >
                      <h2> New added patients </h2>
                   </div>
             </div>
-
             <!-- THE PATIENT -->
+            <section id="patientFilter">
+
+            </section>
             
-            <!-- END PATIENT -->
-            
-            <div class="row">
+             <!-- ALL PATIENTS DIV -->
+            <div class="row" style="margin-top: 5%;" id="allPatientsDiv">
                <!-- ALL PATIENTS DIV -->
-               <div class="col-md-12" align="center" style="margin-top: 5%;" >
+               <div class="col-md-12" align="center" >
                   <h2> All patients </h2>
                </div>
             </div>
@@ -125,9 +121,8 @@
             <section id="patientSection">
                
             </section>
-      <!-- end section -->
 
-
+      <br>
       <!-- COPYRIGHTS -->
       <div class="copyright-area wow fadeIn">
          <div class="container">
