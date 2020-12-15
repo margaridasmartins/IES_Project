@@ -86,9 +86,27 @@ public class Patient extends User {
     }
 
     public Patient(String password, String username, String email, String fullname, 
-    int age, Date last_check, String current_state) {
-        super(password, username, email, fullname, age);
+    int age, String gender, Date last_check, String current_state, double height, double weight) {
+        super(password, username, email, fullname, age, gender);
         this.last_check = last_check;
         this.current_state = current_state;
+        this.height = height;
+        this.weight = weight;
+    }
+
+    public void addCondition(String cond){
+        this.med_conditions.add(cond);
+    }
+
+    public void removeCondition(String cond){
+        this.med_conditions.remove(cond);
+    }
+
+    public void addMedication(String med){
+        this.med_conditions.add(med);
+    }
+
+    public void removeMedication(String med){
+        this.med_conditions.remove(med);
     }
 }

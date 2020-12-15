@@ -41,16 +41,20 @@ public class User {
     @Column(name = "age")
     private int age;
 
+    @Column(name = "gender")
+    private String gender;
+
     public User(){
 
     }
     
-    public User(String password, String username, String email, String fullname, int age) {
+    public User(String password, String username, String email, String fullname, int age, String gender) {
         this.password = password;
         this.username = username;
         this.email = email;
         this.fullname = fullname;
         this.age = age;
+        this.gender = gender;
     }
 
     public String getEmail(){

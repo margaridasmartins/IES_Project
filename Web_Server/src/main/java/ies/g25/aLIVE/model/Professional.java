@@ -52,7 +52,7 @@ public class Professional extends User {
     }
 
     public Professional(String password, String username, String email, String fullname, 
-    int age, String workplace, String speciality, String type) {
+    int age, String gender, String workplace, String speciality, String type) {
         super(password, username, email, fullname, age);
         this.workplace = workplace;
         this.speciality = speciality;
