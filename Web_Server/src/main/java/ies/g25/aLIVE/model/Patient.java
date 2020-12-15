@@ -32,6 +32,20 @@ public class Patient extends User {
     @Column(name = "current_state")
     private String current_state;
 
+    @Column(name = "med_conditions")
+    private ArrayList<String> med_conditions;
+
+    @Column(name = "medication")
+    private ArrayList<String> medication; //dic medicamento:quantidade?
+
+    @Column(name = "weight")
+    private double weight;
+
+    @Column(name = "height")
+    private double height;
+
+
+
     //Assigned professional
     @ManyToOne
     @JoinColumn(name = "professional_id")
