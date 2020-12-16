@@ -6,6 +6,7 @@ import numpy as np
 import json
 import time
 import asyncio
+import os
 
 #---------------------------------------------------------------------
 
@@ -14,7 +15,7 @@ class Generator:
     def __init__(self, heartbeat):
         self.hearbeat = heartbeat
         # rabbit connections
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_IP')))
         self.channel = self.connection.channel()
 
     async def gen_heart_beats(self, heartbeat=80):

@@ -2,7 +2,7 @@ package ies.g25.aLIVE.model;
 
 import java.util.Date;
 import java.util.Set;
-
+import java.util.ArrayList;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
