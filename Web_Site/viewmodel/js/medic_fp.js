@@ -1,7 +1,6 @@
 $(document).ready(function () {
 
     userLogin = JSON.parse(localStorage.getItem('login'));
-    console.log(userLogin);
     allUsers = JSON.parse(localStorage.getItem('users'));
 
 
@@ -115,13 +114,92 @@ $(document).ready(function () {
 });
 
 function sortPositions(){
-
-    console.log("sort")
+    console.log("sortPositions");
+    var select, strValue, myPatientsArray, currentState;
+    select = document.getElementById("select_order");
+    strValue = select.value;
+    myPatientsArray = filter_doctorPatients();
+    if (strValue == "status"){
+        console.log("status");
+        document.getElementById("patientOrder").innerHTML = ""; 
+        myPatientsArray.sort(function(a, b){return a.currentState - b.currentState});
+        //console.log("SORTED ", myPatientsArray);
+        myPatientsArray.forEach(p => {
+            $("#newPatientsDiv").fadeOut();
+            $("#allPatientsDiv").fadeOut();
+            $("#patientOrder").append(`<div class="row" style="margin-top: 3%;">
+                                            <div class="col-md-12">
+                                                <a class="currentP" href="#" value="${p['id']}">
+                                                    <div class="card " style="background-color: lightgreen;" >
+                                                        <div class="card-body">
+                                                            <div class="row ">
+                                                                <div class="col-md-2 my-auto">
+                                                                    <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
+                                                                </div>
+                                                                <div class="col-md-3 my-auto"> 
+                                                                    <b>Name: </b> 
+                                                                    <em>${p['full_name']} </em>
+                                                                </div>
+                                                                <div class="col-md-2 my-auto">
+                                                                    <b>Age: </b>
+                                                                    <em>${p['age']} </em>
+                                                                </div>
+                                                                
+                                                                <div class="col-md-3 my-auto" id="date">
+                                                                    <b>Last Check: </b>
+                                                                    <em>${new Date(p['last_check']).toLocaleDateString()} </em>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>`)
+            });
+        };
+        if (strValue == "last"){
+            console.log("last");
+            document.getElementById("patientOrder").innerHTML = ""; 
+            myPatientsArray.sort(function(a, b){return new Date(a.last_check).toLocaleDateString() - new Date(b.last_check).toLocaleDateString()});
+            //console.log("SORTED ", myPatientsArray);
+            myPatientsArray.forEach(p => {
+                $("#newPatientsDiv").fadeOut();
+                $("#allPatientsDiv").fadeOut();
+                $("#patientOrder").append(`<div class="row" style="margin-top: 3%;">
+                                                <div class="col-md-12">
+                                                    <a class="currentP" href="#" value="${p['id']}">
+                                                        <div class="card " style="background-color: lightgreen;" >
+                                                            <div class="card-body">
+                                                                <div class="row ">
+                                                                    <div class="col-md-2 my-auto">
+                                                                        <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
+                                                                    </div>
+                                                                    <div class="col-md-3 my-auto"> 
+                                                                        <b>Name: </b> 
+                                                                        <em>${p['full_name']} </em>
+                                                                    </div>
+                                                                    <div class="col-md-2 my-auto">
+                                                                        <b>Age: </b>
+                                                                        <em>${p['age']} </em>
+                                                                    </div>
+                                                                    
+                                                                    <div class="col-md-3 my-auto" id="date">
+                                                                        <b>Last Check: </b>
+                                                                        <em>${new Date(p['last_check']).toLocaleDateString()} </em>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>`)
+            });
+        };
 }
 
 function search_patient(){
     console.log("search_patient");
-    var input, filter, patientName, li;
+    var input, filter, patientName, myPatientsArray;
     input = document.getElementById("searchbox_patient");
     filter = input.value.toUpperCase();
     myPatientsArray = filter_doctorPatients();
@@ -184,16 +262,15 @@ function selectPatient(id){
     })
 };
 
-
 function filter_doctorPatients(){
     $.ajax({
         url: "http://localhost:8080/api/users"
     }).then(function(data) {
+        var myPatients = [];
         data.forEach(p=>{
             if(p.doctorID == userLogin['id']){
-                var myPatients = [];
                 myPatients.push(p);
-                console.log(myPatients);
+                //console.log(myPatients);
             }
             
         });
@@ -201,3 +278,16 @@ function filter_doctorPatients(){
     });
 }; 
 
+
+// FOR LOCAL TESTING
+/* function filter_doctorPatients(){
+    //console.log(allUsers);
+    var myPatients = [];
+    allUsers.forEach(p => {
+        if(p['doctorID'] == userLogin.id){
+            myPatients.push(p);   
+        }
+    });
+    //console.log("MY PATIENTS ", myPatients);
+    return myPatients;
+}; */
