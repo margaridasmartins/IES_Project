@@ -30,7 +30,7 @@
       <!-- Modernizer for Portfolio -->
       <script src="js/modernizer.js"></script>
       <!-- [if lt IE 9] -->
-      <script src="js/login_register.js"></script>
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
    </head>
    <body class="clinic_version">
       <!-- LOADER -->
@@ -70,13 +70,12 @@
          <div class="container">
             <div class="row">
                <!-- LOGIN-->
-               <div class=".col-6 .col-md-4" style="width:36%;">
+               <div class=".col-6 .col-md-4" style="width:50%; float: left">
                <section class="left-section">
-                    <div id="left-cover" class="cover cover-hide" style="display: block;">
-                    <div class="appointment-form">
-                        <h3>REGISTAR ASSISTENTE DE SAÚDE</h3>
+                    <div id="left-cover" style="display: block;">
+                    <div class="appointment-form2">
                         <div class="center">
-                            <input type="button" value="REGISTAR" name="loginButton" id="loginButton" class="switch-btn" onclick="switchSignupAssistente()">
+                            <input type="button" value="REGISTER ASSISTANT" name="loginButton" id="registerButtom" class="switch-btn" onclick="switchSignupAssistente()">
                         </div>
                     </div>
                     </div>
@@ -90,10 +89,13 @@
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="row">
                                             <div class="form-group">
-                                            <input type="email" name="loginEmail" id="loginEmail" value="" placeholder="Email">
-                                            <input type="password" name="loginPassword" id="loginPassword" value="" placeholder="Password">
+                                             <input type="name" name="regName" id="regName" value="" placeholder="Full Name">
+                                             <input type="email" name="regEmail" id="regEmail" value="" placeholder="Email">
+                                                 
+                                             <input type="password" name="regPass" id="regPass" value="" placeholder="Type a Password">
+                                             <input type="password" name="regPass2" id="regPass2" value="" placeholder="Repeat Password">
                                             <div class="center">
-                                                <input type="button" value="REGISTAR" name="loginButton" id="loginButton">
+                                                <input type="button" value="REGISTER" name="resButton" id="registerAssis">
                                             </div>
                                             <p class="text-danger mt-5 mb-0 d-none" id="loginError"></p>
                                             </div>
@@ -106,17 +108,13 @@
                     </div>
                 </section>
                 </div>
-                <div class=".col-6 .col-md-4">
-
-                </div>
                <!-- FINAL LOGIN-->
-               <div class=".col-6 .col-md-4" style="width:36%; float: right;">
+               <div class=".col-6 .col-md-4" style="width:50%; float: right;">
                <section class="right-section">
-                    <div id="right-cover" class="cover fade-in-element" style="display: block;">
-                        <div class="appointment-form">
-                            <h3>REGISTAR UTENTE</h3>
+                    <div id="right-cover" style="display: block;">
+                        <div class="appointment-form2">
                             <div class="center">
-                                <input type="button" value="REGISTAR" name="loginButton" id="loginButton"  class="switch-btn" onclick="switchSignupPaciente()">
+                                <input type="button" value="REGISTER PATIENT" name="loginButton" id="registerButtom"  class="switch-btn" onclick="switchSignupPaciente()">
                             </div>
                         </div>
                     </div>
@@ -130,12 +128,49 @@
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="row">
                                         <div class="form-group">
-                                            <input type="email" name="loginEmail" id="loginEmail" value="" placeholder="Email">
-                                            <input type="password" name="loginPassword" id="loginPassword" value="" placeholder="Password">
+                                            <input type="name" name="registerName" id="registerName" value="" placeholder="Full Name">
+                                            <input type="email" name="registerEmail" id="registerEmail" value="" placeholder="Email">
+                                             <div class ="container-fluid">
+                                                <div class ="row">
+                                                   <div class ="col-md-6 col-sm-6">
+                                                      <input type="age" name="registerAge" id="registerAge" value="" placeholder="Age">
+                                                   </div>
+                                                   <div class ="col-md-6 col-sm-6">
+                                                         
+                                                         <select name="genre" id="registerGenre">
+                                                            <option value="Male">Male</option>
+                                                            <option value="Female">Female</option>
+                                                         </select>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div class ="container-fluid">
+                                                <div class ="row">
+                                                   <div class ="col-md-6 col-sm-6">
+                                                      <input type="weight" name="registerWeight" id="registerWeight" value="" placeholder="Weight">
+                                                   </div>
+                                                   <div class ="col-md-6 col-sm-6">
+                                                      <input type="height" name="registerHeight" id="registerHeight" value="" placeholder="Height">
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div>
+                                             <label for="diseases">Diseases and Conditions:</label>
+
+                                             <textarea id="diseases" name="diseases" rows="4" cols="50"></textarea>
+                                             </div>
+                                             <div>
+                                             <label for="medication"> Medication:</label>
+
+                                             <textarea id="medication" name="medication" rows="4" cols="50"></textarea>
+                                             <input type="asis" name="assis" id="assis" value="" placeholder="Type Assistent email">
+                                             <input type="password" name="registerPass" id="registerPass" value="" placeholder="Type a Password">
+                                            <input type="password" name="registerPass2" id="registerPass2" value="" placeholder="Repeat Password">
+                                          </div>
                                             <div class="center">
-                                                <input type="button" value="REGISTAR" name="loginButton" id="loginButton">
+                                                <input type="button" value="REGISTER" name="resButton2" id="registerPatient">
                                             </div>
-                                            <p class="text-danger mt-5 mb-0 d-none" id="loginError"></p>
+                                            <p class="text-danger mt-5 mb-0 d-none" id="registerError"></p>
                                         </div>
                                     </div>
                                     </div>
@@ -146,7 +181,11 @@
                     </div>
                 </section>
             </div>
+            
             </div>
+            <div style="width: 40%; margin:0 auto; padding: 50px;">
+                     <input type="button" value="Already have an account?" name="loginButton" id="toLoginButton"  class="switch-btn" onclick="location.href='login.html'">
+                </div>
          </div>
          <br>
       </div>
@@ -154,10 +193,7 @@
 
       <!-- FOOTER-->
       <footer id="footer" class="footer-area wow fadeIn">
-        <div class="row">
-            <div class="col-sm-6"><p>OLA</p></div>
-            <div class="col-sm-6"><p>OLA</p></div>
-          </div>
+      
          <div class="container" id="getintouch">
             <div class="row">
                <div class="col-md-4">
@@ -234,5 +270,6 @@
       <script src="js/custom.js"></script>
       <!-- LOGIN JS -->
      <script src="viewmodel/js/login.js"></script>
+     <script src="viewmodel/js/login_register.js"></script>
    </body>
 </html>

@@ -212,6 +212,34 @@ header {
     box-shadow: 0 0 50px -22px rgba(0,0,0,0.3);
     padding: 20px;
 }
+.appointment-form2 {
+    float: left;
+    width: 100%;
+    background: #fff;
+    opacity: 0.9;
+    min-height: 100px;
+    box-shadow: 0 0 50px -22px rgba(0,0,0,0.3);
+    padding: 20px;
+}
+#registerButtom{
+    float: left;
+    margin: 0;
+    background: linear-gradient(to right, #39b49a 0%, #1d86df 100%);
+    width: 100%;
+    color: #fff;
+    padding: 15px 25px;
+    font-size: 18px;
+    font-weight: 600;
+}
+#toLoginButton{
+    margin: 0;
+    background: linear-gradient(to right, #a3e9da 0%, #c1f5f5 100%);
+    width: 100%;
+    color: #234c70;
+    padding: 15px 25px;
+    font-size: 18px;
+    font-weight: 600;
+}
 .appointment-form h3 {
     float: left;
     margin: 0;
