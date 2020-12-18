@@ -53,15 +53,13 @@ class Generator:
             await asyncio.sleep(2)
     
     async def gen_sugar_level(self):
-        before_mu = 5.0
-        after_mu = 6.9
+        mu = 5.0
         sigma = 1.0
 
         while True:
-            before = np.random.randn(1) * sigma + before_mu
-            after = np.random.randn(1) * sigma + after_mu
+            sugar = np.random.randn(1) * sigma + mu
 
-            json_text = {'id': 4, 'after': float(after), 'before': float(before)}
+            json_text = {'id': 4, 'sugar': float(sugar)}
             self.channel.basic_publish(exchange='logs', routing_key='', body= json.dumps(json_text))
             await asyncio.sleep(2)
 
