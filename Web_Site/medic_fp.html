@@ -33,11 +33,6 @@
       <!-- Modernizer for Portfolio -->
       <script src="js/modernizer.js"></script>
       <!-- [if lt IE 9] -->
-      <script>
-         function show_result(){
-            $('#patients').html($('#joao').html());
-         }
-      </script>
       <style>
          p {margin:0;}
       </style>
@@ -84,18 +79,18 @@
             <div class="row">
                <div class="input-group col-md-8" >
                   <!-- SEARCH BOX -->
-                  <input type="text" class="form-control input-lg" placeholder="Search for patient" />
+                  <input type="text" class="form-control input-lg" placeholder="Search for patient" id="searchbox_patient"/>
                   <span class="input-group-btn">
-                     <button class="btn btn-info btn-lg" type="button" onclick="show_result()">
+                     <button class="btn btn-info btn-lg" type="button" onclick="search_patient();">
                         <i class="fa fa-search" aria-hidden="true"></i>
                      </button>
                   </span>
                </div>
                <div class="input-group col-md-3 offset-1 d-flex justify-content-end" >
                   <!-- ORDER BY SELECTION -->
-                  <select class="form-control d-flex align-self-center">
-                     <option>Order by Last Checked</option>
-                     <option>Order by Health status</option>
+                  <select class="form-control d-flex align-self-center" id="select_order" onchange="sortPositions();">
+                     <option value="last">Order by Last Checked</option>
+                     <option value="status">Order by Health status</option>
                   </select>
                </div>
             </div>
@@ -105,132 +100,34 @@
 
          <div class="container" id="patients" style="margin-top: 5%;">
             <!-- NEW ADDED PATIENTS DIV -->
-            <div class="row" style="margin-top: 5%;">
+            <div class="row" style="margin-top: 5%;" id="newPatientsDiv">
                   <div class="col-md-12" align="center" >
                      <h2> New added patients </h2>
                   </div>
             </div>
+            <!-- THE PATIENT -->
+            <section id="patientFilter">
+
+            </section>
 
             <!-- THE PATIENT -->
-            <section id="patientSection">
-               
+            <section id="patientOrder">
+
             </section>
-            <!-- END PATIENT -->
             
-            <div class="row">
+             <!-- ALL PATIENTS DIV -->
+            <div class="row" style="margin-top: 5%;" id="allPatientsDiv">
                <!-- ALL PATIENTS DIV -->
-               <div class="col-md-12" align="center" style="margin-top: 5%;" >
+               <div class="col-md-12" align="center" >
                   <h2> All patients </h2>
                </div>
             </div>
             <!-- THE PATIENT -->
-            <div class="row  " style="margin-top: 3%;">
-               <div class="col-md-12">
-                  <a href="utente_info.html" >
-                     <div class="card " style="background-color: #FFFF66;" >
-                        <div class="card-body">
-                           <div class="row">
-                              <div class="col-md-2 my-auto">
-                                 <img src="./images/old_woman.jpg" style="max-width:100px; max-height:100px;">
-                              </div>
-                              <div class="col-md-4 my-auto"> 
-                                 <p><b>Name: </b> Rosália Josefina</p>
-                              </div>
-                              <div class="col-md-2 my-auto">
-                                 <p><b>Age: </b> 81</p>
-                              </div>
-                              <div class="col-md-4 my-auto">
-                                 <p><b>Last Check: </b> 25/11/2020</p>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </a>
-               </div>
-            </div>
-            <!-- END PATIENT -->
-            <div class="row">
-               <div class="col-md-12">
-                  <a href="utente_info.html" >
-                     <div class="card " style="background-color: lightgreen;" >
-                        <div class="card-body">
-                           <div class="row">
-                              <div class="col-md-2 my-auto">
-                                 <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
-                              </div>
-                              <div class="col-md-4 my-auto"> 
-                                 <p><b>Name: </b> Manel Fernandes</p>
-                              </div>
-                              <div class="col-md-2 my-auto">
-                                 <p><b>Age: </b> 61</p>
-                              </div>
-                              <div class="col-md-4 my-auto">
-                                 <p><b>Last Check: </b> 23/11/2020</p>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </a>
-               </div>
-            </div>
-            <div class="row">
-               <div class="col-md-12">
-                  <a href="utente_info.html" >
-                     <div class="card " style="background-color: lightcoral;" >
-                        <div class="card-body">
-                           <div class="row">
-                              <div class="col-md-2 my-auto">
-                                 <img src="./images/old_woman.jpg" style="max-width:100px; max-height:100px;">
-                              </div>
-                              <div class="col-md-4 my-auto "> 
-                                 <p><b>Name: </b> Carminda Rodrigues</p>
-                              </div>
-                              <div class="col-md-2 my-auto">
-                                 <p><b>Age: </b> 68</p>
-                              </div>
-                              <div class="col-md-3 my-auto">
-                                 <p><b>Last Check: </b> 30/11/2020</p>
-                              </div>
-                              <div class="col-md-1 my-auto">
-                                 <img src="./images/danger.png" style="max-width:50px; max-height:50px;">
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </a>
-               </div>
-            </div>
-            <div class="row">
-               <div class="col-md-12">
-                  <a href="utente_info.html" >
-                     <div class="card " style="background-color: #FFFF66;" >
-                        <div class="card-body">
-                           <div class="row">
-                              <div class="col-md-2 my-auto">
-                                 <img src="./images/old_woman.jpg" style="max-width:100px; max-height:100px;">
-                              </div>
-                              <div class="col-md-4 my-auto "> 
-                                 <p><b>Name: </b> Elvira Santos</p>
-                              </div>
-                              <div class="col-md-2 my-auto">
-                                 <p><b>Age: </b> 98</p>
-                              </div>
-                              <div class="col-md-4 my-auto">
-                                 <p><b>Last Check: </b> 28/11/2020</p>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </a>
-               </div>
-            </div>
-            <!-- END PATIENT -->
-         </div>
-         <!-- end container -->
-      </div>
-      <!-- end section -->
+            <section id="patientSection">
+               
+            </section>
 
-
+      <br>
       <!-- COPYRIGHTS -->
       <div class="copyright-area wow fadeIn">
          <div class="container">

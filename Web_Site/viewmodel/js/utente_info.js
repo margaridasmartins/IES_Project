@@ -14,7 +14,7 @@ $(document).ready(function () {
         $('#cstatus').attr('href','utente.html');
     }
     // Add content to HTML
-    $("#patientFullName").text(currentPatient['full_name']);
+    $("#patientFullName").text(currentPatient['fullname']);
     $("#patientAge").text(currentPatient['age']);
     if (currentPatient['genre']== "M"){
         $("#patientGenre").text("Male");
@@ -178,8 +178,6 @@ $(document).ready(function () {
     });
 
 });
-
-
 // CHARTS
 
 // Heart Rate
@@ -188,124 +186,146 @@ google.charts.setOnLoadCallback(draw_HeartRateChart);
 var currentPatient = localStorage.getItem('currentPatient');
 //console.log(userLogin);
 function draw_HeartRateChart() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('date', 'Day');
-    data.addColumn('number', 'Beats Per Minute');
-    // Get users data
-    (currentPatient['health_data']['heart_rate']).forEach(element => {
-        var date = element['when'].split("T")[0].split("-");
-        var value = element['value'];
-        //console.log(date, value);
-        data.addRows([
-            [new Date(date[0], date[1]-1, date[2]), value]
-        ]);
-    });
-   
-    var options = {
-        title: 'Resting Heart Rate',
-        height: 350,
-        hAxis: { title: 'Time' },
-        vAxis: { title: 'Heart Raten in BPM' },
-        legend: { position: "none" },
-        tooltip: {isHtml: true}
-    };
-   
-    var chart = new google.visualization.LineChart(document.getElementById('heartrate_chart'));
-    chart.draw(data, options);
-    
+    $.ajax({
+        url: 'http://localhost:8080/api/data/heartrate/'+currentPatient['id'],
+        dataType: 'json',
+     }).done(function (results) {
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Day');
+        data.addColumn('number', 'Beats Per Minute');
+        // Get users data
+        results.forEach(elem =>{
+            //console.log(elem)
+
+            var date = elem['date'].split("-");
+            var value = elem['heartRate'];
+            //console.log(date, value);
+            data.addRows([
+                [new Date(date[0], date[1]-1, date[2]), value]
+            ]);
+        })
+        
+        var options = {
+            title: 'Resting Heart Rate',
+            height: 350,
+            hAxis: { title: 'Time' },
+            vAxis: { title: 'Heart Raten in BPM' },
+            legend: { position: "none" },
+            tooltip: {isHtml: true}
+        };
+        
+        var chart = new google.visualization.LineChart(document.getElementById('heartrate_chart'));
+        chart.draw(data, options);
+     })
 }
 
 // Blood Pressure
 google.charts.load('current', {'packages':['bar']});
 google.charts.setOnLoadCallback(draw_BloodPressureChart);
 function draw_BloodPressureChart() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('date', 'Day');
-    data.addColumn('number', 'Diastolic, mm Hg');
-    data.addColumn('number', 'Systolic, mm Hg');
+    $.ajax({
+        url: 'http://localhost:8080/api/data/bloodpressure/'+currentPatient['id'],
+        dataType: 'json',
+     }).done(function (results) {
+         console.log(results)
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Day');
+        data.addColumn('number', 'Diastolic, mm Hg');
 
-    // Get users data
-    (currentPatient['health_data']['blood_pressure']).forEach(element => {
-        var date = element['when'].split("T")[0].split("-");
-        var value_diast = element['value_diast'];
-        var value_sys = element['value_sys'];
-        //console.log(date, value_diast, value_sys);
-        data.addRows([
-            [new Date(date[0], date[1]-1, date[2]), value_diast, value_sys]
-        ]);
-    });
+        // Get users data
+        results.forEach(elem =>{
+            var date = elem['date'].split("-");
+            var high_value = elem['high_value'];
+            var low_value = elem['low_value'];
+            //console.log(date, value_diast, value_sys);
+            data.addRows([
+                [new Date(date[0], date[1]-1, date[2]), low_value]
+            ]);
+        })
 
-    var options = {
-        chart: {
-            title: 'Blood Pressure',
-            subtitle: 'Diastolic and Systolic'
-        },
-        height: 350,
-        hAxis: { title: 'Day' },
-        vAxis: { title: 'Blood Pressure, in mm Hg' },
-        legend: { position: "top" }
-    };
-    var chart = new google.charts.Bar(document.getElementById('bloodpressure_chart'));
-    chart.draw(data, google.charts.Bar.convertOptions(options));
+        var options = {
+            chart: {
+                title: 'Blood Pressure',
+                subtitle: 'Diastolic'
+            },
+            height: 350,
+            hAxis: { title: 'Day' },
+            vAxis: { title: 'Blood Pressure, in mm Hg' },
+            legend: { position: "top" }
+        };
+     
+        var chart = new google.charts.Bar(document.getElementById('bloodpressure_chart'));
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+    })
 }
 
 // Temperatue
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(draw_TemperatureChart);
 function draw_TemperatureChart() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('date', 'Day');
-    data.addColumn('number', 'C*');
+    $.ajax({
+        url: 'http://localhost:8080/api/data/bodytemperature/'+currentPatient['id'],
+        dataType: 'json',
+     }).done(function (results) {
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Day');
+        data.addColumn('number', 'C*');
 
-    // Get users data
-    (currentPatient['health_data']['body_temperature']).forEach(element => {
-        var date = element['when'].split("T")[0].split("-");
-        var value = element['value'];
-        console.log(date, value);
-        data.addRows([
-            [new Date(date[0], date[1]-1, date[2]), value]
-        ]);
-    });
+        // Get users data
+        results.forEach(element =>{
+            var date = element['date'].split("-");
+            var value = element['bodyTemp'];
+            //console.log(date, value);
+            data.addRows([
+                [new Date(date[0], date[1]-1, date[2]), value]
+            ]);
+        })
 
-    var options = {
-        title: 'Body Temperature',
-        height: 350,
-        hAxis: { title: 'Day' },
-        vAxis: { title: 'Temperature, in C*' },
-        legend: { position: "none" },
-        tooltip: {isHtml: true}
-    };
+        var options = {
+            title: 'Body Temperature',
+            height: 350,
+            hAxis: { title: 'Day' },
+            vAxis: { title: 'Temperature, in C*' },
+            legend: { position: "none" },
+            tooltip: {isHtml: true}
+        };
 
-    var chart = new google.visualization.LineChart(document.getElementById('bodytemperature_chart'));
-    chart.draw(data, options);
+        var chart = new google.visualization.LineChart(document.getElementById('bodytemperature_chart'));
+        chart.draw(data, options);
+    })
 }
 
 // Blood Sugar
 google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(draw_BloodSugarChart);
 function draw_BloodSugarChart() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('date', 'Day');
-    data.addColumn('number', 'mg/dL');
+    $.ajax({
+        url: 'http://localhost:8080/api/data/sugarlevel/'+currentPatient['id'],
+        dataType: 'json',
+     }).done(function (results) {
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Day');
+        data.addColumn('number', 'mg/dL');
 
-    // Get users data
-    (currentPatient['health_data']['blood_glucose']).forEach(element => {
-        var date = element['when'].split("T")[0].split("-");
-        var value = element['value'];
-        console.log(date, value);
-        data.addRows([
-            [new Date(date[0], date[1]-1, date[2]), value]
-        ]);
-    });
+        // Get users data
+        results.forEach(element =>{
+            var date = element['date'].split("-");
+            var value = element['sugar_level'];
+            //console.log(date, value);
+            data.addRows([
+                [new Date(date[0], date[1]-1, date[2]), value]
+            ]);
+        })
 
-    var options = {
-        title: "Blood Glucose Level",
-        height: 350,
-        hAxis: { title: 'Day' },
-        vAxis: { title: 'Blood Glucose, in mg/dL' },
-        legend: { position: "none" },
-        tooltip: {isHtml: true}
-    };
-    var chart = new google.visualization.ColumnChart(document.getElementById('bloodglucose_chart'));
-    chart.draw(data, options);
+        var options = {
+            title: "Blood Glucose Level",
+            height: 350,
+            hAxis: { title: 'Day' },
+            vAxis: { title: 'Blood Glucose, in mg/dL' },
+            legend: { position: "none" },
+            tooltip: {isHtml: true}
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById('bloodglucose_chart'));
+        chart.draw(data, options);
+     })
 }

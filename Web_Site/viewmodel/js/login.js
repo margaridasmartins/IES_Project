@@ -10,17 +10,15 @@ $(document).ready(function () {
         localStorage.setItem('users', JSON.stringify(json));
     });
 
-    /* localStorage.setItem('users',JSON.stringify([
-        {"email": "user@teste.pt", "password": "teste", "username": "johndoe123","type":"patient", "full_name": "John"},
-        {"email": "medic@teste.pt", "password":"teste", "username": "medic","type":"medic", "full_name": "Sample Medic"}
-    ]
-        
-    )); */
-
     // Login
+
     $("#loginButton").click(function(){
+        getUsers(function(users){
+            console.log(users)
+        });
+
         $("#loginError").removeClass("d-none");
-        $("#loginError").hide();
+            $("#loginError").hide();
         // Get data from "db"
         users = JSON.parse(localStorage.getItem('users'));
         console.log(users)
@@ -66,3 +64,11 @@ $(document).ready(function () {
     });
 
 });
+// Get users from API
+function getUsers(handleData){
+    $.ajax({
+        url: "http://localhost:8080/api/users"
+    }).then(function(data) {
+        handleData(data);
+    });
+};
