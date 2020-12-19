@@ -1,7 +1,7 @@
 //data de recolha, id paciente, mg/dL value
 package ies.g25.aLIVE.model;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +25,7 @@ public class SugarLevel{
     // date of the mesure
     @Column(name="date",nullable = false, updatable = false)
     @CreationTimestamp
-    private Date date;
+    private LocalDateTime date;
 
     // Sugar level values
     @Column(name="sugar_level")
@@ -50,7 +50,7 @@ public class SugarLevel{
         return this.sugar_level;
     }
 
-    public Date getDate(){
+    public LocalDateTime getDate(){
         return this.date;
     }
     public Patient getPatient(){

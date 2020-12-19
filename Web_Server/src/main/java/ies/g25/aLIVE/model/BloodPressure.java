@@ -1,7 +1,8 @@
 //data de recolha, id paciente, high and low values
 package ies.g25.aLIVE.model;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +26,7 @@ public class BloodPressure{
     // date of the mesure
     @Column(name="date",nullable = false, updatable = false)
     @CreationTimestamp
-    private Date date;
+    private LocalDateTime date;
 
     // Blood Pressure values
     @Column(name = "high_value")
@@ -60,7 +61,7 @@ public class BloodPressure{
         return this.low_value;
     }
 
-    public Date getDate(){
+    public LocalDateTime getDate(){
         return this.date;
     }
     public Patient getPatient(){

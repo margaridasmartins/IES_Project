@@ -91,16 +91,9 @@ public class SensorReceiver {
                 Integer id1 = (Integer) jo1.get("id"); 
                 BloodPressure bp = new BloodPressure();
                 bp.setLow_value(low.doubleValue());
-                bp.setLow_value(high.doubleValue());
+                bp.setHigh_value(high.doubleValue());
                 controller.createBloodPressure(Long.valueOf(id1), bp);
                 break;
-                /*
-                BloodPressure bp = new BloodPressure();
-                String[] val = in.split("-");
-                bp.setHigh_value(Double.parseDouble(val[0]));
-                bp.setLow_value(Double.parseDouble(val[1]));
-                controller.createBloodPressure(1, bp);
-                */
 
             case 4:
                 JSONObject jo2 = new JSONObject(in);
@@ -109,11 +102,6 @@ public class SensorReceiver {
                 Integer id2 = (Integer) jo2.get("id");
                 bt.setbodyTemp(body_temp.doubleValue());
                 controller.createBodyTemperature(Long.valueOf(id2), bt);
-                /*
-                BodyTemperature bt = new BodyTemperature();
-                bt.setbodyTemp(Double.parseDouble(in));
-                controller.createBodyTemperature(1, bt);
-                */
                 break;
         
             default:
