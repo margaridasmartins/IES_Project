@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
@@ -41,16 +42,24 @@ public class User {
     @Column(name = "age")
     private int age;
 
+    @Column(name = "gender")
+    private String gender;
+
+    @Lob
+    @Column(name="picture",  columnDefinition="mediumblob")
+    private byte[] image;
+
     public User(){
 
     }
     
-    public User(String password, String username, String email, String fullname, int age) {
+    public User(String password, String username, String email, String fullname, int age, String gender) {
         this.password = password;
         this.username = username;
         this.email = email;
         this.fullname = fullname;
         this.age = age;
+        this.gender = gender;
     }
 
     public String getEmail(){
@@ -59,6 +68,14 @@ public class User {
 
     public Long getId(){
         return this.id;
+    }
+
+    public void setImage(byte[] img){
+        this.image = img;
+    }
+
+    public byte[] getImage(){
+        return this.image;
     }
 }
 

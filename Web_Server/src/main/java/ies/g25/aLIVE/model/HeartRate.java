@@ -1,8 +1,7 @@
 //data de recolha, id paciente, beats per minute
 package ies.g25.aLIVE.model;
 
-
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,7 +25,7 @@ public class HeartRate{
     // date of the mesure
     @Column(name="date",nullable = false, updatable = false)
     @CreationTimestamp
-    private Date date;
+    private LocalDateTime date;
 
     // Hert Rate values
     @Column(name="heartRate",nullable = false)
@@ -51,7 +50,7 @@ public class HeartRate{
         return this.heartRate;
     }
 
-    public Date getDate(){
+    public LocalDateTime getDate(){
         return this.date;
     }
     public Patient getPatient(){
