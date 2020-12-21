@@ -58,6 +58,11 @@ services:
       dockerfile: Dockerfile
     ports: 
       - '8000:80'
+    depends_on:
+      - db
+      - rabbit
+      - web-server
+      - sensing
     volumes: 
       - ./src:/etc/share/nginx/html
     
