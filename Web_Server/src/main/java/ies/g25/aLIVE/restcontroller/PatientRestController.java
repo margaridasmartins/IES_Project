@@ -1,16 +1,15 @@
 package ies.g25.aLIVE.restcontroller;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.validation.Valid;
-import java.time.LocalDateTime;
 
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.hibernate.type.descriptor.java.LocalDateTimeJavaDescriptor;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -185,6 +185,24 @@ public class PatientRestController {
             throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
         } 
 
+    }
+
+    @GetMapping("/{pid}/latest")
+    @ResponseBody
+    public List<Object> getLatestValues(@PathVariable(value = "pid") long pid) throws ResourceNotFoundException {
+        Sort sort = Sort.by("date").ascending().descending();
+        Optional<Patient> op=patientRepository.findById(pid);
+        if(op.isPresent()){
+            List<Object> list = new ArrayList<Object>();
+            Patient p = op.get();
+            list.add(bloodPressureRepository.findFirstByPatient(p, sort));
+            list.add(bodyTemperatureRepository.findFirstByPatient(p, sort));
+            list.add(heartRateRepository.findFirstByPatient(p, sort));
+            list.add(sugarLevelRepository.findFirstByPatient(p, sort));
+
+             return list;
+        }
+        throw new ResourceNotFoundException("Patient not found for this id: " + pid);
     }
 
 }

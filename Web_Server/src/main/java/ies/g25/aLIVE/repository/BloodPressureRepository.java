@@ -1,14 +1,16 @@
 package ies.g25.aLIVE.repository;
 
-import org.springframework.stereotype.Repository;
+import java.time.LocalDateTime;
+import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import java.time.LocalDateTime;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import ies.g25.aLIVE.model.*;
+import ies.g25.aLIVE.model.BloodPressure;
+import ies.g25.aLIVE.model.Patient;
 
 
 
@@ -19,4 +21,6 @@ public interface BloodPressureRepository extends JpaRepository<BloodPressure, Lo
     List<BloodPressure> findByPatientLessThanMonth(@Param("cdate") LocalDateTime cdate, @Param("patientID") Long id);
 
     List<BloodPressure> findByPatient(Patient p);
+
+    BloodPressure findFirstByPatient(Patient p, Sort sort);
 }

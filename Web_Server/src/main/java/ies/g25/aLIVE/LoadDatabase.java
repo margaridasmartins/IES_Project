@@ -23,11 +23,11 @@ class LoadDatabase {
 
     return args -> {
       log.info("Preloading " + Prep.save(new Patient("pass1", "manel123", "manel@jmail.com", "Manel Ribeiro", 
-      62,"Male", new Date(), "good",1.75,67)));
+      62,"Male", new Date(), "",1.75,67)));
       Patient p1 = new Patient("pass2", "silvia69", "silv@dmail.com", "Silvia Matos", 
-      74,"Female", new Date(), "very good", 1.66,70);
+      74,"Female", new Date(), "", 1.66,70);
       log.info("Preloading " + Prep.save(p1));
-      Patient p = new Patient("pass3", "ze321", "ze@dmail.com", "Zé Matos", 75,"Male", new Date(), "very good",1.69,80);
+      Patient p = new Patient("pass3", "ze321", "ze@dmail.com", "Zé Matos", 75,"Male", new Date(), "",1.69,80);
       log.info("Preloading " + Prep.save(p));
       Sensor s1 =new Sensor( p);
       log.info("Preloading " + String.valueOf(p.getId()));
