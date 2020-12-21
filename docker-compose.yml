@@ -52,5 +52,12 @@ services:
     environment:
       RABBITMQ_IP: rabbit
     restart: on-failure
+  client:
+    image: nginx
+    ports: 
+      - 8000:80
+    volumes: 
+      - ./src:/etc/share/nginx/html
+    
 volumes:
   db-data:
