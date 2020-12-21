@@ -53,9 +53,11 @@ services:
       RABBITMQ_IP: rabbit
     restart: on-failure
   client:
-    image: nginx
+    build:
+      context: Web_Site
+      dockerfile: Dockerfile
     ports: 
-      - 8000:80
+      - '8000:80'
     volumes: 
       - ./src:/etc/share/nginx/html
     
