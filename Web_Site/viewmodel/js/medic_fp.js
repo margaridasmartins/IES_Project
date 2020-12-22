@@ -84,7 +84,7 @@ $(document).ready(function () {
                                                                 </div>
                                                                 <div class="col-md-3 my-auto"> 
                                                                     <b>Name: </b> 
-                                                                    <em>${p['full_name']} </em>
+                                                                    <em>${p['fullname']} </em>
                                                                 </div>
                                                                 <div class="col-md-2 my-auto">
                                                                     <b>Age: </b>
@@ -138,7 +138,7 @@ function sortPositions(){
                                                                 </div>
                                                                 <div class="col-md-3 my-auto"> 
                                                                     <b>Name: </b> 
-                                                                    <em>${p['full_name']} </em>
+                                                                    <em>${p['fullname']} </em>
                                                                 </div>
                                                                 <div class="col-md-2 my-auto">
                                                                     <b>Age: </b>
@@ -176,7 +176,7 @@ function sortPositions(){
                                                                     </div>
                                                                     <div class="col-md-3 my-auto"> 
                                                                         <b>Name: </b> 
-                                                                        <em>${p['full_name']} </em>
+                                                                        <em>${p['fullname']} </em>
                                                                     </div>
                                                                     <div class="col-md-2 my-auto">
                                                                         <b>Age: </b>
@@ -205,7 +205,7 @@ function search_patient(){
     myPatientsArray = filter_doctorPatients();
 
     myPatientsArray.forEach(p => {
-        patientName = p['full_name'].toUpperCase();
+        patientName = p['fullname'].toUpperCase();
         if(patientName.indexOf(filter) > -1){
             $("#newPatientsDiv").fadeOut();
             $("#allPatientsDiv").fadeOut();
@@ -220,7 +220,7 @@ function search_patient(){
                                                                 </div>
                                                                 <div class="col-md-3 my-auto"> 
                                                                     <b>Name: </b> 
-                                                                    <em>${p['full_name']} </em>
+                                                                    <em>${p['fullname']} </em>
                                                                 </div>
                                                                 <div class="col-md-2 my-auto">
                                                                     <b>Age: </b>
