@@ -5,9 +5,16 @@ $(document).ready(function () {
         window.location.replace('user.html'); */
 
     // Load users database
-    $.getJSON("https://itskikat.github.io/ies_itskikat/DB/users.json", function(json) {
+    /* $.getJSON("https://itskikat.github.io/ies_itskikat/DB/users.json", function(json) {
         console.log(json)
         localStorage.setItem('users', JSON.stringify(json));
+    }); */
+    
+    $.ajax({
+        url: "http://localhost:8080/api/users"
+        }).then(function(data) {
+            console.log(data);
+            localStorage.setItem('users', JSON.stringify(json));
     });
 
     // Login
