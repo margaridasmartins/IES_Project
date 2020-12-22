@@ -1,9 +1,10 @@
 package ies.g25.aLIVE.rabbitmq;
 
 import java.math.BigDecimal;
-import org.json.JSONArray; 
-import org.json.JSONObject;
+import java.util.List;
+import java.util.Optional;
 
+import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,6 +12,8 @@ import ies.g25.aLIVE.exception.ResourceNotFoundException;
 import ies.g25.aLIVE.model.BloodPressure;
 import ies.g25.aLIVE.model.BodyTemperature;
 import ies.g25.aLIVE.model.HeartRate;
+import ies.g25.aLIVE.model.Patient;
+import ies.g25.aLIVE.model.Sensor;
 import ies.g25.aLIVE.model.SugarLevel;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
@@ -18,6 +21,7 @@ import ies.g25.aLIVE.repository.HeartRateRepository;
 import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.SensorRepository;
 import ies.g25.aLIVE.repository.SugarLevelRepository;
+import ies.g25.aLIVE.restcontroller.PatientRestController;
 import ies.g25.aLIVE.restcontroller.SensorRestController;
 
 public class SensorReceiver {
@@ -43,6 +47,10 @@ public class SensorReceiver {
     @Autowired
     public SensorRestController controller = new SensorRestController(sensorRepository, patientRepository,
             heartRateRepository, sugarLevelRepository, bloodPressureRepository, bodyTemperatureRepository);
+    
+    @Autowired
+    public PatientRestController PatientController = new PatientRestController(patientRepository,
+            heartRateRepository, sugarLevelRepository, bloodPressureRepository, bodyTemperatureRepository);
 
     @RabbitListener(queues = "heart_beat")
     public void receive1(String in) throws InterruptedException, ResourceNotFoundException {
@@ -65,11 +73,11 @@ public class SensorReceiver {
     }
 
     public void receive(String in, int receiver) throws InterruptedException, ResourceNotFoundException {
+        JSONObject jo = new JSONObject(in); 
+        Integer id = (Integer) jo.get("id");
         switch (receiver) {
             case 1:
-                JSONObject jo = new JSONObject(in);
-                Integer val = (Integer) jo.get("heartbeat"); 
-                Integer id = (Integer) jo.get("id");
+                Integer val = (Integer) jo.get("heartbeat");
                 HeartRate hr = new HeartRate();
                 hr.setHeartRate(val);
                 controller.createHeartrate(Long.valueOf(id), hr);
@@ -85,28 +93,145 @@ public class SensorReceiver {
 
 
             case 3:
-                JSONObject jo1 = new JSONObject(in);
-                BigDecimal high = (BigDecimal) jo1.get("systolic"); 
-                BigDecimal low = (BigDecimal) jo1.get("diastolic");
-                Integer id1 = (Integer) jo1.get("id"); 
+                BigDecimal high = (BigDecimal) jo.get("systolic"); 
+                BigDecimal low = (BigDecimal) jo.get("diastolic");
                 BloodPressure bp = new BloodPressure();
                 bp.setLow_value(low.doubleValue());
                 bp.setHigh_value(high.doubleValue());
-                controller.createBloodPressure(Long.valueOf(id1), bp);
+                controller.createBloodPressure(Long.valueOf(id), bp);
                 break;
 
             case 4:
-                JSONObject jo2 = new JSONObject(in);
-                BigDecimal body_temp = (BigDecimal) jo2.get("temperature"); 
+                BigDecimal body_temp = (BigDecimal) jo.get("temperature"); 
                 BodyTemperature bt = new BodyTemperature();
-                Integer id2 = (Integer) jo2.get("id");
                 bt.setbodyTemp(body_temp.doubleValue());
-                controller.createBodyTemperature(Long.valueOf(id2), bt);
+                controller.createBodyTemperature(Long.valueOf(id), bt);
                 break;
         
             default:
                 break;
         }
+
+        Optional<Sensor> op = sensorRepository.findById(Long.valueOf(id));
+        if(op.isPresent()){
+            updatePatientStatus(op.get().getPatient());
+        }
+
+    }
+
+    public void updatePatientStatus(Patient p) throws ResourceNotFoundException {
+        int risk = 0;
+
+        List<Object> list = PatientController.getLatestValues(p.getId());
+        
+        for (Object o : list) {
+            if(o==null){
+                continue;
+            }
+
+            String cl = o.getClass().toString().split(" ")[1].split("\\.")[4];
+            System.out.println(cl);
+
+            switch (cl) {
+                case "BloodPressure":
+                    BloodPressure bp = (BloodPressure) o;
+                    double h = bp.getHigh_value();
+                    double l = bp.getLow_value();
+
+                    if(h<69 || l<39){
+                        risk+=12;
+                    }else if(h<89 || l<59){
+                        risk+=4;
+                    }else if(h<99 || l<64){
+                        risk+=1;
+                    }else if(h<120 && l<80){
+                        risk+=0;
+                    }else if(h<129 && l<84){
+                        risk+=1;
+                    }else if(h<139 && l<89){
+                        risk+=2;
+                    }else if(h<159 && l<99){
+                        risk+=4;
+                    }else if(h<179 && l<109){
+                        risk+=5;
+                    }else{
+                        risk+=12;
+                    }
+
+                    break;
+
+                case "BodyTemperature":
+                    BodyTemperature bt = (BodyTemperature) o;
+                    double temp = bt.getbodyTemp();
+
+                    if(temp<35){
+                        risk+=12;
+                    }else if(temp<37.5){
+                        risk+=0;
+                    }else if(temp<38.3){
+                        risk+=2;
+                    }else{
+                        risk+=12;
+                    }
+                    break;
+
+                case "HeartRate":
+                    HeartRate hr = (HeartRate) o;
+                    int rate = hr.getHeartRate();
+
+                    if(rate<75){
+                        risk+=0;
+                    }else if(rate<85){
+                        risk+=1;
+                    }else if(rate<100){
+                        risk+=2;
+                    }else if(rate<120){
+                        risk+=3;
+                    }else{
+                        risk+=12;
+                    }
+                    break;
+
+                case "SugarLevel":
+                    SugarLevel sl = (SugarLevel) o;
+                    double level = sl.getSugarLevel();
+
+                    if(level<3){
+                        risk+=12;
+                    }else if(level<4){
+                        risk+=2;
+                    }else if(level<5.5){
+                        risk+=0;
+                    }else if(level<7){
+                        risk+=1;
+                    }else if(level<8){
+                        risk+=2;
+                    }else if(level<9){
+                        risk+=4;
+                    }else{
+                        risk+=12;
+                    }
+            
+                default:
+                    break;
+            }
+        }
+
+
+        String status = "";
+        if(risk<2){
+            status="healthy";
+        }else if(risk<7){
+            status="normal";
+        }else if(risk<12){
+            status="unhealthy";
+        }else{
+            status="in-danger";
+        }
+
+        p.setCurrent_state(status);
+        patientRepository.save(p);
+        
     }
 
 
