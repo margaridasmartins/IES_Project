@@ -20,7 +20,7 @@ $(document).ready(function () {
 
         data.forEach(p=>{
             //show the patients associated with the doctor       null -> userLogin['email']
-            if(p.professional == null){
+            //if(p.professional == null){
 
                 console.log(p)
                 var danger=false
@@ -105,7 +105,7 @@ $(document).ready(function () {
                                             </div>
                                         </div>`);
                     }
-            }
+            //}
         })
         
        
