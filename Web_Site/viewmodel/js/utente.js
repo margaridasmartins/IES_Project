@@ -11,7 +11,7 @@ $(document).ready(function () {
         $('#cstatus').attr('href','utente.html');
     }
     // Add content to HTML
-    $("#userFullName").text(userLogin['full_name']);
+    $("#userFullName").text(userLogin['fullname']);
     $("#userId").text(userLogin['username']);
     $("#userEmail").text(userLogin['email']);
     $("#userAge").text(userLogin['age']);
