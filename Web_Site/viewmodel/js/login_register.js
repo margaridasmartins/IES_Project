@@ -67,7 +67,7 @@ $("#registerPatient").click(function(){
             //console.log(data_post)
             
             postData(data_post);
-            window.location.replace("login.html");
+            window.location.replace("index.html");
         };
     });
     
