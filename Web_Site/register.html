@@ -75,14 +75,14 @@
                     <div id="left-cover" style="display: block;">
                     <div class="appointment-form2">
                         <div class="center">
-                            <input type="button" value="REGISTER ASSISTANT" name="loginButton" id="registerButtom" class="switch-btn" onclick="switchSignupAssistente()">
+                            <input type="button" value="REGISTER PROFESSIONAL" name="loginButton" id="registerButtom" class="switch-btn" onclick="switchSignupAssistente()">
                         </div>
                     </div>
                     </div>
                     <div id="left-form" class="form fade-in-element" style="display: none;">  
                         <div class="appointment-form">
                             <br>
-                            <h3>REGISTAR ASSISTENTE DE SAÚDE</h3>
+                            <h3>REGISTER PROFESSIONAL</h3>
                             <div class="form">
                                 <form action="login.html">
                                 <fieldset>
@@ -91,13 +91,28 @@
                                             <div class="form-group">
                                              <input type="name" name="regName" id="regName" value="" placeholder="Full Name">
                                              <input type="email" name="regEmail" id="regEmail" value="" placeholder="Email">
-                                                 
+                                             <div class ="container-fluid">
+                                                <div class ="row">
+                                                   <div class ="col-md-6 col-sm-6">
+                                                      <input type="age" name="registerAge" id="regAge" value="" placeholder="Age">
+                                                   </div>
+                                                   <div class ="col-md-6 col-sm-6">
+                                                         
+                                                         <select name="gender" id="regGender">
+                                                            <option value="Male">Male</option>
+                                                            <option value="Female">Female</option>
+                                                         </select>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <input type="workplace" name="regWorkplace" id="regWorkplace" value="" placeholder="Type the Workplace">
+                                             <input type="speciality" name="regSpeciality" id="regSpeciality" value="" placeholder="Type your speciality">
                                              <input type="password" name="regPass" id="regPass" value="" placeholder="Type a Password">
                                              <input type="password" name="regPass2" id="regPass2" value="" placeholder="Repeat Password">
                                             <div class="center">
-                                                <input type="button" value="REGISTER" name="resButton" id="registerAssis">
+                                                <input type="button" value="REGISTER" name="resButton" id="registerProfessional">
                                             </div>
-                                            <p class="text-danger mt-5 mb-0 d-none" id="loginError"></p>
+                                            <p class="text-danger mt-5 mb-0 d-none" id="registerError"></p>
                                             </div>
                                         </div>
                                     </div>
@@ -121,7 +136,7 @@
                     <div id="right-form" class="form form-hide" style="display: none;"> 
                         <div class="appointment-form" >
                         <br>
-                        <h3>REGISTAR UTENTE</h3>
+                        <h3>REGISTER PATIENT</h3>
                         <div class="form">
                             <form action="login.html">
                                 <fieldset>
@@ -138,8 +153,8 @@
                                                    <div class ="col-md-6 col-sm-6">
                                                          
                                                          <select name="gender" id="registerGender">
-                                                            <option value="M">Male</option>
-                                                            <option value="F">Female</option>
+                                                            <option value="Male">Male</option>
+                                                            <option value="Female">Female</option>
                                                          </select>
                                                    </div>
                                                 </div>
@@ -155,7 +170,7 @@
                                                 </div>
                                              </div>
                                              <div>
-                                             <input type="asis" name="assis" id="assis" value="" placeholder="Type Assistent email">
+                                             <input type="prof" name="registerProf" id="registerProf" value="" placeholder="Type Assistent email">
                                              <input type="password" name="registerPass" id="registerPass" value="" placeholder="Type a Password">
                                             <input type="password" name="registerPass2" id="registerPass2" value="" placeholder="Repeat Password">
                                           </div>
@@ -176,7 +191,7 @@
             
             </div>
             <div style="width: 40%; margin:0 auto; padding: 50px;">
-                     <input type="button" value="Already have an account?" name="loginButton" id="toLoginButton"  class="switch-btn" onclick="location.href='login.html'">
+                     <input type="button" value="Already have an account?" name="loginButton" id="toLoginButton"  class="switch-btn" onclick="location.href='index.html'">
                 </div>
          </div>
          <br>
