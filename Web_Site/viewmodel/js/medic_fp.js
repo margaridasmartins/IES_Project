@@ -15,7 +15,7 @@ $(document).ready(function () {
 
 
     $.ajax({
-        url: "http://localhost:8080/api/users"
+        url: "http://localhost:8080/api/patients"
     }).then(function(data) {
 
         data.forEach(p=>{
@@ -248,7 +248,7 @@ function search_patient(){
 
 function selectPatient(id){
     $.ajax({
-        url: "http://localhost:8080/api/users"
+        url: "http://localhost:8080/api/patients"
     }).then(function(data) {
         data.forEach(p=>{
             if(p.id == id){
@@ -264,7 +264,7 @@ function selectPatient(id){
 
 function filter_doctorPatients(){
     $.ajax({
-        url: "http://localhost:8080/api/users"
+        url: "http://localhost:8080/api/patients"
     }).then(function(data) {
         var myPatients = [];
         data.forEach(p=>{

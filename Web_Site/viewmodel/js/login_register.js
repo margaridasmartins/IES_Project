@@ -22,7 +22,9 @@ $("#registerPatient").click(function(){
     var name = $("#registerName").val();
     var email = $("#registerEmail").val();
     var age = $("#registerAge").val();
-    var genre = $("#registerGenre").val();
+    var gender = $("#registerGender").val();
+    var weight = $("#registerWeight").val();
+    var height = $("#registerHeight").val();
     var pass1 = $("#registerPass").val();
     var pass2 = $("#registerPass2").val();
     var assistant = $("#assis").val();
@@ -32,6 +34,10 @@ $("#registerPatient").click(function(){
     data_post["email"]=email;
     data_post["age"]=age;
     data_post["password"]=pass1;
+    data_post["gender"]=gender;
+    data_post["weight"]=parseFloat(weight);
+    data_post["height"]=parseFloat(height);
+    data_post["last_check"]= new Date();
     //data_post["professional"]=assistant;
 
     if(name == "" || email == "" || age == ""){
@@ -67,7 +73,7 @@ $("#registerPatient").click(function(){
             //console.log(data_post)
             
             postData(data_post);
-            window.location.replace("index.html");
+            window.location.replace("login.html");
         };
     });
     
