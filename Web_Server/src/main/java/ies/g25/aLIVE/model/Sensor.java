@@ -13,6 +13,10 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Data
 @Table(name="SENSOR")
@@ -25,6 +29,9 @@ public class Sensor {
     //Patient Id
     @ManyToOne()
     @JoinColumn(name = "patient")
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Patient patient;
 
     public Sensor(){
