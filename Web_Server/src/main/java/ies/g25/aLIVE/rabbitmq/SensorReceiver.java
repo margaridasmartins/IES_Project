@@ -90,11 +90,10 @@ public class SensorReceiver {
                 break;
 
             case 2:
-                /*
+                BigDecimal vals = (BigDecimal) jo.get("sugar");
                 SugarLevel sl = new SugarLevel();
-                sl.setSugarLevel(Double.parseDouble(in));
-                controller.createSugarLevel(1, sl);
-                */
+                sl.setSugarLevel(vals.doubleValue());
+                controller.createSugarLevel(Long.valueOf(id), sl);
                 break;
 
 
