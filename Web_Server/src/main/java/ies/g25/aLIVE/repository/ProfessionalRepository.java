@@ -9,5 +9,5 @@ import ies.g25.aLIVE.model.*;
 
 @Repository
 public interface ProfessionalRepository extends JpaRepository<Professional, Long>{
-
+    
 }
