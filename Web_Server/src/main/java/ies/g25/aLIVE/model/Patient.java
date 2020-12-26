@@ -49,6 +49,9 @@ public class Patient extends User {
     //Assigned professional
     @ManyToOne
     @JoinColumn(name = "professional_id")
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Professional professional;
 
     @OneToMany(mappedBy = "patient")
@@ -117,4 +120,13 @@ public class Patient extends User {
     public void setCurrent_state(String current_state){
         this.current_state=current_state;
     }
+
+    public Professional getProfessional(){
+        return professional;
+    }
+
+    public void setProfessional(Professional professional){
+        this.professional=professional;
+    }
+
 }

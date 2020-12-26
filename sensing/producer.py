@@ -7,6 +7,7 @@ import json
 import time
 import asyncio
 import os
+import requests
 
 #---------------------------------------------------------------------
 
@@ -17,6 +18,11 @@ class Generator:
         # rabbit connections // os.getenv('RABBITMQ_IP')
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         self.channel = self.connection.channel()
+
+    async def get_sensors(self):
+        sensors = requests.get('http://localhost:8080/api/sensors/ids')
+        print(sensors.text)
+        pass
 
     async def gen_heart_beats(self, heartbeat=80):
         mu = heartbeat
@@ -83,13 +89,15 @@ if __name__ == "__main__":
     loop = asyncio.get_event_loop()
 
     #tasks
+    sensor_task = loop.create_task(g.get_sensors())
+
     hb_task = loop.create_task(g.gen_heart_beats())
     bp_task = loop.create_task(g.gen_blood_pressure())
     bt_task = loop.create_task(g.gen_body_temp())
     sl_task = loop.create_task(g.gen_sugar_level())
 
     # run them
-    loop.run_until_complete(asyncio.gather(hb_task, bp_task, bt_task, sl_task))
+    loop.run_until_complete(asyncio.gather(hb_task, bp_task, bt_task, sl_task, sensor_task))
 
     #loop close
     loop.close()

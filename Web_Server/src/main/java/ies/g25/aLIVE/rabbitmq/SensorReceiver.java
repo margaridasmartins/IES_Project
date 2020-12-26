@@ -13,15 +13,18 @@ import ies.g25.aLIVE.model.BloodPressure;
 import ies.g25.aLIVE.model.BodyTemperature;
 import ies.g25.aLIVE.model.HeartRate;
 import ies.g25.aLIVE.model.Patient;
+import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.model.Sensor;
 import ies.g25.aLIVE.model.SugarLevel;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
 import ies.g25.aLIVE.repository.HeartRateRepository;
 import ies.g25.aLIVE.repository.PatientRepository;
+import ies.g25.aLIVE.repository.ProfessionalRepository;
 import ies.g25.aLIVE.repository.SensorRepository;
 import ies.g25.aLIVE.repository.SugarLevelRepository;
 import ies.g25.aLIVE.restcontroller.PatientRestController;
+import ies.g25.aLIVE.restcontroller.ProfessionalRestController;
 import ies.g25.aLIVE.restcontroller.SensorRestController;
 
 public class SensorReceiver {
@@ -44,13 +47,16 @@ public class SensorReceiver {
     @Autowired
     public BodyTemperatureRepository bodyTemperatureRepository;
 
+    @Autowired 
+    public ProfessionalRepository professionalRepository;
+
     @Autowired
     public SensorRestController controller = new SensorRestController(sensorRepository, patientRepository,
             heartRateRepository, sugarLevelRepository, bloodPressureRepository, bodyTemperatureRepository);
     
     @Autowired
     public PatientRestController PatientController = new PatientRestController(patientRepository,
-            heartRateRepository, sugarLevelRepository, bloodPressureRepository, bodyTemperatureRepository);
+            heartRateRepository, sugarLevelRepository, bloodPressureRepository, bodyTemperatureRepository,professionalRepository);
 
     @RabbitListener(queues = "heart_beat")
     public void receive1(String in) throws InterruptedException, ResourceNotFoundException {

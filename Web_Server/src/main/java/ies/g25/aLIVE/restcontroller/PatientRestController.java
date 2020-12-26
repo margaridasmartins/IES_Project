@@ -26,15 +26,17 @@ import ies.g25.aLIVE.model.BloodPressure;
 import ies.g25.aLIVE.model.BodyTemperature;
 import ies.g25.aLIVE.model.HeartRate;
 import ies.g25.aLIVE.model.Patient;
+import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.model.SugarLevel;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
 import ies.g25.aLIVE.repository.HeartRateRepository;
 import ies.g25.aLIVE.repository.PatientRepository;
+import ies.g25.aLIVE.repository.ProfessionalRepository;
 import ies.g25.aLIVE.repository.SugarLevelRepository;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/patients")
 public class PatientRestController {
     // get users, get health info from a user
 
@@ -45,14 +47,17 @@ public class PatientRestController {
     public SugarLevelRepository sugarLevelRepository;
     public BloodPressureRepository bloodPressureRepository;
     public BodyTemperatureRepository bodyTemperatureRepository;
+    public ProfessionalRepository professionalRepository;
 
     public PatientRestController(PatientRepository patientRepository, HeartRateRepository heartRateRepository,
-            SugarLevelRepository sugarLevelRepository, BloodPressureRepository bloodPressureRepository, BodyTemperatureRepository bodyTemperatureRepository) {
+            SugarLevelRepository sugarLevelRepository, BloodPressureRepository bloodPressureRepository, 
+            BodyTemperatureRepository bodyTemperatureRepository, ProfessionalRepository professionalRepository) {
         this.patientRepository = patientRepository;
         this.heartRateRepository = heartRateRepository;
         this.sugarLevelRepository = sugarLevelRepository;
         this.bloodPressureRepository = bloodPressureRepository;
         this.bodyTemperatureRepository = bodyTemperatureRepository;
+        this.professionalRepository = professionalRepository;
     }
 
     @GetMapping
@@ -60,6 +65,7 @@ public class PatientRestController {
     public List<Patient> getAllPatients() {
         return patientRepository.findAll();
     }
+
 
     @PostMapping
     public Patient createPatient(@Valid @RequestBody Patient patient) {

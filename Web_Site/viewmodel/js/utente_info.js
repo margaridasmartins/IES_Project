@@ -16,11 +16,11 @@ $(document).ready(function () {
     // Add content to HTML
     $("#patientFullName").text(currentPatient['fullname']);
     $("#patientAge").text(currentPatient['age']);
-    if (currentPatient['genre']== "M"){
-        $("#patientGenre").text("Male");
+    if (currentPatient['gender']== "Male"){
+        $("#patientGender").text("Male");
     }
     else{
-        $("#patientGenre").text("Female");
+        $("#patientGender").text("Female");
     }
     $("#patientWeight").text(currentPatient['weight']);
     $("#patientHeight").text(currentPatient['height']);
