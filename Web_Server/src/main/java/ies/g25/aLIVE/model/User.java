@@ -69,7 +69,9 @@ public class User {
     public Long getId(){
         return this.id;
     }
-
+    public String getUsername(){
+        return this.username;
+    }
     public void setImage(byte[] img){
         this.image = img;
     }
