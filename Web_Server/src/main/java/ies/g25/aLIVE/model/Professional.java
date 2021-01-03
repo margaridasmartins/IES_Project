@@ -46,6 +46,31 @@ public class Professional extends User {
         this.speciality = speciality;
         this.type = type;
     }
+
+    public void setWorkplace(String workplace){
+        this.workplace=workplace;
+    } 
+
+    public String getWorkplace(){
+        return this.workplace;
+    }
+
+    public String getSpeciality(){
+        return this.speciality;
+    }
+
+    public void setSpeciality(String speciality){
+        this.speciality=speciality;
+    } 
+
+    public void setType(String type){
+        this.type=type;
+    }
+
+    public String getType(String type){
+        return type;
+    }
+
 }
 
 

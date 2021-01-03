@@ -29,7 +29,6 @@ import ies.g25.aLIVE.model.BloodPressure;
 import ies.g25.aLIVE.model.BodyTemperature;
 import ies.g25.aLIVE.model.HeartRate;
 import ies.g25.aLIVE.model.Patient;
-import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.model.SugarLevel;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
@@ -111,7 +110,7 @@ public class PatientRestController {
          ) throws ResourceNotFoundException {
 
         List<BloodPressure> bloodPressures;
-        Pageable paging = PageRequest.of(page, size);
+        Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
         Page<BloodPressure> bp;
 
         try {
@@ -151,7 +150,7 @@ public class PatientRestController {
          ) throws ResourceNotFoundException {
 
         List<HeartRate> heartRates;
-        Pageable paging = PageRequest.of(page, size);
+        Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
         Page<HeartRate> hr;
 
         try {
@@ -191,7 +190,7 @@ public class PatientRestController {
         ) throws ResourceNotFoundException {
 
         List<SugarLevel> sugarlevels;
-        Pageable paging = PageRequest.of(page, size);
+        Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
         Page<SugarLevel> sl;
 
         try {
@@ -231,7 +230,7 @@ public class PatientRestController {
         ) throws ResourceNotFoundException {
 
         List<BodyTemperature> bodyTemperatures;
-        Pageable paging = PageRequest.of(page, size);
+        Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
         Page<BodyTemperature> bt;
 
         try {

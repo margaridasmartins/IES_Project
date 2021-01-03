@@ -66,6 +66,33 @@ public class User {
         return this.email;
     }
 
+    public void setEmail(String email){
+        this.email=email;
+    } 
+
+    public int getAge(){
+        return this.age;
+    }
+    public void setAge(int age){
+        this.age=age;
+    } 
+
+    public String getFullname(){
+        return this.fullname;
+    }
+    
+    public void setFullname(String fullname){
+        this.fullname=fullname;
+    } 
+
+    public String getGender(){
+        return this.gender;
+    }
+    
+    public void setGender(String gender){
+        this.gender=gender;
+    } 
+
     public Long getId(){
         return this.id;
     }

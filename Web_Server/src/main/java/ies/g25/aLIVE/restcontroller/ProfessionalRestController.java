@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 
 import ies.g25.aLIVE.exception.ResourceNotFoundException;
 import ies.g25.aLIVE.model.Professional;
@@ -49,6 +51,20 @@ public class ProfessionalRestController {
     @PostMapping
     public Professional createProfessional(@Valid @RequestBody Professional professional) {
         return professionalRepository.save(professional);
+    }
+
+    @PostMapping("/{id}/picture")
+    public Patient updatePhoto(@PathVariable(value = "id") Long patientId, @RequestParam("file") MultipartFile file)
+            throws ResourceNotFoundException, IOException {
+		Optional<Patient> op=  patientRepository.findById(patientId);
+        if(op.isPresent()){
+            Patient p = op.get();
+            byte[] data = file.getBytes();
+            p.setImage(data);
+            patientRepository.save(p);
+            return p;
+        }
+        throw new ResourceNotFoundException("Patient not found for this id: " + patientId);		
     }
 
     @GetMapping("/{id}")
