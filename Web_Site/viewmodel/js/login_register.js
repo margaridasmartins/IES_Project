@@ -15,8 +15,8 @@ function switchSignupPaciente() {
 }
 //Patient Register
 $("#registerPatient").click(function(){
-    $("#registerError").removeClass("d-none");
-    $("#registerError").hide();
+    $("#registerErrorPat").removeClass("d-none");
+    $("#registerErrorPat").hide();
     var data_post={}
     
     var name = $("#registerName").val();
@@ -30,14 +30,14 @@ $("#registerPatient").click(function(){
     var professional = $("#registerProf").val(); 
 
     if(name == "" || email == "" || age == ""){
-        $("#registerError").text("Fill all the fields!");
-        $("#registerError").fadeIn();
+        $("#registerErrorPat").text("Fill all the fields!");
+        $("#registerErrorPat").fadeIn();
         return;
     }
 
     if(pass1 != pass2){
-        $("#registerError").text("The passwords don't match!");
-        $("#registerError").fadeIn();
+        $("#registerErrorPat").text("The passwords don't match!");
+        $("#registerErrorPat").fadeIn();
         return;
     }
 
@@ -49,7 +49,7 @@ $("#registerPatient").click(function(){
     data_post["gender"]=gender;
     data_post["weight"]=parseFloat(weight);
     data_post["height"]=parseFloat(height);
-    data_post["last_check"]= new Date();
+    data_post["lastcheck"]= new Date();
     
     $.ajax({
         url: "http://localhost:8080/api/professionals"
@@ -72,8 +72,8 @@ $("#registerPatient").click(function(){
                     };
                 };
                 if(email_exists){
-                    $("#registerError").text("This email is already registered!");
-                    $("#registerError").fadeIn();
+                    $("#registerErrorPat").text("This email is already registered!");
+                    $("#registerErrorPat").fadeIn();
                     return;
                 }
                 else{
@@ -81,20 +81,21 @@ $("#registerPatient").click(function(){
                     //console.log(data_post)
                     
                     postPatient(data_post);
+                    alert("Patient saved!");
                     window.location.replace("index.html");
                 };
             });
         }
         else{
-            $("#registerError").text("This Professional is not registered!");
-            $("#registerError").fadeIn();
+            $("#registerErrorPat").text("This Professional is not registered!");
+            $("#registerErrorPat").fadeIn();
         }
     })
   });
 
 $("#registerProfessional").click(function(){
-    $("#registerError").removeClass("d-none");
-    $("#registerError").hide();
+    $("#registerErrorPro").removeClass("d-none");
+    $("#registerErrorPro").hide();
     var data_post={}
     
     var name = $("#regName").val();
@@ -116,14 +117,14 @@ $("#registerProfessional").click(function(){
     data_post["speciality"]=speciality;
 
     if(name == "" || email == "" || age == "" || workplace == "" || speciality == "" || pass1 == ""){
-        $("#registerError").text("Fill all the fields!");
-        $("#registerError").fadeIn();
+        $("#registerErrorPro").text("Fill all the fields!");
+        $("#registerErrorPro").fadeIn();
         return;
     }
 
     if(pass1 != pass2){
-        $("#registerError").text("The passwords don't match!");
-        $("#registerError").fadeIn();
+        $("#registerErrorPro").text("The passwords don't match!");
+        $("#registerErrorPro").fadeIn();
         return;
     }
 
@@ -139,8 +140,8 @@ $("#registerProfessional").click(function(){
             };
         };
         if(email_exists){
-            $("#registerError").text("This email is already registered!");
-            $("#registerError").fadeIn();
+            $("#registerErrorPro").text("This email is already registered!");
+            $("#registerErrorPro").fadeIn();
             return;
         }
         else{
@@ -148,6 +149,7 @@ $("#registerProfessional").click(function(){
             console.log(data_post)
             
             postProfessional(data_post);
+            alert("Patient saved!");
             window.location.replace("index.html");
         };
     });

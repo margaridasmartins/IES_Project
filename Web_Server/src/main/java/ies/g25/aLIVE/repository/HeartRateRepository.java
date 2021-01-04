@@ -11,15 +11,16 @@ import org.springframework.stereotype.Repository;
 
 import ies.g25.aLIVE.model.HeartRate;
 import ies.g25.aLIVE.model.Patient;
-
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 @Repository
 public interface HeartRateRepository extends JpaRepository<HeartRate, Long>{
 
-    @Query("select b from HeartRate b where b.date > :cdate and patient.id=:patientID")
-    List<HeartRate> findByPatientLessThanMonth(@Param("cdate") LocalDateTime cdate, @Param("patientID") Long id);
+    @Query("select h from HeartRate h where h.date > :start_date and h.date<:end_date and patient.id=:patientID")
+    Page<HeartRate> findByPatientandDate(@Param("start_date") LocalDateTime start_date, @Param("end_date") LocalDateTime end_date, @Param("patientID") Long id, Pageable pageable);
 
-    List<HeartRate> findByPatient(Patient p);
+    Page<HeartRate> findByPatient(Patient p, Pageable pageable);
 
     HeartRate findFirstByPatient(Patient p, Sort sort);
 }

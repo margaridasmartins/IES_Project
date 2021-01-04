@@ -11,15 +11,16 @@ import org.springframework.stereotype.Repository;
 
 import ies.g25.aLIVE.model.Patient;
 import ies.g25.aLIVE.model.SugarLevel;
-
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 @Repository
 public interface SugarLevelRepository extends JpaRepository<SugarLevel, Long>{
 
-    @Query("select b from SugarLevel b where b.date > :cdate and patient.id=:patientID")
-    List<SugarLevel> findByPatientLessThanMonth(@Param("cdate") LocalDateTime cdate, @Param("patientID") Long id);
-
-    List<SugarLevel> findByPatient(Patient p);
+    @Query("select s from SugarLevel s where s.date > :start_date and s.date<:end_date and patient.id=:patientID")
+    Page<SugarLevel> findByPatientandDate(@Param("start_date") LocalDateTime start_date, @Param("end_date") LocalDateTime end_date, @Param("patientID") Long id, Pageable pageable);
+    
+    Page<SugarLevel> findByPatient(Patient p, Pageable pageable);
 
     SugarLevel findFirstByPatient(Patient p, Sort sort);
 }

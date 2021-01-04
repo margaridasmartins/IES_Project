@@ -20,22 +20,22 @@ $(document).ready(function () {
 
         data.forEach(p=>{
             //show the patients associated with the doctor       null -> userLogin['email']
-            //if(p.professional == null){
+            if(p.professional == null){
 
                 console.log(p)
                 var danger=false
-                var currentState=p['current_state'];
+                var currentState=p['currentstate'];
                 var color;
-                if(currentState=="good"){
+                if(currentState=="normal"){
                     color="lightgreen";
                 }
-                if(currentState=="very good"){
+                if(currentState=="healthy"){
                     color="Chartreuse";
                 }
-                if(currentState=="bad"){
+                if(currentState=="unhealthy"){
                     color="#FFFF66";
                 }
-                if(currentState=="very bad"){
+                if(currentState=="in-danger"){
                     danger = true;
                     color="red";
                 }
@@ -61,7 +61,7 @@ $(document).ready(function () {
                                                                 
                                                                 <div class="col-md-3 my-auto" id="date">
                                                                     <b>Last Check: </b>
-                                                                    <em>${new Date(p['last_check']).toLocaleDateString()} </em>
+                                                                    <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
                                                                 </div>
                                                 
                                                             </div>
@@ -75,7 +75,7 @@ $(document).ready(function () {
                 }else{
                         $("#patientSection").append(`<div class="row" style="margin-top: 3%;">
                                             <div class="col-md-12">
-                                                <a class="currentP" href="#" value="${p['id']}">
+                                                <a href="#"  onClick="selectPatient(${p.id});" id="currentPatient${p.id}" value="${p['id']}">
                                                     <div class="card " style="background-color: ${color};" >
                                                         <div class="card-body">
                                                             <div class="row ">
@@ -93,7 +93,7 @@ $(document).ready(function () {
                                                                 
                                                                 <div class="col-md-3 my-auto" id="date">
                                                                     <b>Last Check: </b>
-                                                                    <em>${new Date(p['last_check']).toLocaleDateString()} </em>
+                                                                    <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
                                                                 </div>
                                                                 <div class="col-md-1 my-auto">
                                                                     <img src="./images/danger.png" style="max-width:50px; max-height:50px;">
@@ -105,7 +105,7 @@ $(document).ready(function () {
                                             </div>
                                         </div>`);
                     }
-            //}
+            }
         })
         
        
@@ -147,7 +147,7 @@ function sortPositions(){
                                                                 
                                                                 <div class="col-md-3 my-auto" id="date">
                                                                     <b>Last Check: </b>
-                                                                    <em>${new Date(p['last_check']).toLocaleDateString()} </em>
+                                                                    <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -160,7 +160,7 @@ function sortPositions(){
         if (strValue == "last"){
             console.log("last");
             document.getElementById("patientOrder").innerHTML = ""; 
-            myPatientsArray.sort(function(a, b){return new Date(a.last_check).toLocaleDateString() - new Date(b.last_check).toLocaleDateString()});
+            myPatientsArray.sort(function(a, b){return new Date(a.lastcheck).toLocaleDateString() - new Date(b.lastcheck).toLocaleDateString()});
             //console.log("SORTED ", myPatientsArray);
             myPatientsArray.forEach(p => {
                 $("#newPatientsDiv").fadeOut();
@@ -185,7 +185,7 @@ function sortPositions(){
                                                                     
                                                                     <div class="col-md-3 my-auto" id="date">
                                                                         <b>Last Check: </b>
-                                                                        <em>${new Date(p['last_check']).toLocaleDateString()} </em>
+                                                                        <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -229,7 +229,7 @@ function search_patient(){
                                                                 
                                                                 <div class="col-md-3 my-auto" id="date">
                                                                     <b>Last Check: </b>
-                                                                    <em>${new Date(p['last_check']).toLocaleDateString()} </em>
+                                                                    <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
                                                                 </div>
                                                                 <div class="col-md-1 my-auto">
                                                                     <img src="./images/danger.png" style="max-width:50px; max-height:50px;">
@@ -253,8 +253,8 @@ function selectPatient(id){
         data.forEach(p=>{
             if(p.id == id){
                 localStorage.setItem('currentPatient', JSON.stringify(p));
-                console.log(localStorage.getItem('currentPatient'));
-                console.log("currentPatient"+id);
+                //console.log(localStorage.getItem('currentPatient'));
+                //console.log("currentPatient"+id);
                 document.getElementById("currentPatient"+id).setAttribute('href', 'utente_info.html');
             }
             

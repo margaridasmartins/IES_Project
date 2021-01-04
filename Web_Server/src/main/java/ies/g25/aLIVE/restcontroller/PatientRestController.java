@@ -3,13 +3,16 @@ package ies.g25.aLIVE.restcontroller;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
-
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +29,6 @@ import ies.g25.aLIVE.model.BloodPressure;
 import ies.g25.aLIVE.model.BodyTemperature;
 import ies.g25.aLIVE.model.HeartRate;
 import ies.g25.aLIVE.model.Patient;
-import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.model.SugarLevel;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
@@ -34,6 +36,10 @@ import ies.g25.aLIVE.repository.HeartRateRepository;
 import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.ProfessionalRepository;
 import ies.g25.aLIVE.repository.SugarLevelRepository;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/api/patients")
@@ -97,11 +103,39 @@ public class PatientRestController {
         throw new ResourceNotFoundException("Patient not found for this id: " + patientId);		
     }
     
-    @GetMapping("/bloodpressure/month/{id}")
-    public List<BloodPressure> getBloodPressureMonthStatusById(@PathVariable(value = "id") Long patientId) throws ResourceNotFoundException {
-        LocalDateTime now = LocalDateTime.now();
+    @GetMapping("{id}/bloodpressure")
+    public ResponseEntity<Map<String, Object>> getBloodPressureByIdAndDate(@PathVariable(value = "id") Long patientId,
+        @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
+         ) throws ResourceNotFoundException {
+
+        List<BloodPressure> bloodPressures;
+        Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
+        Page<BloodPressure> bp;
+
         try {
-            return bloodPressureRepository.findByPatientLessThanMonth(now.minusMonths(1), patientId);
+            if (start_date != null &&  end_date!=null){
+                bp= bloodPressureRepository.findByPatientandDate(start_date,end_date, patientId, paging);
+            }
+            else{
+                Optional<Patient> op = patientRepository.findById(patientId);
+                if (op.isPresent()) {
+                    Patient p = op.get();
+                    bp = bloodPressureRepository.findByPatient(p, paging);
+                }
+                else{
+                    throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+                }
+            }
+            bloodPressures = bp.getContent();
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", bloodPressures);
+            response.put("currentPage", bp.getNumber());
+            response.put("totalItems", bp.getTotalElements());
+            response.put("totalPages", bp.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+            
 
         } catch (Exception e) {
             throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
@@ -109,11 +143,39 @@ public class PatientRestController {
 
     }
 
-    @GetMapping("/bloodpressure/day/{id}")
-    public List<BloodPressure> getBloodPressureDayStatusById(@PathVariable(value = "id") Long patientId) throws ResourceNotFoundException {
-        LocalDateTime now = LocalDateTime.now();
+    @GetMapping("{id}/heartrate")
+    public ResponseEntity<Map<String, Object>> getHeartRateByIdAndDate(@PathVariable(value = "id") Long patientId,
+        @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
+         ) throws ResourceNotFoundException {
+
+        List<HeartRate> heartRates;
+        Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
+        Page<HeartRate> hr;
+
         try {
-            return bloodPressureRepository.findByPatientLessThanMonth(now.minusDays(1), patientId);
+            if (start_date != null &&  end_date!=null){
+                hr= heartRateRepository.findByPatientandDate(start_date,end_date, patientId, paging);
+            }
+            else{
+                Optional<Patient> op = patientRepository.findById(patientId);
+                if (op.isPresent()) {
+                    Patient p = op.get();
+                    hr = heartRateRepository.findByPatient(p, paging);
+                }
+                else{
+                    throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+                }
+            }
+            heartRates = hr.getContent();
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", heartRates);
+            response.put("currentPage", hr.getNumber());
+            response.put("totalItems", hr.getTotalElements());
+            response.put("totalPages", hr.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+            
 
         } catch (Exception e) {
             throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
@@ -121,77 +183,85 @@ public class PatientRestController {
 
     }
 
-    @GetMapping("/heartrate/month/{id}")
-    public List<HeartRate> getHeartRateMonthStatusById(@PathVariable(value = "id") Long patientId) throws ResourceNotFoundException {
-        LocalDateTime now = LocalDateTime.now();
+    @GetMapping("{id}/sugarlevel")
+    public ResponseEntity<Map<String, Object>> getSugarLevelByIdAndDate(@PathVariable(value = "id") Long patientId,
+        @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
+        ) throws ResourceNotFoundException {
+
+        List<SugarLevel> sugarlevels;
+        Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
+        Page<SugarLevel> sl;
+
         try {
-            return heartRateRepository.findByPatientLessThanMonth(now.minusMonths(1), patientId);
+            if (start_date != null &&  end_date!=null){
+                sl= sugarLevelRepository.findByPatientandDate(start_date,end_date, patientId, paging);
+            }
+            else{
+                Optional<Patient> op = patientRepository.findById(patientId);
+                if (op.isPresent()) {
+                    Patient p = op.get();
+                    sl = sugarLevelRepository.findByPatient(p, paging);
+                }
+                else{
+                    throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+                }
+            }
+            sugarlevels = sl.getContent();
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", sugarlevels);
+            response.put("currentPage", sl.getNumber());
+            response.put("totalItems", sl.getTotalElements());
+            response.put("totalPages", sl.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+            
 
         } catch (Exception e) {
             throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
-        } 
+        }
+    } 
 
-    }
 
-    @GetMapping("/heartrate/day/{id}")
-    public List<HeartRate> getHeartRateDayStatusById(@PathVariable(value = "id") Long patientId) throws ResourceNotFoundException {
-        LocalDateTime now = LocalDateTime.now();
+    @GetMapping("{id}/bodytemperature")
+    public ResponseEntity<Map<String, Object>> getBodyTemperatureByIdAndDate(@PathVariable(value = "id") Long patientId,
+        @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
+        ) throws ResourceNotFoundException {
+
+        List<BodyTemperature> bodyTemperatures;
+        Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
+        Page<BodyTemperature> bt;
+
         try {
-            return heartRateRepository.findByPatientLessThanMonth(now.minusDays(1), patientId);
+            if (start_date != null &&  end_date!=null){
+                bt= bodyTemperatureRepository.findByPatientandDate(start_date,end_date, patientId, paging);
+            }
+            else{
+                Optional<Patient> op = patientRepository.findById(patientId);
+                if (op.isPresent()) {
+                    Patient p = op.get();
+                    bt = bodyTemperatureRepository.findByPatient(p, paging);
+                }
+                else{
+                    throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+                }
+            }
+            bodyTemperatures = bt.getContent();
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", bodyTemperatures);
+            response.put("currentPage", bt.getNumber());
+            response.put("totalItems", bt.getTotalElements());
+            response.put("totalPages", bt.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+            
 
         } catch (Exception e) {
             throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
-        } 
-
+        }
     }
 
-    @GetMapping("/sugarlevel/month/{id}")
-    public List<SugarLevel> getSugarLevelMonthStatusById(@PathVariable(value = "id") Long patientId) throws ResourceNotFoundException {
-        LocalDateTime now = LocalDateTime.now();
-        try {
-            return sugarLevelRepository.findByPatientLessThanMonth(now.minusMonths(1), patientId);
-
-        } catch (Exception e) {
-            throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
-        } 
-
-    }
-
-    @GetMapping("/sugarlevel/day/{id}")
-    public List<SugarLevel> getSugarLevelDayStatusById(@PathVariable(value = "id") Long patientId) throws ResourceNotFoundException {
-        LocalDateTime now = LocalDateTime.now();
-        try {
-            return sugarLevelRepository.findByPatientLessThanMonth(now.minusDays(1), patientId);
-
-        } catch (Exception e) {
-            throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
-        } 
-
-    }
-
-    @GetMapping("/bodytemperature/month/{id}")
-    public List<BodyTemperature> getBodyTemperatureMonthStatusById(@PathVariable(value = "id") Long patientId) throws ResourceNotFoundException {
-        LocalDateTime now = LocalDateTime.now();
-        try {
-            return bodyTemperatureRepository.findByPatientLessThanMonth(now.minusMonths(1), patientId);
-
-        } catch (Exception e) {
-            throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
-        } 
-
-    }
-
-    @GetMapping("/bodytemperature/day/{id}")
-    public List<BodyTemperature> getBodyTemperatureDayStatusById(@PathVariable(value = "id") Long patientId) throws ResourceNotFoundException {
-        LocalDateTime now = LocalDateTime.now();
-        try {
-            return bodyTemperatureRepository.findByPatientLessThanMonth(now.minusDays(1), patientId);
-
-        } catch (Exception e) {
-            throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
-        } 
-
-    }
 
     @GetMapping("/{pid}/latest")
     @ResponseBody
