@@ -5,31 +5,24 @@ $(document).ready(function () {
     console.log(currentPatient);
     console.log(userLogin);
 
-    if (userLogin['type']== "Medic"){
-        $('#cstatus').text("Dashboard");
-        $('#cstatus').attr('href','medic_fp.html');
-    }
-    else{
-        $('#cstatus').text("Clinical Status");
-        $('#cstatus').attr('href','utente.html');
-    }
+    
     // Add content to HTML
     $("#patientFullName").text(currentPatient['fullname']);
     $("#patientAge").text(currentPatient['age']);
-    if (currentPatient['genre']== "M"){
-        $("#patientGenre").text("Male");
+    if (currentPatient['gender']== "Male"){
+        $("#patientGender").text("Male");
     }
     else{
-        $("#patientGenre").text("Female");
+        $("#patientGender").text("Female");
     }
     $("#patientWeight").text(currentPatient['weight']);
     $("#patientHeight").text(currentPatient['height']);
-    var condArray = currentPatient['health_data']['conditions'];
+    var condArray = currentPatient['med_conditions'];
     $.each(condArray, function(index, value) {
         //console.log(value);
         $("#patientConditionList").append("<li>" + value + "</li>");
     });
-    var medicationArray = currentPatient['health_data']['medication'];
+    var medicationArray = currentPatient['medication'];
     $.each(medicationArray, function(index, value) {
         //console.log(value);
         $("#patientMedicationList").append("<li>" + value + "</li>");
@@ -82,7 +75,7 @@ $(document).ready(function () {
             $("#addDiseaseError").fadeIn();
             return;
         }
-        currentPatient['health_data']['conditions'].push($("#patientNewDisease").val());
+        currentPatient['med_conditions'].push($("#patientNewDisease").val());
         localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
 
         $("#patientNewDisease").fadeOut();
@@ -109,8 +102,8 @@ $(document).ready(function () {
         }
 
         var old = $("#patientRemovedDisease").val();
-        var index = currentPatient['health_data']['conditions'].indexOf(old);
-        currentPatient['health_data']['conditions'].splice(index, 1);
+        var index = currentPatient['med_conditions'].indexOf(old);
+        currentPatient['med_conditions'].splice(index, 1);
         localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
         $("#patientRemovedDisease").fadeOut();
         $("#removeDiseaseDone").fadeOut();
@@ -135,7 +128,7 @@ $(document).ready(function () {
             $("#addMedicationError").fadeIn();
             return;
         }
-        currentPatient['health_data']['medication'].push($("#patientNewMedication").val());
+        currentPatient['medication'].push($("#patientNewMedication").val());
         localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
 
         $("#patientNewMedication").fadeOut();
@@ -162,8 +155,8 @@ $(document).ready(function () {
         }
 
         var old = $("#patientRemovedDisease").val();
-        var index = currentPatient['health_data']['medication'].indexOf(old);
-        currentPatient['health_data']['medication'].splice(index, 1);
+        var index = currentPatient['medication'].indexOf(old);
+        currentPatient['medication'].splice(index, 1);
         localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
         $("#patientRemovedMedication").fadeOut();
         $("#removeMedicationDone").fadeOut();
@@ -187,21 +180,22 @@ var currentPatient = localStorage.getItem('currentPatient');
 //console.log(userLogin);
 function draw_HeartRateChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/data/heartrate/'+currentPatient['id'],
+        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/heartrate',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'Day');
         data.addColumn('number', 'Beats Per Minute');
         // Get users data
-        results.forEach(elem =>{
+        console.log(results)
+        results.data.forEach(elem =>{
             //console.log(elem)
 
             var date = elem['date'].split("-");
             var value = elem['heartRate'];
             //console.log(date, value);
             data.addRows([
-                [new Date(date[0], date[1]-1, date[2]), value]
+                [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
             ]);
         })
         
@@ -224,22 +218,22 @@ google.charts.load('current', {'packages':['bar']});
 google.charts.setOnLoadCallback(draw_BloodPressureChart);
 function draw_BloodPressureChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/data/bloodpressure/'+currentPatient['id'],
+        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/bloodpressure',
         dataType: 'json',
      }).done(function (results) {
-         console.log(results)
+        //console.log(results)
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'Day');
         data.addColumn('number', 'Diastolic, mm Hg');
 
         // Get users data
-        results.forEach(elem =>{
+        results.data.forEach(elem =>{
             var date = elem['date'].split("-");
             var high_value = elem['high_value'];
             var low_value = elem['low_value'];
             //console.log(date, value_diast, value_sys);
             data.addRows([
-                [new Date(date[0], date[1]-1, date[2]), low_value]
+                [new Date(date[0], date[1]-1, date[2].split("T")[0]), low_value]
             ]);
         })
 
@@ -264,7 +258,7 @@ google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(draw_TemperatureChart);
 function draw_TemperatureChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/data/bodytemperature/'+currentPatient['id'],
+        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/bodytemperature',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
@@ -272,12 +266,12 @@ function draw_TemperatureChart() {
         data.addColumn('number', 'C*');
 
         // Get users data
-        results.forEach(element =>{
+        results.data.forEach(element =>{
             var date = element['date'].split("-");
             var value = element['bodyTemp'];
-            //console.log(date, value);
+            console.log(date, value);
             data.addRows([
-                [new Date(date[0], date[1]-1, date[2]), value]
+                [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
             ]);
         })
 
@@ -289,7 +283,6 @@ function draw_TemperatureChart() {
             legend: { position: "none" },
             tooltip: {isHtml: true}
         };
-
         var chart = new google.visualization.LineChart(document.getElementById('bodytemperature_chart'));
         chart.draw(data, options);
     })
@@ -300,7 +293,7 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(draw_BloodSugarChart);
 function draw_BloodSugarChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/data/sugarlevel/'+currentPatient['id'],
+        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/sugarlevel',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
@@ -308,12 +301,12 @@ function draw_BloodSugarChart() {
         data.addColumn('number', 'mg/dL');
 
         // Get users data
-        results.forEach(element =>{
+        results.data.forEach(element =>{
             var date = element['date'].split("-");
-            var value = element['sugar_level'];
+            var value = element['sugarLevel'];
             //console.log(date, value);
             data.addRows([
-                [new Date(date[0], date[1]-1, date[2]), value]
+                [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
             ]);
         })
 

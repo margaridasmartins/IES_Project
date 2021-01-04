@@ -15,7 +15,7 @@ $(document).ready(function () {
 
 
     $.ajax({
-        url: "http://localhost:8080/api/users"
+        url: "http://localhost:8080/api/patients"
     }).then(function(data) {
 
         data.forEach(p=>{
@@ -26,16 +26,16 @@ $(document).ready(function () {
                 var danger=false
                 var currentState=p['currentstate'];
                 var color;
-                if(currentState=="good"){
+                if(currentState=="normal"){
                     color="lightgreen";
                 }
-                if(currentState=="very good"){
+                if(currentState=="healthy"){
                     color="Chartreuse";
                 }
-                if(currentState=="bad"){
+                if(currentState=="unhealthy"){
                     color="#FFFF66";
                 }
-                if(currentState=="very bad"){
+                if(currentState=="in-danger"){
                     danger = true;
                     color="red";
                 }
@@ -75,7 +75,7 @@ $(document).ready(function () {
                 }else{
                         $("#patientSection").append(`<div class="row" style="margin-top: 3%;">
                                             <div class="col-md-12">
-                                                <a class="currentP" href="#" value="${p['id']}">
+                                                <a href="#"  onClick="selectPatient(${p.id});" id="currentPatient${p.id}" value="${p['id']}">
                                                     <div class="card " style="background-color: ${color};" >
                                                         <div class="card-body">
                                                             <div class="row ">
@@ -84,7 +84,7 @@ $(document).ready(function () {
                                                                 </div>
                                                                 <div class="col-md-3 my-auto"> 
                                                                     <b>Name: </b> 
-                                                                    <em>${p['full_name']} </em>
+                                                                    <em>${p['fullname']} </em>
                                                                 </div>
                                                                 <div class="col-md-2 my-auto">
                                                                     <b>Age: </b>
@@ -138,7 +138,7 @@ function sortPositions(){
                                                                 </div>
                                                                 <div class="col-md-3 my-auto"> 
                                                                     <b>Name: </b> 
-                                                                    <em>${p['full_name']} </em>
+                                                                    <em>${p['fullname']} </em>
                                                                 </div>
                                                                 <div class="col-md-2 my-auto">
                                                                     <b>Age: </b>
@@ -176,7 +176,7 @@ function sortPositions(){
                                                                     </div>
                                                                     <div class="col-md-3 my-auto"> 
                                                                         <b>Name: </b> 
-                                                                        <em>${p['full_name']} </em>
+                                                                        <em>${p['fullname']} </em>
                                                                     </div>
                                                                     <div class="col-md-2 my-auto">
                                                                         <b>Age: </b>
@@ -205,7 +205,7 @@ function search_patient(){
     myPatientsArray = filter_doctorPatients();
 
     myPatientsArray.forEach(p => {
-        patientName = p['full_name'].toUpperCase();
+        patientName = p['fullname'].toUpperCase();
         if(patientName.indexOf(filter) > -1){
             $("#newPatientsDiv").fadeOut();
             $("#allPatientsDiv").fadeOut();
@@ -220,7 +220,7 @@ function search_patient(){
                                                                 </div>
                                                                 <div class="col-md-3 my-auto"> 
                                                                     <b>Name: </b> 
-                                                                    <em>${p['full_name']} </em>
+                                                                    <em>${p['fullname']} </em>
                                                                 </div>
                                                                 <div class="col-md-2 my-auto">
                                                                     <b>Age: </b>
@@ -248,13 +248,13 @@ function search_patient(){
 
 function selectPatient(id){
     $.ajax({
-        url: "http://localhost:8080/api/users"
+        url: "http://localhost:8080/api/patients"
     }).then(function(data) {
         data.forEach(p=>{
             if(p.id == id){
                 localStorage.setItem('currentPatient', JSON.stringify(p));
-                console.log(localStorage.getItem('currentPatient'));
-                console.log("currentPatient"+id);
+                //console.log(localStorage.getItem('currentPatient'));
+                //console.log("currentPatient"+id);
                 document.getElementById("currentPatient"+id).setAttribute('href', 'utente_info.html');
             }
             
@@ -264,7 +264,7 @@ function selectPatient(id){
 
 function filter_doctorPatients(){
     $.ajax({
-        url: "http://localhost:8080/api/users"
+        url: "http://localhost:8080/api/patients"
     }).then(function(data) {
         var myPatients = [];
         data.forEach(p=>{
