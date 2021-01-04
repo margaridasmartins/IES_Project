@@ -25,10 +25,10 @@ class Generator:
         while True:
             sensors = requests.get('http://localhost:8080/api/sensors/ids')
             lst = sensors.json()
-            high = lst[len(lst)-1]
+            high = lst[len(lst) - 1]
             self.sensor_id = randint(1, high)
-            print(self.sensor_id)
             await asyncio.sleep(2)
+    
 
     async def gen_heart_beats(self, heartbeat=80):
         mu = heartbeat

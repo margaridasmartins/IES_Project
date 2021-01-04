@@ -1,35 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
    <head>
-      <!-- Basic -->
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <!-- Mobile Metas -->
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-      <!-- Site Metas -->
-      <title>aLIVE - Medical Care Software</title>
-      <meta name="keywords" content="">
-      <meta name="description" content="">
-      <meta name="author" content="">
-      <!-- Site Icons -->
-      <link rel="shortcut icon" href="images/fevicon.ico.png" type="image/x-icon" />
-      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-      <!-- Bootstrap CSS -->
-      <link rel="stylesheet" href="css/bootstrap.min.css">
-      <!-- Site CSS -->
-      <link rel="stylesheet" href="style.css">
-      <!-- Colors CSS -->
-      <link rel="stylesheet" href="css/colors.css">
-      <!-- ALL VERSION CSS -->
-      <link rel="stylesheet" href="css/versions.css">
-      <!-- Responsive CSS -->
-      <link rel="stylesheet" href="css/responsive.css">
-      <!-- Custom CSS -->
-      <link rel="stylesheet" href="css/custom.css">
-      <!-- Modernizer for Portfolio -->
-      <script src="js/modernizer.js"></script>
-      <!-- [if lt IE 9] -->
+   <!-- Basic -->
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <!-- Mobile Metas -->
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+   <!-- Site Metas -->
+   <title>aLIVE - Medical Care Software</title>
+   <meta name="keywords" content="">
+   <meta name="description" content="">
+   <meta name="author" content="">
+   <!-- Site Icons -->
+   <link rel="shortcut icon" href="images/fevicon.ico.png" type="image/x-icon" />
+   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+   <!-- Bootstrap CSS -->
+   <link rel="stylesheet" href="css/bootstrap.min.css">
+   <!-- Site CSS -->
+   <link rel="stylesheet" href="style.css">
+   <!-- Colors CSS -->
+   <link rel="stylesheet" href="css/colors.css">
+   <!-- ALL VERSION CSS -->
+   <link rel="stylesheet" href="css/versions.css">
+   <!-- Responsive CSS -->
+   <link rel="stylesheet" href="css/responsive.css">
+   <!-- Custom CSS -->
+   <link rel="stylesheet" href="css/custom.css">
+   <!-- Modernizer for Portfolio -->
+   <script src="js/modernizer.js"></script>
+   <!-- [if lt IE 9] -->
+   <script src="viewmodel/js/sockjs-0.3.4.js"></script>
+   <script src="viewmodel/js/stomp.js"></script>
+   
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   <script type="text/javascript">
+
+      var stompClient = null;
+
+
+      var socket = new SockJS('http://localhost:8080/chat');
+      stompClient = Stomp.over(socket);
+
+      stompClient.connect({}, function(frame) {
+
+         console.log('Connected: ' + frame);
+         stompClient.subscribe('/healthstatus/messages', function(messageOutput) {
+
+            console.log(messageOutput.body);
+         });
+      });
+
+      
+      google.charts.load('current', {packages: ['corechart', 'line']});
+      google.charts.setOnLoadCallback(drawBackgroundColor);
+
+   function drawBackgroundColor() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('number', 'X');
+      data.addColumn('number', 'Beats');
+
+      data.addRows([
+        [0, 0],   [0.9, 0], 
+        [1, 10],  [1.1, 0],  [1.9, 0],  
+        [2, 10],  [2.1, 0], [2.9, 0],  
+        [3, 10],  [3.1, 0], [3.9, 0],
+        [4, 10],  [4.1, 0], [4.9, 0], 
+        [5, 10],  [5.1, 0], [5.9, 0], 
+        [6, 10],  [6.1, 0], [6.9, 0],   
+
+      ]);
+
+      var options = {
+        hAxis: {
+          title: 'Time'
+        },
+        vAxis: {
+          title: 'Heart Beats'
+        },
+        backgroundColor: '#f1f8e9'
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+    }
+   </script>
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   <script type="text/javascript">
+     google.charts.load('current', {'packages':['corechart']});
+     google.charts.setOnLoadCallback(drawChart);
+
+     function drawChart() {
+       var data = google.visualization.arrayToDataTable([
+         ['Time', 'Blood Presure'],
+         ['1',  130],
+         ['5',  133],
+         ['10',  135],
+         ['15',  132],
+         ['20',  130],
+         ['25',  127]
+       ]);
+
+       var options = {
+         title: 'Blood Presure',
+         curveType: 'function',
+         legend: { position: 'bottom' }
+       };
+
+       var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+       chart.draw(data, options);
+     }
+   </script>
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   <script type="text/javascript">
+     google.charts.load('current', {'packages':['corechart']});
+     google.charts.setOnLoadCallback(drawChart);
+
+     function drawChart() {
+       var data = google.visualization.arrayToDataTable([
+         ['Time',  'Temp'],
+         ['1',  35.7],
+         ['2',  35.3],
+         ['3',  35.2],
+         ['4',  35.6],
+         ['5',  36.1],
+         ['6',  36.5]
+       ]);
+
+       var options = {
+         vAxis: {title: 'Body Temperature'},
+
+         isStacked: true
+       };
+
+       var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div2'));
+
+       chart.draw(data, options);
+     }
+   </script>
    </head>
    <body class="clinic_version">
       <!-- LOADER -->
