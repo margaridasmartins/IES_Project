@@ -24,7 +24,7 @@ $(document).ready(function () {
 
                 console.log(p)
                 var danger=false
-                var currentState=p['current_state'];
+                var currentState=p['currentstate'];
                 var color;
                 if(currentState=="good"){
                     color="lightgreen";
@@ -61,7 +61,7 @@ $(document).ready(function () {
                                                                 
                                                                 <div class="col-md-3 my-auto" id="date">
                                                                     <b>Last Check: </b>
-                                                                    <em>${new Date(p['last_check']).toLocaleDateString()} </em>
+                                                                    <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
                                                                 </div>
                                                 
                                                             </div>
@@ -93,7 +93,7 @@ $(document).ready(function () {
                                                                 
                                                                 <div class="col-md-3 my-auto" id="date">
                                                                     <b>Last Check: </b>
-                                                                    <em>${new Date(p['last_check']).toLocaleDateString()} </em>
+                                                                    <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
                                                                 </div>
                                                                 <div class="col-md-1 my-auto">
                                                                     <img src="./images/danger.png" style="max-width:50px; max-height:50px;">
@@ -147,7 +147,7 @@ function sortPositions(){
                                                                 
                                                                 <div class="col-md-3 my-auto" id="date">
                                                                     <b>Last Check: </b>
-                                                                    <em>${new Date(p['last_check']).toLocaleDateString()} </em>
+                                                                    <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -160,7 +160,7 @@ function sortPositions(){
         if (strValue == "last"){
             console.log("last");
             document.getElementById("patientOrder").innerHTML = ""; 
-            myPatientsArray.sort(function(a, b){return new Date(a.last_check).toLocaleDateString() - new Date(b.last_check).toLocaleDateString()});
+            myPatientsArray.sort(function(a, b){return new Date(a.lastcheck).toLocaleDateString() - new Date(b.lastcheck).toLocaleDateString()});
             //console.log("SORTED ", myPatientsArray);
             myPatientsArray.forEach(p => {
                 $("#newPatientsDiv").fadeOut();
@@ -185,7 +185,7 @@ function sortPositions(){
                                                                     
                                                                     <div class="col-md-3 my-auto" id="date">
                                                                         <b>Last Check: </b>
-                                                                        <em>${new Date(p['last_check']).toLocaleDateString()} </em>
+                                                                        <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -229,7 +229,7 @@ function search_patient(){
                                                                 
                                                                 <div class="col-md-3 my-auto" id="date">
                                                                     <b>Last Check: </b>
-                                                                    <em>${new Date(p['last_check']).toLocaleDateString()} </em>
+                                                                    <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
                                                                 </div>
                                                                 <div class="col-md-1 my-auto">
                                                                     <img src="./images/danger.png" style="max-width:50px; max-height:50px;">

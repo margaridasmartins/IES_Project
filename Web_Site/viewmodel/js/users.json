@@ -74,8 +74,8 @@
             ]
         }, 
         "doctorID": "M01",
-        "last_check": "2020-06-05T19:00:00",
-        "current_state": 1
+        "lastcheck": "2020-06-05T19:00:00",
+        "currentstate": 1
     },
     {
         "id": "P02",
@@ -152,8 +152,8 @@
             ]
         }, 
         "doctorID": "M01",
-        "last_check": "2020-08-05T19:00:00",
-        "current_state": 5
+        "lastcheck": "2020-08-05T19:00:00",
+        "currentstate": 5
     },
     {
         "id": "M01",

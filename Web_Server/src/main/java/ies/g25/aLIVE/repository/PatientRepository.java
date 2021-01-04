@@ -10,10 +10,15 @@ import ies.g25.aLIVE.model.Professional;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
-
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long>{
-    List<Patient> findByProfessional(Professional professional );
+    Page<Patient> findByProfessional(Professional professional, Pageable pageable);
+
+    Page<Patient> findByProfessionalAndCurrentstate(Professional professional, String currentstate, Pageable pageable);
+
+    Page<Patient> findByProfessionalAndFullnameContaining(Professional professional, String name, Pageable pageable);
 }

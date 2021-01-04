@@ -1,6 +1,8 @@
 package ies.g25.aLIVE.restcontroller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -8,6 +10,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +29,10 @@ import ies.g25.aLIVE.model.Patient;
 import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.ProfessionalRepository;
 
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/api/professionals")
@@ -80,13 +88,40 @@ public class ProfessionalRestController {
 
     @GetMapping("/{id}/patients")
     @ResponseBody
-    public List<Patient>  AllPatientsByProfessionalId(@PathVariable(value = "id") Long pId)
+    public ResponseEntity<Map<String, Object>> AllPatientsByProfessionalId(@PathVariable(value = "id") Long pId, @RequestParam(defaultValue = "0") 
+        int page,@RequestParam(defaultValue = "10") int size, @RequestParam(required = false) String name, @RequestParam(required = false) String state)
             throws ResourceNotFoundException {
         Optional<Professional> op = professionalRepository.findById(pId);
-        if(op.isPresent()){
-            Professional p = op.get();   
-            return patientRepository.findByProfessional(p);
-        }
-        throw new ResourceNotFoundException("Professional not found for this id: " + pId);  
+
+        List<Patient> patients;
+        Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "lastcheck"));
+        Page<Patient> pt;
+        
+        try{
+            if(op.isPresent()){
+                Professional p = op.get();
+                if(name!=null){
+                    pt = patientRepository.findByProfessionalAndFullnameContaining(p, name, paging);
+                }else if(state!=null){
+                    pt = patientRepository.findByProfessionalAndCurrentstate(p, state, paging);
+                } else{
+                    pt = patientRepository.findByProfessional(p, paging);
+                }
+            }
+            else{
+                throw new ResourceNotFoundException("Professional not found for this id: " + pId);
+            }
+            patients = pt.getContent();
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", patients);
+            response.put("currentPage", pt.getNumber());
+            response.put("totalItems", pt.getTotalElements());
+            response.put("totalPages", pt.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
+        } 
     }
 }

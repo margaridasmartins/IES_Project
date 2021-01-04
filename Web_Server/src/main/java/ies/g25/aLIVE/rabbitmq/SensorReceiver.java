@@ -243,7 +243,7 @@ public class SensorReceiver {
             status="in-danger";
         }
 
-        p.setCurrent_state(status);
+        p.setCurrentstate(status);
         patientRepository.save(p);
         
     }

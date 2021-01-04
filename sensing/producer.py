@@ -19,14 +19,14 @@ class Generator:
         # rabbit connections // os.getenv('RABBITMQ_IP')
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         self.channel = self.connection.channel()
-        self.sensor_id = 0
+        self.sensor_id = 1
 
     async def get_sensors(self):
         while True:
             sensors = requests.get('http://localhost:8080/api/sensors/ids')
             lst = sensors.json()
             high = lst[len(lst) - 1]
-            self.sensor_id = randint(0, high)
+            self.sensor_id = randint(1, high)
             await asyncio.sleep(2)
     
 
