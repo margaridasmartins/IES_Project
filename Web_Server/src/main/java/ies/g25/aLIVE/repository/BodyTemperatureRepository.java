@@ -11,14 +11,16 @@ import org.springframework.stereotype.Repository;
 
 import ies.g25.aLIVE.model.BodyTemperature;
 import ies.g25.aLIVE.model.Patient;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 @Repository
 public interface BodyTemperatureRepository extends JpaRepository<BodyTemperature, Long>{
 
-    @Query("select b from BodyTemperature b where b.date > :cdate and patient.id=:patientID")
-    List<BodyTemperature> findByPatientLessThanMonth(@Param("cdate") LocalDateTime cdate, @Param("patientID") Long id);
+    @Query("select b from BodyTemperature b where b.date > :start_date and b.date<:end_date and patient.id=:patientID")
+    Page<BodyTemperature>  findByPatientandDate(@Param("start_date") LocalDateTime start_date, @Param("end_date") LocalDateTime end_date, @Param("patientID") Long id, Pageable pageable);;
 
-    List<BodyTemperature> findByPatient(Patient p);
+    Page<BodyTemperature>  findByPatient(Patient p, Pageable pageable);
 
     BodyTemperature findFirstByPatient(Patient p, Sort sort);
 }

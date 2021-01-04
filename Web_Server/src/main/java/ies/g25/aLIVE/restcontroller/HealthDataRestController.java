@@ -57,15 +57,6 @@ public class HealthDataRestController{
         return sugarLevelRepository.findAll();
     }
 
-    @GetMapping("/sugarlevel/{pid}")
-    @ResponseBody
-    public List<SugarLevel> getSugarLevel(@PathVariable(value = "pid") long pid) throws ResourceNotFoundException {
-        Optional<Patient> op=patientRepository.findById(pid);
-        if(op.isPresent()){
-            return sugarLevelRepository.findByPatient(op.get());
-        }
-        throw new ResourceNotFoundException("Patient not found for this id: " + pid);
-    }
 
     @PostMapping("/sugarlevel/{pid}")
     public SugarLevel createSugarLevel(@PathVariable(value = "pid") long pid, @Valid @RequestBody SugarLevel sl) throws ResourceNotFoundException {
@@ -83,15 +74,6 @@ public class HealthDataRestController{
         return heartRateRepository.findAll();
     }
 
-    @GetMapping("/heartrate/{pid}")
-    @ResponseBody
-    public List<HeartRate> getHeartRate(@PathVariable(value = "pid") long pid) throws ResourceNotFoundException {
-        Optional<Patient> op=patientRepository.findById(pid);
-        if(op.isPresent()){
-            return heartRateRepository.findByPatient(op.get());
-        }
-        throw new ResourceNotFoundException("Patient not found for this id: " + pid);
-    }
 
     @PostMapping("/heartrate/{pid}")
     public HeartRate createHeartRate( @PathVariable(value = "pid") long pid, @Valid @RequestBody HeartRate hr) throws ResourceNotFoundException {
@@ -107,16 +89,6 @@ public class HealthDataRestController{
     @ResponseBody
     public List<BloodPressure> getAllBloodPressures() {
         return bloodPressureRepository.findAll();
-    }
-
-    @GetMapping("/bloodpressure/{pid}")
-    @ResponseBody
-    public List<BloodPressure> getBloodPressure(@PathVariable(value = "pid") long pid) throws ResourceNotFoundException{
-        Optional<Patient> op=patientRepository.findById(pid);
-        if(op.isPresent()){
-            return bloodPressureRepository.findByPatient(op.get());
-        }
-        throw new ResourceNotFoundException("Patient not found for this id: " + pid);
     }
 
     @PostMapping("/bloodpressure/{pid}")
@@ -136,15 +108,7 @@ public class HealthDataRestController{
         return bodyTemperatureRepository.findAll();
     }
 
-    @GetMapping("/bodytemperature/{pid}")
-    @ResponseBody
-    public List<BodyTemperature> getBodyTemperature(@PathVariable(value = "pid") long pid)throws ResourceNotFoundException {
-        Optional<Patient> op=patientRepository.findById(pid);
-        if(op.isPresent()){
-            return bodyTemperatureRepository.findByPatient(op.get());
-        }
-        throw new ResourceNotFoundException("Patient not found for this id: " + pid);
-    }
+
 
     @PostMapping("/bodytemperature/{pid}")
     public BodyTemperature createBloodPressure(@Valid @RequestBody BodyTemperature bt, @PathVariable(value = "pid") long pid)  throws ResourceNotFoundException{

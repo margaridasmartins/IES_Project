@@ -3,6 +3,8 @@ package ies.g25.aLIVE.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,10 +19,10 @@ import ies.g25.aLIVE.model.Patient;
 @Repository
 public interface BloodPressureRepository extends JpaRepository<BloodPressure, Long>{
 
-    @Query("select b from BloodPressure b where b.date > :cdate and patient.id=:patientID")
-    List<BloodPressure> findByPatientLessThanMonth(@Param("cdate") LocalDateTime cdate, @Param("patientID") Long id);
+    @Query("select b from BloodPressure b where b.date > :start_date and b.date<:end_date and patient.id=:patientID")
+    Page<BloodPressure> findByPatientandDate(@Param("start_date") LocalDateTime start_date, @Param("end_date") LocalDateTime end_date, @Param("patientID") Long id, Pageable pageable);
 
-    List<BloodPressure> findByPatient(Patient p);
+    Page<BloodPressure> findByPatient(Patient p, Pageable pageable);
 
     BloodPressure findFirstByPatient(Patient p, Sort sort);
 }

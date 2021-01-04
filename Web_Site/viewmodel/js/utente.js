@@ -48,23 +48,25 @@ $(document).ready(function () {
 google.charts.load('current', {packages: ['line']});
 google.charts.setOnLoadCallback(draw_HeartRateChart);
 var userLogin = localStorage.getItem('login');
+console.log(userLogin)
+console.log("Certo!")
 function draw_HeartRateChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/data/heartrate/'+userLogin['id'],
+        url: 'http://localhost:8080/api/patients/'+userLogin['id']+'/heartrate',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'Day');
         data.addColumn('number', 'Beats Per Minute');
         // Get users data
-        results.forEach(elem =>{
-            //console.log(elem)
+        results.data.forEach(elem =>{
+            console.log(elem)
 
             var date = elem['date'].split("-");
             var value = elem['heartRate'];
             //console.log(date, value);
             data.addRows([
-                [new Date(date[0], date[1]-1, date[2]), value]
+                [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
             ]);
         })
         
@@ -87,7 +89,7 @@ google.charts.load('current', {'packages':['bar']});
 google.charts.setOnLoadCallback(draw_BloodPressureChart);
 function draw_BloodPressureChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/data/bloodpressure/'+userLogin['id'],
+        url: 'http://localhost:8080/api/patients/'+userLogin['id']+'/bloodpressure',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
@@ -95,13 +97,13 @@ function draw_BloodPressureChart() {
         data.addColumn('number', 'Diastolic, mm Hg');
 
         // Get users data
-        results.forEach(elem =>{
+        results.data.forEach(elem =>{
             var date = elem['date'].split("-");
             var high_value = elem['high_value'];
             var low_value = elem['low_value'];
             //console.log(date, value_diast, value_sys);
             data.addRows([
-                [new Date(date[0], date[1]-1, date[2]), low_value]
+                [new Date(date[0], date[1]-1, date[2].split("T")[0]), low_value]
             ]);
         })
 
@@ -126,7 +128,7 @@ google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(draw_TemperatureChart);
 function draw_TemperatureChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/data/bodytemperature/'+userLogin['id'],
+        url: 'http://localhost:8080/api/patients/'+userLogin['id']+'/bodytemperature',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
@@ -134,12 +136,12 @@ function draw_TemperatureChart() {
         data.addColumn('number', 'C*');
 
         // Get users data
-        results.forEach(element =>{
+        results.data.forEach(element =>{
             var date = element['date'].split("-");
             var value = element['bodyTemp'];
             //console.log(date, value);
             data.addRows([
-                [new Date(date[0], date[1]-1, date[2]), value]
+                [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
             ]);
         })
 
@@ -162,7 +164,7 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(draw_BloodSugarChart);
 function draw_BloodSugarChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/data/sugarlevel/'+userLogin['id'],
+        url: 'http://localhost:8080/api/patients/'+userLogin['id']+'/sugarlevel',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
@@ -170,12 +172,12 @@ function draw_BloodSugarChart() {
         data.addColumn('number', 'mg/dL');
 
         // Get users data
-        results.forEach(element =>{
+        results.data.forEach(element =>{
             var date = element['date'].split("-");
-            var value = element['sugar_level'];
+            var value = element['sugarLevel'];
             //console.log(date, value);
             data.addRows([
-                [new Date(date[0], date[1]-1, date[2]), value]
+                [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
             ]);
         })
 

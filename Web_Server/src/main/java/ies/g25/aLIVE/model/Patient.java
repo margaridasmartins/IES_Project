@@ -25,12 +25,12 @@ import lombok.ToString;
 @DiscriminatorValue("Patient")
 public class Patient extends User {
 
-    @Column(name = "last_check")
+    @Column(name = "lastcheck")
     @Temporal(TemporalType.DATE)
-    private Date last_check;
+    private Date lastcheck;
 
-    @Column(name = "current_state")
-    private String current_state;
+    @Column(name = "currentstate")
+    private String currentstate;
 
     @Column(name = "med_conditions")
     private ArrayList<String> med_conditions;
@@ -89,10 +89,10 @@ public class Patient extends User {
     }
 
     public Patient(String password, String username, String email, String fullname, 
-    int age, String gender, Date last_check, String current_state, double height, double weight) {
+    int age, String gender, Date lastcheck, String currentstate, double height, double weight) {
         super(password, username, email, fullname, age, gender);
-        this.last_check = last_check;
-        this.current_state = current_state;
+        this.lastcheck = lastcheck;
+        this.currentstate = currentstate;
         this.height = height;
         this.weight = weight;
     }
@@ -113,12 +113,12 @@ public class Patient extends User {
         this.med_conditions.remove(med);
     }
 
-    public String getCurrent_state(){
-        return this.current_state;
+    public String getCurrentstate(){
+        return this.currentstate;
     }
 
-    public void setCurrent_state(String current_state){
-        this.current_state=current_state;
+    public void setCurrentstate(String currentstate){
+        this.currentstate=currentstate;
     }
 
     public Professional getProfessional(){
