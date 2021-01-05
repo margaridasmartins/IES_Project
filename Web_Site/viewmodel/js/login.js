@@ -5,7 +5,7 @@ $(document).ready(function () {
         window.location.replace('user.html'); */
 
     // Load users database
-    $.ajax({
+    /* $.ajax({
         url: "http://192.168.160.217:8080/api/patients"
     }).then(function(patient) {
         localStorage.setItem('users', JSON.stringify(patient))
@@ -17,13 +17,13 @@ $(document).ready(function () {
     }).then(function(professional) {
         localStorage.getItem('users').append(professional)
         }
-    )
+    ) */
 
 
-    /* $.getJSON("https://itskikat.github.io/ies_itskikat/DB/users.json", function(json) {
+    $.getJSON("https://itskikat.github.io/ies_itskikat/DB/users.json", function(json) {
         //console.log(json)
         localStorage.setItem('users', JSON.stringify(json));
-    }); */
+    });
 
     // Login
     $("#loginButton").click(function(){
