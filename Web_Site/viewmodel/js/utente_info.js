@@ -180,7 +180,7 @@ var currentPatient = localStorage.getItem('currentPatient');
 //console.log(userLogin);
 function draw_HeartRateChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/heartrate',
+        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/heartrate',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
@@ -218,7 +218,7 @@ google.charts.load('current', {'packages':['bar']});
 google.charts.setOnLoadCallback(draw_BloodPressureChart);
 function draw_BloodPressureChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/bloodpressure',
+        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/bloodpressure',
         dataType: 'json',
      }).done(function (results) {
         //console.log(results)
@@ -258,7 +258,7 @@ google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(draw_TemperatureChart);
 function draw_TemperatureChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/bodytemperature',
+        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/bodytemperature',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
@@ -293,7 +293,7 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(draw_BloodSugarChart);
 function draw_BloodSugarChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/sugarlevel',
+        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/sugarlevel',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();

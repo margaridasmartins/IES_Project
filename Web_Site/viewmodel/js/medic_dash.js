@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $.ajax({
-        url: "http://localhost:8080/api/users"
+        url: "http://192.168.160.217:8080/api/users"
     }).then(function(data) {
        console.log(data)
 
