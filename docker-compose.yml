@@ -54,8 +54,7 @@ services:
       SERVER_IP: backend
     restart: on-failure
 
-  client:
-    image: nginx:latest   
+  client:   
     build:
       context: Web_Site
       dockerfile: Dockerfile
