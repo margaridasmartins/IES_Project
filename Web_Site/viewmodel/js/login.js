@@ -72,7 +72,7 @@ $(document).ready(function () {
 // Get Patients from API
 function getPatients(handleData){
     $.ajax({
-        url: "http://localhost:8080/api/patients"
+        url: "http://192.168.160.217:8080/api/patients"
     }).then(function(data) {
         handleData(data);
     });
@@ -81,7 +81,7 @@ function getPatients(handleData){
 // Get Professionals from API
 function getProfessionals(handleData){
     $.ajax({
-        url: "http://localhost:8080/api/professionals"
+        url: "http://192.168.160.217:8080/api/professionals"
     }).then(function(data) {
         handleData(data);
     });

@@ -52,7 +52,7 @@ $("#registerPatient").click(function(){
     data_post["lastcheck"]= new Date();
     
     $.ajax({
-        url: "http://localhost:8080/api/professionals"
+        url: "http://192.168.160.217:8080/api/professionals"
     }).then(function(dataPro) {
         pro_exists=true;                                //Associar o paciente ao medico
         /*dataPro.forEach((value, index) => {
@@ -63,7 +63,7 @@ $("#registerPatient").click(function(){
         })*/
         if (pro_exists){
             $.ajax({
-                url: "http://localhost:8080/api/patients"
+                url: "http://192.168.160.217:8080/api/patients"
             }).then(function(data) {
                 var email_exists=false;
                 for(u in data){
@@ -131,7 +131,7 @@ $("#registerProfessional").click(function(){
     
 
     $.ajax({
-        url: "http://localhost:8080/api/professionals"
+        url: "http://192.168.160.217:8080/api/professionals"
     }).then(function(data) {
         var email_exists=false;
         for(u in data){
@@ -161,7 +161,7 @@ function postPatient(data){
 
     $.ajax({
         type: "POST",
-        url: "http://localhost:8080/api/patients",
+        url: "http://192.168.160.217:8080/api/patients",
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
@@ -184,7 +184,7 @@ function postProfessional(data){
 
     $.ajax({
         type: "POST",
-        url: "http://localhost:8080/api/professionals",
+        url: "http://192.168.160.217:8080/api/professionals",
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
