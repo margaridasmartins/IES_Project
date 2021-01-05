@@ -17,7 +17,6 @@ public class WarningController {
     @MessageMapping("/chat")
     @SendTo("/healthstatus/messages")
     public String send(final String message){
-        System.out.println("Sock sent");
         this.template.convertAndSend("/healthstatus/messages", message);
         return message;
     }

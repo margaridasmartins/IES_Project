@@ -27,7 +27,7 @@ public class User {
     private Long id;
 
     @Column(name = "password")
-    @ToString.Exclude
+    //@ToString.Exclude
     private String password;
 
     @Column(name = "username")
@@ -105,6 +105,10 @@ public class User {
 
     public byte[] getImage(){
         return this.image;
+    }
+    
+    public String getPassword(){
+    	return this.password;
     }
 }
 

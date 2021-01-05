@@ -30,26 +30,10 @@
    <!-- Modernizer for Portfolio -->
    <script src="js/modernizer.js"></script>
    <!-- [if lt IE 9] -->
-   <script src="viewmodel/js/sockjs-0.3.4.js"></script>
-   <script src="viewmodel/js/stomp.js"></script>
+   
    
    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
    <script type="text/javascript">
-
-      var stompClient = null;
-
-
-      var socket = new SockJS('http://localhost:8080/chat');
-      stompClient = Stomp.over(socket);
-
-      stompClient.connect({}, function(frame) {
-
-         console.log('Connected: ' + frame);
-         stompClient.subscribe('/healthstatus/messages', function(messageOutput) {
-
-            console.log(messageOutput.body);
-         });
-      });
 
       
       google.charts.load('current', {packages: ['corechart', 'line']});

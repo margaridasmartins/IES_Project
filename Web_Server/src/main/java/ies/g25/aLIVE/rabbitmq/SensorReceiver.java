@@ -138,7 +138,7 @@ public class SensorReceiver {
             }
 
             String cl = o.getClass().toString().split(" ")[1].split("\\.")[4];
-            System.out.println(cl);
+
 
             switch (cl) {
                 case "BloodPressure":
@@ -234,8 +234,7 @@ public class SensorReceiver {
             status = "unhealthy";
         } else {
             try {
-                warningController.send("Hello");
-                warningController.send(p.getUsername());
+                warningController.send(String.valueOf(p.getId())+":"+String.valueOf(p.getProfessional().getId()));
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

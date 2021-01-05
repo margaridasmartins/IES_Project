@@ -41,6 +41,7 @@ $(document).ready(function () {
                         registered = true;
                         user="patient";
                         localStorage.setItem('login', JSON.stringify(value));
+                        localStorage.setItem('type',"patient");
                         return;
                     }
                 }
@@ -55,6 +56,7 @@ $(document).ready(function () {
                             registered = true;
                             user="professional";
                             localStorage.setItem('login', JSON.stringify(value));
+                            localStorage.setItem('type',"professional");
                             return;
                         }
                     }

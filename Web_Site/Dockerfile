@@ -5,6 +5,8 @@
 # base image - nginx with tag "latest"
 FROM nginx:latest
 
+COPY . /usr/share/nginx/html
+COPY . /var/www/html
 # Adding read permissions to custom index.html
 RUN chmod +r /usr/share/nginx/html/index.html
 

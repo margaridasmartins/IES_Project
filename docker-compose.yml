@@ -26,7 +26,7 @@ services:
       AMQP_URL: 'amqp://rabbitmq?connection_attempts=5&retry_delay=5'
       RABBITMQ_DEFAULT_USER: "guest"
       RABBITMQ_DEFAULT_PASS: "guest"
-  web-server:
+  backend:
     build:
       context: Web_Server
       dockerfile: Dockerfile
@@ -48,9 +48,10 @@ services:
     depends_on:
       - db
       - rabbit
-      - web-server
+      - backend
     environment:
       RABBITMQ_IP: rabbit
+      SERVER_IP: backend
     restart: on-failure
 
   client:
@@ -59,14 +60,16 @@ services:
       context: Web_Site
       dockerfile: Dockerfile
     ports: 
-      - '8000:80'
+      - '80:80'
     depends_on:
       - db
       - rabbit
-      - web-server
+      - backend
       - sensing
     volumes: 
       - ./src:/etc/share/nginx/html
+    environment:
+      SERVER_IP: backend
     
 volumes:
   db-data:
