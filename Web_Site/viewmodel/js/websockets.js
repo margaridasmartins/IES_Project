@@ -3,7 +3,7 @@ userLogin = JSON.parse(localStorage.getItem('login'));
 if (localStorage.getItem('type')=="professional"){
     var stompClient = null;
 
-    var socket = new SockJS('http://localhost:8080/chat');
+    var socket = new SockJS('http://192.168.160.217:8080/chat');
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function(frame) {
