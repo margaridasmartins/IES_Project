@@ -1,14 +1,19 @@
 $(document).ready(function () {
 
-    /* // If user is logged in already, redirect to app
+    /* 
+    // If user is logged in already, redirect to app
     if (localStorage.getItem('login')!=null)
-        window.location.replace('user.html'); */
+        window.location.replace('user.html'); 
+    */
 
+
+    /* LOCAL TESTING ONLY!
     // Load users database
     $.getJSON("https://itskikat.github.io/ies_itskikat/DB/users.json", function(json) {
         //console.log(json)
         localStorage.setItem('users', JSON.stringify(json));
     });
+    */
 
     // Login
     $("#loginButton").click(function(){
