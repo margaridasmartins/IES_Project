@@ -3,6 +3,9 @@ package ies.g25.aLIVE.rabbitmq;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.sql.Timestamp;
 
 import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -85,10 +88,17 @@ public class SensorReceiver {
     public void receive(String in, int receiver) throws InterruptedException, ResourceNotFoundException {
         JSONObject jo = new JSONObject(in);
         Integer id = (Integer) jo.get("id");
+
+        long offset = Timestamp.valueOf("2020-01-01 00:00:00").getTime();
+        long end = Timestamp.valueOf("2021-13-01 00:00:00").getTime();
+        long diff = end - offset + 1;
+        Timestamp rand = new Timestamp(offset + (long)(Math.random() * diff));
+        LocalDateTime date = rand.toLocalDateTime();
         switch (receiver) {
             case 1:
                 Integer val = (Integer) jo.get("heartbeat");
                 HeartRate hr = new HeartRate();
+                hr.setDate(date);
                 hr.setHeartRate(val);
                 controller.createHeartrate(Long.valueOf(id), hr);
                 break;
@@ -96,6 +106,7 @@ public class SensorReceiver {
             case 2:
                 BigDecimal vals = (BigDecimal) jo.get("sugar");
                 SugarLevel sl = new SugarLevel();
+                sl.setDate(date);
                 sl.setSugarLevel(vals.doubleValue());
                 controller.createSugarLevel(Long.valueOf(id), sl);
                 break;
@@ -104,6 +115,7 @@ public class SensorReceiver {
                 BigDecimal high = (BigDecimal) jo.get("systolic");
                 BigDecimal low = (BigDecimal) jo.get("diastolic");
                 BloodPressure bp = new BloodPressure();
+                bp.setDate(date);
                 bp.setLow_value(low.doubleValue());
                 bp.setHigh_value(high.doubleValue());
                 controller.createBloodPressure(Long.valueOf(id), bp);
@@ -112,6 +124,7 @@ public class SensorReceiver {
             case 4:
                 BigDecimal body_temp = (BigDecimal) jo.get("temperature");
                 BodyTemperature bt = new BodyTemperature();
+                bt.setDate(date);
                 bt.setbodyTemp(body_temp.doubleValue());
                 controller.createBodyTemperature(Long.valueOf(id), bt);
                 break;
