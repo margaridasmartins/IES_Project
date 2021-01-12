@@ -24,7 +24,6 @@ public class SugarLevel{
 
     // date of the mesure
     @Column(name="date",nullable = false, updatable = false)
-    @CreationTimestamp
     private LocalDateTime date;
 
     // Sugar level values
@@ -52,6 +51,9 @@ public class SugarLevel{
 
     public LocalDateTime getDate(){
         return this.date;
+    }
+    public void setDate(LocalDateTime date){
+        this.date=date;
     }
     public Patient getPatient(){
         return this.patient;

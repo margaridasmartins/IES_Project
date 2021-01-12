@@ -1,5 +1,6 @@
 package ies.g25.aLIVE.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -23,7 +24,6 @@ public class BodyTemperature{
 
     // date of the mesure
     @Column(name="date",nullable = false, updatable = false)
-    @CreationTimestamp
     private LocalDateTime date;
 
     // Blood Temperature values
@@ -50,6 +50,9 @@ public class BodyTemperature{
 
     public LocalDateTime getDate(){
         return this.date;
+    }
+    public void setDate(LocalDateTime date){
+        this.date=date;
     }
     public Patient getPatient(){
         return this.patient;

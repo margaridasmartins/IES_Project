@@ -25,7 +25,6 @@ public class BloodPressure{
 
     // date of the mesure
     @Column(name="date",nullable = false, updatable = false)
-    @CreationTimestamp
     private LocalDateTime date;
 
     // Blood Pressure values
@@ -63,6 +62,9 @@ public class BloodPressure{
 
     public LocalDateTime getDate(){
         return this.date;
+    }
+    public void setDate(LocalDateTime date){
+        this.date=date;
     }
     public Patient getPatient(){
         return this.patient;
