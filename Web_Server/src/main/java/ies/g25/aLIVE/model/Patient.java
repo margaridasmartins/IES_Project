@@ -129,4 +129,52 @@ public class Patient extends User {
         this.professional=professional;
     }
 
+    public String getUsername(){
+        return super.getUsername();
+    }
+
+    public void setUsername(String username){
+        super.setUsername(username);
+    }
+
+    public String getFullname(){
+        return super.getFullname();
+    }
+
+    public void setFullname(String fullname){
+        super.setFullname(fullname);
+    }
+
+    public int getAge(){
+        return super.getAge();
+    }
+
+    public void setAge(int age){
+        super.setAge(age);
+    }
+
+    public String getEmail(){
+        return super.getEmail();
+    }
+
+    public void setEmail(String email){
+        super.setEmail(email);
+    }
+
+    public double getWeight(){
+        return this.weight;
+    }
+
+    public void setWeight(double weight){
+        this.weight=weight;
+    }
+
+    public double getHeight(){
+        return this.height;
+    }
+
+    public void setHeight(double height){
+        this.height=height;
+    }
+
 }

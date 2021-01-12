@@ -7,8 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
+import java.beans.FeatureDescriptor;
 
 import javax.validation.Valid;
+import org.springframework.beans.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -17,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -77,6 +81,34 @@ public class PatientRestController {
     public Patient createPatient(@Valid @RequestBody Patient patient) {
         return patientRepository.save(patient);
     }
+
+    @PutMapping("/{id}")
+    public Patient replacePatient(@RequestBody Patient newPatient, @PathVariable(value = "id") Long patientId) 
+            throws ResourceNotFoundException{
+        /*
+        return patientRepository.findById(patientId)
+        .map(patient -> {
+            patient.setFullname(newPatient.getFullname());
+            patient.setAge(newPatient.getAge());
+            patient.setUsername(newPatient.getUsername());
+            patient.setEmail(newPatient.getEmail());
+            patient.setHeight(newPatient.getHeight());
+            patient.setWeight(newPatient.getWeight());
+            return patientRepository.save(patient);
+        })
+        .orElseGet(() -> {
+            newPatient.setId(patientId);
+            return patientRepository.save(newPatient);
+        });
+        */Optional<Patient> op = patientRepository.findById(patientId);
+        if (op.isPresent()) {
+            Patient patient = op.get();
+            newPatient = (Patient) PersistenceUtils.partialUpdate(patient, newPatient);
+            return patientRepository.save(newPatient);
+        }
+        throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Patient> getPatientById(@PathVariable(value = "id") Long patientId)
@@ -279,6 +311,26 @@ public class PatientRestController {
              return list;
         }
         throw new ResourceNotFoundException("Patient not found for this id: " + pid);
+    }
+
+
+    public static class PersistenceUtils {
+
+        public static Object partialUpdate(Object dbObject, Object partialUpdateObject){
+            String[] ignoredProperties = getNullPropertyNames(partialUpdateObject);
+            BeanUtils.copyProperties(partialUpdateObject, dbObject, ignoredProperties);
+            return dbObject;
+        }
+    
+        private static String[] getNullPropertyNames(Object object) {
+            final BeanWrapper wrappedSource = new BeanWrapperImpl(object);
+            return Stream.of(wrappedSource.getPropertyDescriptors())
+                    .map(FeatureDescriptor::getName)
+                    .filter(propertyName -> wrappedSource.getPropertyValue(propertyName) == null)
+                    .toArray(String[]::new);
+        }
+    
+    
     }
 
 }
