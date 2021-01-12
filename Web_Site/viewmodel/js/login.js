@@ -1,9 +1,13 @@
 $(document).ready(function () {
 
-    /* // If user is logged in already, redirect to app
+    /* 
+    // If user is logged in already, redirect to app
     if (localStorage.getItem('login')!=null)
-        window.location.replace('user.html'); */
+        window.location.replace('user.html'); 
+    */
 
+
+    /* LOCAL TESTING ONLY!
     // Load users database
     /* $.ajax({
         url: "http://192.168.160.217:8080/api/patients"
@@ -24,6 +28,7 @@ $(document).ready(function () {
         //console.log(json)
         localStorage.setItem('users', JSON.stringify(json));
     });
+    */
 
     // Login
     $("#loginButton").click(function(){

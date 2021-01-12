@@ -322,3 +322,38 @@ function draw_BloodSugarChart() {
         chart.draw(data, options);
      })
 }
+
+// Oxygen Saturation
+google.charts.load('current', {packages: ['corechart', 'bar']});
+google.charts.setOnLoadCallback(draw_OxygenSaturationChart);
+function draw_OxygenSaturationChart() {
+    $.ajax({
+        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/oxygensaturation',
+        dataType: 'json',
+     }).done(function (results) {
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Day');
+        data.addColumn('percentage', '%');
+
+        // Get users data
+        results.data.forEach(element =>{
+            var date = element['date'].split("-");
+            var value = element['oxygensaturation'];
+            //console.log(date, value);
+            data.addRows([
+                [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
+            ]);
+        })
+
+        var options = {
+            title: "Oxygen Saturation",
+            height: 350,
+            hAxis: { title: 'Day' },
+            vAxis: { title: 'Oxygen Saturation, in %' },
+            legend: { position: "none" },
+            tooltip: {isHtml: true}
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById('oxygensaturation_chart'));
+        chart.draw(data, options);
+     })
+}
