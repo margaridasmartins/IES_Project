@@ -15,7 +15,7 @@ $(document).ready(function () {
 
 
     $.ajax({
-        url: "http://localhost:8080/api/professionals/" +  userLogin["id"] + "/patients"
+        url: "http://192.168.160.217:8080/api/professionals/" +  userLogin["id"] + "/patients"
     }).then(function(data) {
 
         data.data.forEach(p=>{
@@ -246,7 +246,7 @@ function search_patient(){
 
 function selectPatient(id){
     $.ajax({
-        url: "http://localhost:8080/api/patients"
+        url: "http://192.168.160.217:8080/api/patients"
     }).then(function(data) {
         data.forEach(p=>{
             if(p.id == id){
@@ -262,7 +262,7 @@ function selectPatient(id){
 
 function filter_doctorPatients(){
     $.ajax({
-        url: "http://localhost:8080/api/professionals/" +  userLogin["id"] + "/patients"
+        url: "http://192.168.160.217:8080/api/professionals/" +  userLogin["id"] + "/patients"
     }).then(function(data) {
         var myPatients = [];
         data.data.forEach(p=>{
