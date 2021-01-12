@@ -89,8 +89,8 @@ public class SensorReceiver {
         JSONObject jo = new JSONObject(in);
         Integer id = (Integer) jo.get("id");
 
-        long offset = Timestamp.valueOf("2020-01-01 00:00:00").getTime();
-        long end = Timestamp.valueOf("2021-13-01 00:00:00").getTime();
+        long offset = Timestamp.valueOf("2020-11-01 00:00:00").getTime();
+        long end = Timestamp.valueOf("2021-01-13 00:00:00").getTime();
         long diff = end - offset + 1;
         Timestamp rand = new Timestamp(offset + (long)(Math.random() * diff));
         LocalDateTime date = rand.toLocalDateTime();
