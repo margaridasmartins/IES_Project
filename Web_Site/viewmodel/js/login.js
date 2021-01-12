@@ -21,7 +21,7 @@ $(document).ready(function () {
     }).then(function(professional) {
         localStorage.getItem('users').append(professional)
         }
-    ) */
+    )
 
 
     $.getJSON("https://itskikat.github.io/ies_itskikat/DB/users.json", function(json) {
