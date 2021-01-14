@@ -328,7 +328,7 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(draw_OxygenSaturationChart);
 function draw_OxygenSaturationChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/oxygensaturation',
+        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/oxygenlevel',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
