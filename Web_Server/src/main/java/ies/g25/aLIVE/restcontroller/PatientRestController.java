@@ -85,22 +85,7 @@ public class PatientRestController {
     @PutMapping("/{id}")
     public Patient replacePatient(@RequestBody Patient newPatient, @PathVariable(value = "id") Long patientId) 
             throws ResourceNotFoundException{
-        /*
-        return patientRepository.findById(patientId)
-        .map(patient -> {
-            patient.setFullname(newPatient.getFullname());
-            patient.setAge(newPatient.getAge());
-            patient.setUsername(newPatient.getUsername());
-            patient.setEmail(newPatient.getEmail());
-            patient.setHeight(newPatient.getHeight());
-            patient.setWeight(newPatient.getWeight());
-            return patientRepository.save(patient);
-        })
-        .orElseGet(() -> {
-            newPatient.setId(patientId);
-            return patientRepository.save(newPatient);
-        });
-        */Optional<Patient> op = patientRepository.findById(patientId);
+        Optional<Patient> op = patientRepository.findById(patientId);
         if (op.isPresent()) {
             Patient patient = op.get();
             newPatient = (Patient) PersistenceUtils.partialUpdate(patient, newPatient);

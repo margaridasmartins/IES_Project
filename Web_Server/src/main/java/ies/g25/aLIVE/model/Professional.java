@@ -8,10 +8,11 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -67,7 +68,7 @@ public class Professional extends User {
         this.type=type;
     }
 
-    public String getType(String type){
+    public String getType(){
         return type;
     }
 

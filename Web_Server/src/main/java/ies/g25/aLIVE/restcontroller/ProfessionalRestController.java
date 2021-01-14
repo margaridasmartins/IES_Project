@@ -1,38 +1,41 @@
 package ies.g25.aLIVE.restcontroller;
 
+import java.beans.FeatureDescriptor;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
 
 import ies.g25.aLIVE.exception.ResourceNotFoundException;
-import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.model.Patient;
+import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.ProfessionalRepository;
-
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/api/professionals")
@@ -59,6 +62,18 @@ public class ProfessionalRestController {
     @PostMapping
     public Professional createProfessional(@Valid @RequestBody Professional professional) {
         return professionalRepository.save(professional);
+    }
+
+    @PutMapping("/{id}")
+    public Professional replaceProfessional(@RequestBody Professional newProfessional, @PathVariable(value = "id") Long professionalId) 
+            throws ResourceNotFoundException{
+        Optional<Professional> op = professionalRepository.findById(professionalId);
+        if (op.isPresent()) {
+            Professional professional = op.get();
+            newProfessional = (Professional) PersistenceUtils.partialUpdate(professional, newProfessional);
+            return professionalRepository.save(newProfessional);
+        }
+        throw new ResourceNotFoundException("Professional not found for this id: " + professionalId);
     }
 
     @PostMapping("/{id}/picture")
@@ -123,5 +138,24 @@ public class ProfessionalRestController {
         } catch (Exception e) {
             throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
         } 
+    }
+
+    public static class PersistenceUtils {
+
+        public static Object partialUpdate(Object dbObject, Object partialUpdateObject){
+            String[] ignoredProperties = getNullPropertyNames(partialUpdateObject);
+            BeanUtils.copyProperties(partialUpdateObject, dbObject, ignoredProperties);
+            return dbObject;
+        }
+    
+        private static String[] getNullPropertyNames(Object object) {
+            final BeanWrapper wrappedSource = new BeanWrapperImpl(object);
+            return Stream.of(wrappedSource.getPropertyDescriptors())
+                    .map(FeatureDescriptor::getName)
+                    .filter(propertyName -> wrappedSource.getPropertyValue(propertyName) == null)
+                    .toArray(String[]::new);
+        }
+    
+    
     }
 }
