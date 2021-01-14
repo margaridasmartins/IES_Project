@@ -28,7 +28,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private AuthenticationManager authenticationManager;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
-        this.setAuthenticationManager(authenticationManager);
+        this.authenticationManager = authenticationManager;
+        //this.setAuthenticationManager(authenticationManager);
+
+        setFilterProcessesUrl("/api/login");
     }
     
     @Override
@@ -53,6 +56,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        System.out.println(authenticationManager);
         return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getParameter("username"), request.getParameter("password")));
     }

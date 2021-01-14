@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,6 +60,10 @@ public class PatientRestController {
     public BodyTemperatureRepository bodyTemperatureRepository;
     public ProfessionalRepository professionalRepository;
 
+    @Autowired
+    public PasswordEncoder passwordEncoder;
+
+
     public PatientRestController(PatientRepository patientRepository, HeartRateRepository heartRateRepository,
             SugarLevelRepository sugarLevelRepository, BloodPressureRepository bloodPressureRepository, 
             BodyTemperatureRepository bodyTemperatureRepository, ProfessionalRepository professionalRepository) {
@@ -79,6 +84,7 @@ public class PatientRestController {
 
     @PostMapping
     public Patient createPatient(@Valid @RequestBody Patient patient) {
+        patient.setPassword(passwordEncoder.encode(patient.getPassword()));
         return patientRepository.save(patient);
     }
 

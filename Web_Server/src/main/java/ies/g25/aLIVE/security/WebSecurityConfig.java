@@ -1,5 +1,6 @@
 package ies.g25.aLIVE.security;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,12 +16,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
+@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private PasswordEncoder passwordEncoder;
     private UserDetailsService userDetailsService;
 
-    public WebSecurityConfig(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
+    public WebSecurityConfig(PasswordEncoder passwordEncoder,
+                             @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
     }
@@ -38,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/v2/api-docs").permitAll()
 			.antMatchers(HttpMethod.GET, "/webjars/**").permitAll()
 			.antMatchers(HttpMethod.GET, "/swagger-resources/**").permitAll()
-            .antMatchers(HttpMethod.POST, "/api/login").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/login").permitAll()
             .antMatchers(HttpMethod.POST, "/api/patients").permitAll()
 			.anyRequest().authenticated()
 			.and()
