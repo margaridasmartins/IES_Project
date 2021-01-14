@@ -115,8 +115,22 @@
                <div class="input-group col-md-3 offset-1 d-flex justify-content-end" >
                   <!-- ORDER BY SELECTION -->
                   <select class="form-control d-flex align-self-center" id="select_order" onchange="sortPositions();">
+                     <option value="default">Select order</option>
                      <option value="last">Order by Last Checked</option>
                      <option value="status">Order by Health status</option>
+                  </select>
+               </div>
+            </div>
+            <p></p>
+            <div class="row">
+               <div class="input-group col-md-8" >
+               </div>
+               <div class="input-group col-md-3 offset-1 d-flex justify-content-end" >
+                  <!-- FILTER BY SELECTION -->
+                  <select class="form-control d-flex align-self-center" id="select_filter" onchange="filterPositions();">
+                     <option value="default">Select filter</option>
+                     <option value="diabetes">Filter - Diabetes</option>
+                     <option value="status">Filter - Obesity</option>
                   </select>
                </div>
             </div>
