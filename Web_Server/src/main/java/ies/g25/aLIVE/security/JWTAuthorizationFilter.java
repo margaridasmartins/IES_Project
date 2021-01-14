@@ -33,6 +33,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
 
 	public JWTAuthorizationFilter(AuthenticationManager authManager) {
+		
         super(authManager);
 	}
 	

@@ -28,7 +28,7 @@ public class User {
     private Long id;
 
     @Column(name = "password")
-    //@ToString.Exclude
+    @ToString.Exclude
     private String password;
 
     @Column(name = "username")
