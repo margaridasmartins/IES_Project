@@ -171,6 +171,30 @@ $(document).ready(function () {
     });
 
 });
+
+// LATETST DATA
+window.onload = function get_latestValues(){
+    $.ajax({
+        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/latest',
+        dataType: 'array',
+        }).done(function (results) {
+            results.data.forEach(elem => {
+                // console.log(elem);
+                var bloodpressure = elem[0];
+                var bodytemperature = elem[1];
+                var heartrate = elem[2];
+                var sugarlevel = elem[3];
+                var oxygenlevel = elem[4];
+                document.getElementById('latest_bp').innerHTML = bloodpressure;
+                document.getElementById('latest_bt').innerHTML = bodytemperature;
+                document.getElementById('latest_hr').innerHTML = heartrate;
+                document.getElementById('latest_sl').innerHTML = sugarlevel;
+                document.getElementById('latest_ol').innerHTML = oxygenlevel;
+            })
+        })
+}
+
+
 // CHARTS
 
 // Heart Rate
