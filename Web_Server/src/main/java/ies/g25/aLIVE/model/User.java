@@ -3,6 +3,7 @@ package ies.g25.aLIVE.model;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -77,6 +78,9 @@ public class User {
         this.age=age;
     } 
 
+    public String getRole(){
+        return this.getClass().getAnnotation(DiscriminatorValue.class).value(); 
+    }
     public String getFullname(){
         return this.fullname;
     }
