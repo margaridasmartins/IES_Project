@@ -2,9 +2,9 @@ package ies.g25.aLIVE.restcontroller;
 
 import java.util.List;
 import java.util.Optional;
+
 import javax.validation.Valid;
 
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,11 +12,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ies.g25.aLIVE.exception.ResourceNotFoundException;
-import ies.g25.aLIVE.model.*;
-import ies.g25.aLIVE.repository.*;
+import ies.g25.aLIVE.model.BloodPressure;
+import ies.g25.aLIVE.model.BodyTemperature;
+import ies.g25.aLIVE.model.HeartRate;
+import ies.g25.aLIVE.model.OxygenLevel;
+import ies.g25.aLIVE.model.Sensor;
+import ies.g25.aLIVE.model.SugarLevel;
+import ies.g25.aLIVE.repository.BloodPressureRepository;
+import ies.g25.aLIVE.repository.BodyTemperatureRepository;
+import ies.g25.aLIVE.repository.HeartRateRepository;
+import ies.g25.aLIVE.repository.OxygenLevelRepository;
+import ies.g25.aLIVE.repository.PatientRepository;
+import ies.g25.aLIVE.repository.SensorRepository;
+import ies.g25.aLIVE.repository.SugarLevelRepository;
 
 @RestController
 @RequestMapping("/api/sensors")
@@ -35,19 +47,23 @@ public class SensorRestController {
     public SugarLevelRepository sugarLevelRepository;
 
     @Autowired
+    public OxygenLevelRepository oxygenLevelRepository;
+
+    @Autowired
     public BloodPressureRepository bloodPressureRepository;
 
     @Autowired
     public BodyTemperatureRepository bodyTemperatureRepository;
 
     public SensorRestController (SensorRepository sensorRepository, PatientRepository patientRepository, HeartRateRepository heartRateRepository, SugarLevelRepository sugarLevelRepository,
-        BloodPressureRepository bloodPressureRepository, BodyTemperatureRepository bodyTemperatureRepository){
+            OxygenLevelRepository oxygenLevelRepository, BloodPressureRepository bloodPressureRepository, BodyTemperatureRepository bodyTemperatureRepository){
 
             this.sensorRepository=sensorRepository;
             this.bloodPressureRepository=bloodPressureRepository;
             this.bodyTemperatureRepository=bodyTemperatureRepository;
             this.heartRateRepository=heartRateRepository;
             this.sugarLevelRepository=sugarLevelRepository;
+            this.oxygenLevelRepository=oxygenLevelRepository;
             this.patientRepository=patientRepository;
     }
 
@@ -78,6 +94,16 @@ public class SensorRestController {
         if(op.isPresent()){
             sl.setPatient(op.get().getPatient());
             return sugarLevelRepository.save(sl);
+        }
+        throw new ResourceNotFoundException("Sensor not found for this id: " + id);
+    }
+
+    @PostMapping("/{id}/oxygenlevel")
+    public OxygenLevel createOxygenLevel(@PathVariable(value = "id") long id, @Valid @RequestBody OxygenLevel ol) throws ResourceNotFoundException {
+        Optional<Sensor> op = sensorRepository.findById(id);
+        if(op.isPresent()){
+            ol.setPatient(op.get().getPatient());
+            return oxygenLevelRepository.save(ol);
         }
         throw new ResourceNotFoundException("Sensor not found for this id: " + id);
     }

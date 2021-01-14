@@ -35,6 +35,11 @@ public class ALiveApplication {
     }
 
     @Bean
+    public Queue queueOL() {
+        return new Queue("oxygen_level");
+    }
+
+    @Bean
     public Queue queueBP() {
         return new Queue("blood_pressure");
     }
@@ -61,6 +66,10 @@ public class ALiveApplication {
     @Bean
     public Binding bindingSL() {
         return BindingBuilder.bind(queueSL()).to(exchange()).with("sugar_level");
+    }
+    @Bean
+    public Binding bindingOL() {
+        return BindingBuilder.bind(queueOL()).to(exchange()).with("oxygen_level");
     }
 
     @Bean

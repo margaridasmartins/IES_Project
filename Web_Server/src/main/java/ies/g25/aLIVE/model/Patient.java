@@ -70,6 +70,12 @@ public class Patient extends User {
     @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    private Set<OxygenLevel> oxygenLevel;
+
+    @OneToMany(mappedBy = "patient")
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<HeartRate> heartRate;
 
     @OneToMany(mappedBy = "patient")

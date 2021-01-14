@@ -1,35 +1,34 @@
 package ies.g25.aLIVE.rabbitmq;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.sql.Timestamp;
 
 import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ies.g25.aLIVE.websocket.*;
 import ies.g25.aLIVE.exception.ResourceNotFoundException;
 import ies.g25.aLIVE.model.BloodPressure;
 import ies.g25.aLIVE.model.BodyTemperature;
 import ies.g25.aLIVE.model.HeartRate;
+import ies.g25.aLIVE.model.OxygenLevel;
 import ies.g25.aLIVE.model.Patient;
-import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.model.Sensor;
 import ies.g25.aLIVE.model.SugarLevel;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
 import ies.g25.aLIVE.repository.HeartRateRepository;
+import ies.g25.aLIVE.repository.OxygenLevelRepository;
 import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.ProfessionalRepository;
 import ies.g25.aLIVE.repository.SensorRepository;
 import ies.g25.aLIVE.repository.SugarLevelRepository;
 import ies.g25.aLIVE.restcontroller.PatientRestController;
-import ies.g25.aLIVE.restcontroller.ProfessionalRestController;
 import ies.g25.aLIVE.restcontroller.SensorRestController;
+import ies.g25.aLIVE.websocket.WarningController;
 
 public class SensorReceiver {
 
@@ -46,6 +45,9 @@ public class SensorReceiver {
     public SugarLevelRepository sugarLevelRepository;
 
     @Autowired
+    public OxygenLevelRepository oxygenLevelRepository;
+
+    @Autowired
     public BloodPressureRepository bloodPressureRepository;
 
     @Autowired
@@ -56,11 +58,11 @@ public class SensorReceiver {
 
     @Autowired
     public SensorRestController controller = new SensorRestController(sensorRepository, patientRepository,
-            heartRateRepository, sugarLevelRepository, bloodPressureRepository, bodyTemperatureRepository);
+            heartRateRepository, sugarLevelRepository, oxygenLevelRepository, bloodPressureRepository, bodyTemperatureRepository);
 
     @Autowired
     public PatientRestController PatientController = new PatientRestController(patientRepository, heartRateRepository,
-            sugarLevelRepository, bloodPressureRepository, bodyTemperatureRepository, professionalRepository);
+            sugarLevelRepository, oxygenLevelRepository, bloodPressureRepository, bodyTemperatureRepository, professionalRepository);
 
     @Autowired
     public WarningController warningController = new WarningController();
@@ -83,6 +85,11 @@ public class SensorReceiver {
     @RabbitListener(queues = "body_temp")
     public void receive4(String in) throws InterruptedException, ResourceNotFoundException {
         receive(in, 4);
+    }
+
+    @RabbitListener(queues = "oxygen_level")
+    public void receive5(String in) throws InterruptedException, ResourceNotFoundException {
+        receive(in, 5);
     }
 
     public void receive(String in, int receiver) throws InterruptedException, ResourceNotFoundException {
@@ -129,6 +136,14 @@ public class SensorReceiver {
                 controller.createBodyTemperature(Long.valueOf(id), bt);
                 break;
 
+            case 5:
+                BigDecimal valo = (BigDecimal) jo.get("oxygen");
+                OxygenLevel ol = new OxygenLevel();
+                ol.setDate(date);
+                ol.setOxygenLevel(valo.doubleValue());
+                controller.createOxygenLevel(Long.valueOf(id), ol);
+                break;
+
             default:
                 break;
         }
@@ -160,7 +175,7 @@ public class SensorReceiver {
                     double l = bp.getLow_value();
 
                     if (h < 69 || l < 39) {
-                        risk += 12;
+                        risk += 15;
                     } else if (h < 89 || l < 59) {
                         risk += 4;
                     } else if (h < 99 || l < 64) {
@@ -176,7 +191,7 @@ public class SensorReceiver {
                     } else if (h < 179 && l < 109) {
                         risk += 5;
                     } else {
-                        risk += 12;
+                        risk += 15;
                     }
 
                     break;
@@ -186,13 +201,13 @@ public class SensorReceiver {
                     double temp = bt.getbodyTemp();
 
                     if (temp < 35) {
-                        risk += 12;
+                        risk += 15;
                     } else if (temp < 37.5) {
                         risk += 0;
                     } else if (temp < 38.3) {
                         risk += 2;
                     } else {
-                        risk += 12;
+                        risk += 15;
                     }
                     break;
 
@@ -209,7 +224,7 @@ public class SensorReceiver {
                     } else if (rate < 120) {
                         risk += 3;
                     } else {
-                        risk += 12;
+                        risk += 15;
                     }
                     break;
 
@@ -218,7 +233,7 @@ public class SensorReceiver {
                     double level = sl.getSugarLevel();
 
                     if (level < 3) {
-                        risk += 12;
+                        risk += 15;
                     } else if (level < 4) {
                         risk += 2;
                     } else if (level < 5.5) {
@@ -230,8 +245,22 @@ public class SensorReceiver {
                     } else if (level < 9) {
                         risk += 4;
                     } else {
-                        risk += 12;
+                        risk += 15;
                     }
+                    break;
+
+                case "OxygenLevel":
+                    OxygenLevel ol = (OxygenLevel) o;
+                    double olevel = ol.getOxygenLevel();
+
+                    if (olevel < 89) {
+                        risk += 15;
+                    } else if (olevel < 95) {
+                        risk += 4;
+                    } else {
+                        risk += 0;
+                    }
+                    break;
 
                 default:
                     break;
@@ -243,7 +272,7 @@ public class SensorReceiver {
             status = "healthy";
         } else if (risk < 7) {
             status = "normal";
-        } else if (risk < 12) {
+        } else if (risk < 15) {
             status = "unhealthy";
         } else {
             try {

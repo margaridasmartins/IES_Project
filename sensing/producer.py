@@ -8,6 +8,7 @@ import time
 import asyncio
 import os
 import requests
+import random
 from random import randint
 
 #---------------------------------------------------------------------
@@ -17,13 +18,15 @@ class Generator:
     def __init__(self, heartbeat):
         self.hearbeat = heartbeat
         # rabbit connections // os.getenv('RABBITMQ_IP')
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_IP')))
+        # self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_IP')))
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         self.channel = self.connection.channel()
         self.sensor_id = 1
 
     async def get_sensors(self):
         while True:
-            sensors = requests.get('http://'+os.getenv('SERVER_IP')+':8080/api/sensors/ids')
+            # sensors = requests.get('http://'+os.getenv('SERVER_IP')+':8080/api/sensors/ids')
+            sensors = requests.get('http://localhost:8080/api/sensors/ids')
             lst = sensors.json()
             print(os.getenv('RABBITMQ_IP'))
             print(os.getenv('SERVER_IP'))
@@ -77,6 +80,19 @@ class Generator:
             self.channel.basic_publish(exchange='logs', routing_key='sugar_level', body= json.dumps(json_text))
             await asyncio.sleep(2)
 
+    async def gen_oxygen_level(self):
+        vals = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+        weights = [0.15,0.2,0.15,0.12,0.12,0.1,0.06,0.0125,0.0125,0.0125,0.0125,0.0125,0.0125,0.0125,0.0125]
+
+
+        while True:
+            oxygen = 100 - (random.choices(vals,weights)[0]+(random.random()**2))
+            json_text = {'id': self.sensor_id, 'oxygen': float(oxygen)}
+            self.channel.basic_publish(exchange='logs', routing_key='oxygen_level', body= json.dumps(json_text))
+            await asyncio.sleep(2)
+
+    
+
 
 
 
@@ -103,9 +119,10 @@ if __name__ == "__main__":
     bp_task = loop.create_task(g.gen_blood_pressure())
     bt_task = loop.create_task(g.gen_body_temp())
     sl_task = loop.create_task(g.gen_sugar_level())
+    ol_task = loop.create_task(g.gen_oxygen_level())
 
     # run them
-    loop.run_until_complete(asyncio.gather(hb_task, bp_task, bt_task, sl_task, sensor_task))
+    loop.run_until_complete(asyncio.gather(hb_task, bp_task, bt_task, sl_task, ol_task, sensor_task))
 
     #loop close
     loop.close()
