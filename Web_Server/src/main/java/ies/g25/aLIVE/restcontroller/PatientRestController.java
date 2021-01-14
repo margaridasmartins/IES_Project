@@ -1,5 +1,6 @@
 package ies.g25.aLIVE.restcontroller;
 
+import java.beans.FeatureDescriptor;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,13 +9,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
-import java.beans.FeatureDescriptor;
 
 import javax.validation.Valid;
-import org.springframework.beans.*;
-import org.springframework.format.annotation.DateTimeFormat;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,18 +38,16 @@ import ies.g25.aLIVE.exception.ResourceNotFoundException;
 import ies.g25.aLIVE.model.BloodPressure;
 import ies.g25.aLIVE.model.BodyTemperature;
 import ies.g25.aLIVE.model.HeartRate;
+import ies.g25.aLIVE.model.OxygenLevel;
 import ies.g25.aLIVE.model.Patient;
 import ies.g25.aLIVE.model.SugarLevel;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
 import ies.g25.aLIVE.repository.HeartRateRepository;
+import ies.g25.aLIVE.repository.OxygenLevelRepository;
 import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.ProfessionalRepository;
 import ies.g25.aLIVE.repository.SugarLevelRepository;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/api/patients")
@@ -58,13 +62,16 @@ public class PatientRestController {
     public BloodPressureRepository bloodPressureRepository;
     public BodyTemperatureRepository bodyTemperatureRepository;
     public ProfessionalRepository professionalRepository;
+    public OxygenLevelRepository oxygenLevelRepository;
 
     public PatientRestController(PatientRepository patientRepository, HeartRateRepository heartRateRepository,
-            SugarLevelRepository sugarLevelRepository, BloodPressureRepository bloodPressureRepository, 
-            BodyTemperatureRepository bodyTemperatureRepository, ProfessionalRepository professionalRepository) {
+            SugarLevelRepository sugarLevelRepository, OxygenLevelRepository oxygenLevelRepository, 
+            BloodPressureRepository bloodPressureRepository, BodyTemperatureRepository bodyTemperatureRepository, 
+            ProfessionalRepository professionalRepository) {
         this.patientRepository = patientRepository;
         this.heartRateRepository = heartRateRepository;
         this.sugarLevelRepository = sugarLevelRepository;
+        this.oxygenLevelRepository = oxygenLevelRepository;
         this.bloodPressureRepository = bloodPressureRepository;
         this.bodyTemperatureRepository = bodyTemperatureRepository;
         this.professionalRepository = professionalRepository;
@@ -237,7 +244,46 @@ public class PatientRestController {
         } catch (Exception e) {
             throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
         }
-    } 
+    }
+    
+    @GetMapping("{id}/oxygenlevel")
+    public ResponseEntity<Map<String, Object>> getOxygenLevelByIdAndDate(@PathVariable(value = "id") Long patientId,
+        @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
+        ) throws ResourceNotFoundException {
+
+        List<OxygenLevel> oxygenlevels;
+        Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
+        Page<OxygenLevel> ol;
+
+        try {
+            if (start_date != null &&  end_date!=null){
+                ol = oxygenLevelRepository.findByPatientandDate(start_date,end_date, patientId, paging);
+            }
+            else{
+                Optional<Patient> op = patientRepository.findById(patientId);
+                if (op.isPresent()) {
+                    Patient p = op.get();
+                    ol = oxygenLevelRepository.findByPatient(p, paging);
+                }
+                else{
+                    throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+                }
+            }
+            oxygenlevels = ol.getContent();
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", oxygenlevels);
+            response.put("currentPage", ol.getNumber());
+            response.put("totalItems", ol.getTotalElements());
+            response.put("totalPages", ol.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+            
+
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
+        }
+    }
 
 
     @GetMapping("{id}/bodytemperature")
@@ -292,6 +338,7 @@ public class PatientRestController {
             list.add(bodyTemperatureRepository.findFirstByPatient(p, sort));
             list.add(heartRateRepository.findFirstByPatient(p, sort));
             list.add(sugarLevelRepository.findFirstByPatient(p, sort));
+            list.add(oxygenLevelRepository.findFirstByPatient(p, sort));
 
              return list;
         }
