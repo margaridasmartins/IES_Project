@@ -23,6 +23,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +42,8 @@ import ies.g25.aLIVE.model.BodyTemperature;
 import ies.g25.aLIVE.model.HeartRate;
 import ies.g25.aLIVE.model.OxygenLevel;
 import ies.g25.aLIVE.model.Patient;
+import ies.g25.aLIVE.model.PatientContext;
+import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.model.SugarLevel;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
@@ -64,6 +68,10 @@ public class PatientRestController {
     public ProfessionalRepository professionalRepository;
     public OxygenLevelRepository oxygenLevelRepository;
 
+    @Autowired
+    public PasswordEncoder passwordEncoder;
+
+
     public PatientRestController(PatientRepository patientRepository, HeartRateRepository heartRateRepository,
             SugarLevelRepository sugarLevelRepository, OxygenLevelRepository oxygenLevelRepository, 
             BloodPressureRepository bloodPressureRepository, BodyTemperatureRepository bodyTemperatureRepository, 
@@ -85,11 +93,19 @@ public class PatientRestController {
 
 
     @PostMapping
-    public Patient createPatient(@Valid @RequestBody Patient patient) {
-        return patientRepository.save(patient);
+    public Patient createPatient(@Valid @RequestBody PatientContext patient)throws ResourceNotFoundException {
+        Optional<Professional> p= professionalRepository.findByEmail(patient.getPemail());
+        if(p.isPresent()){
+            Patient pat = patient.getPatient();
+            pat.setProfessional(p.get());
+            pat.setPassword(passwordEncoder.encode(pat.getPassword()));
+            return patientRepository.save(pat);
+        }
+        throw new ResourceNotFoundException("Professional not found for this id");
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('Patient')")
     public Patient replacePatient(@RequestBody Patient newPatient, @PathVariable(value = "id") Long patientId) 
             throws ResourceNotFoundException{
         Optional<Patient> op = patientRepository.findById(patientId);
@@ -114,6 +130,7 @@ public class PatientRestController {
     }
 
     @PostMapping("/{id}/picture")
+    @PreAuthorize("hasRole('Patient')")
     public Patient updatePhoto(@PathVariable(value = "id") Long patientId, @RequestParam("file") MultipartFile file)
             throws ResourceNotFoundException, IOException {
 		Optional<Patient> op=  patientRepository.findById(patientId);

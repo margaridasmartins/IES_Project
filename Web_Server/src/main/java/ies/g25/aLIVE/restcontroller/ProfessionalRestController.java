@@ -2,12 +2,14 @@ package ies.g25.aLIVE.restcontroller;
 
 import java.beans.FeatureDescriptor;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
@@ -20,6 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +50,9 @@ public class ProfessionalRestController {
     public PatientRepository patientRepository;
 
     @Autowired
+    public PasswordEncoder passwordEncoder;
+
+    @Autowired
     public ProfessionalRepository professionalRepository;
 
     public ProfessionalRestController(PatientRepository patientRepository, ProfessionalRepository professionalRepository) {
@@ -61,10 +68,12 @@ public class ProfessionalRestController {
 
     @PostMapping
     public Professional createProfessional(@Valid @RequestBody Professional professional) {
+        professional.setPassword(passwordEncoder.encode(professional.getPassword()));
         return professionalRepository.save(professional);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('Professional')")
     public Professional replaceProfessional(@RequestBody Professional newProfessional, @PathVariable(value = "id") Long professionalId) 
             throws ResourceNotFoundException{
         Optional<Professional> op = professionalRepository.findById(professionalId);
@@ -77,6 +86,7 @@ public class ProfessionalRestController {
     }
 
     @PostMapping("/{id}/picture")
+    @PreAuthorize("hasRole('Professional')")
     public Patient updatePhoto(@PathVariable(value = "id") Long patientId, @RequestParam("file") MultipartFile file)
             throws ResourceNotFoundException, IOException {
 		Optional<Patient> op=  patientRepository.findById(patientId);
@@ -91,8 +101,11 @@ public class ProfessionalRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Professional> getProfessionalById(@PathVariable(value = "id") Long pID)
+    @PreAuthorize("hasAuthority('Professional')")
+    public ResponseEntity<Professional> getProfessionalById(@PathVariable(value = "id") Long pID, HttpServletRequest request)
             throws ResourceNotFoundException {
+        Principal principal = request.getUserPrincipal();
+        System.out.println(principal.getName());
         Optional<Professional> op = professionalRepository.findById(pID);
         if (op.isPresent()) {
             Professional p = op.get();
@@ -102,6 +115,7 @@ public class ProfessionalRestController {
     }
 
     @GetMapping("/{id}/patients")
+    @PreAuthorize("hasRole('Professional')")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> AllPatientsByProfessionalId(@PathVariable(value = "id") Long pId, @RequestParam(defaultValue = "0") 
         int page,@RequestParam(defaultValue = "10") int size, @RequestParam(required = false) String name, @RequestParam(required = false) String state)

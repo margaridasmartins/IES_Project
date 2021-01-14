@@ -3,6 +3,7 @@ package ies.g25.aLIVE.model;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,7 +28,7 @@ public class User {
     private Long id;
 
     @Column(name = "password")
-    //@ToString.Exclude
+    @ToString.Exclude
     private String password;
 
     @Column(name = "username")
@@ -77,6 +78,9 @@ public class User {
         this.age=age;
     } 
 
+    public String getRole(){
+        return this.getClass().getAnnotation(DiscriminatorValue.class).value(); 
+    }
     public String getFullname(){
         return this.fullname;
     }
@@ -113,6 +117,8 @@ public class User {
     public String getPassword(){
     	return this.password;
     }
+
+    public void setPassword(String password) { this.password = password; }
 }
 
 
