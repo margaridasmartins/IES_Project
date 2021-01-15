@@ -183,4 +183,12 @@ public class Patient extends User {
         this.height=height;
     }
 
+    public Date getLastCheck(){
+        return this.lastcheck;
+    }
+
+    public void setLastCheck(Date lastcheck){
+        this.lastcheck=lastcheck;
+    }
+
 }
