@@ -134,43 +134,57 @@ public class ProfessionalRestController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> AllPatientsByProfessionalId(@PathVariable(value = "id") Long pId, @RequestParam(defaultValue = "0") 
         int page,@RequestParam(defaultValue = "10") int size, @RequestParam(required = false) String name, @RequestParam(required = false) String state,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end_date)
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end_date, HttpServletRequest request)
             throws ResourceNotFoundException {
+
+        Principal principal = request.getUserPrincipal();
+
         Optional<Professional> op = professionalRepository.findById(pId);
 
         List<Patient> patients;
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "lastcheck"));
         Page<Patient> pt;
-        
-        try{
-            if(op.isPresent()){
-                Professional p = op.get();
-                if(start_date!=null && end_date!=null){
-                    pt = patientRepository.findByProfessionalAndLastCheckDate(p, start_date,end_date, paging);
-                }
-                else if(name!=null){
-                    pt = patientRepository.findByProfessionalAndFullnameContaining(p, name, paging);
-                }else if(state!=null){
-                    pt = patientRepository.findByProfessionalAndCurrentstate(p, state, paging);
-                } else{
-                    pt = patientRepository.findByProfessional(p, paging);
-                }
-            }
-            else{
-                throw new ResourceNotFoundException("Professional not found for this id: " + pId);
-            }
-            patients = pt.getContent();
-            Map<String, Object> response = new HashMap<>();
-            response.put("data", patients);
-            response.put("currentPage", pt.getNumber());
-            response.put("totalItems", pt.getTotalElements());
-            response.put("totalPages", pt.getTotalPages());
 
+        if(op.isPresent()){
+            Professional p = op.get();
+            if(start_date!=null && end_date!=null){
+                pt = patientRepository.findByProfessionalAndLastCheckDate(p, start_date,end_date, paging);
+            }
+            else if(name!=null){
+                pt = patientRepository.findByProfessionalAndFullnameContaining(p, name, paging);
+            }else if(state!=null){
+                pt = patientRepository.findByProfessionalAndCurrentstate(p, state, paging);
+            } else{
+                pt = patientRepository.findByProfessional(p, paging);
+            }
+        }
+        else{
+            throw new ResourceNotFoundException("Professional not found for this id: " + pId);
+        }
+        patients = pt.getContent();
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", patients);
+        response.put("currentPage", pt.getNumber());
+        response.put("totalItems", pt.getTotalElements());
+        response.put("totalPages", pt.getTotalPages());
+
+
+        Optional<Professional> op1 = professionalRepository.findByUsername(principal.getName());
+
+        if (!principal.getName().equals("admin")){
+            if (op1.isPresent()) {
+                Professional p = op1.get();
+                if(p.getId() == pId){
+                    return new ResponseEntity<>(response, HttpStatus.OK);
+                }
+                throw new AccessDeniedException("Cannot access this resource");
+            }
+            throw new AccessDeniedException("Cannot access this resource");
+        }
+        else{
             return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-        } catch (Exception e) {
-            throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
-        } 
     }
 
     @PutMapping("/{id}/patients/{idpatient}")
