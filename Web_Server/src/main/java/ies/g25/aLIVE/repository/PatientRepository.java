@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,4 +30,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long>{
     Page<Patient> findByProfessionalAndCurrentstate(Professional professional, String currentstate, Pageable pageable);
 
     Page<Patient> findByProfessionalAndFullnameContaining(Professional professional, String name, Pageable pageable);
+
+    Optional<Patient> findByUsername(String username);
 }

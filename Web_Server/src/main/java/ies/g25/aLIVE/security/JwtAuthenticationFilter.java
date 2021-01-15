@@ -49,6 +49,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String username = ((UserDetails) authResult.getPrincipal()).getUsername();
         String r = this.userRepository.findByUsername(username).get().getRole();
+        Long id = this.userRepository.findByUsername(username).get().getId();
+        
         List<String> authorities = authResult.getAuthorities().stream()
                 .map(role -> role.getAuthority())
                 .collect(Collectors.toList());
@@ -58,6 +60,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         responseBody.put("token", token);
         responseBody.put("role", r);
+        responseBody.put("id", id);
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getWriter(), responseBody);

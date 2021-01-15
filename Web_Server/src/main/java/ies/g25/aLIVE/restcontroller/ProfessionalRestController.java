@@ -26,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -107,15 +108,25 @@ public class ProfessionalRestController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('Professional')")
     public ResponseEntity<Professional> getProfessionalById(@PathVariable(value = "id") Long pID, HttpServletRequest request)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundException, AccessDeniedException {
         Principal principal = request.getUserPrincipal();
-        System.out.println(principal.getName());
-        Optional<Professional> op = professionalRepository.findById(pID);
+        if (principal.getName().equals("admin")){
+            Optional<Professional> op = professionalRepository.findById(pID);
+            if (op.isPresent()) {
+                return ResponseEntity.ok().body(op.get());
+            }
+            throw new ResourceNotFoundException("Professional not found for this id: " + pID);
+        }
+        Optional<Professional> op = professionalRepository.findByUsername(principal.getName());
         if (op.isPresent()) {
             Professional p = op.get();
-            return ResponseEntity.ok().body(p);
+            if(p.getId()==pID){
+                return ResponseEntity.ok().body(p);
+            }
+            throw new AccessDeniedException("Cannot access this resource");
         }
-        throw new ResourceNotFoundException("Professional not found for this id: " + pID);
+        throw new AccessDeniedException("Cannot access this resource");
+        
     }
 
     @GetMapping("/{id}/patients")
