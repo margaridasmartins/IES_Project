@@ -181,7 +181,7 @@ $(document).ready(function () {
 // LATEST DATA
 window.onload = function get_latestValues(){
     $.ajax({
-        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/latest',
+        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/latest',
         }).done(function (results) {
             document.getElementById('latest_bp').innerHTML = '-> '+results[0].low_value;
             document.getElementById('latest_bt').innerHTML = '-> '+results[1].bodyTemp;
@@ -195,7 +195,7 @@ window.onload = function get_latestValues(){
 function editPatient(data){
     $.ajax({
         type: "PUT",
-        url: "http://localhost:8080/api/patients/"+currentPatient['id'],
+        url: "http://192.168.160.217:8080/api/patients/"+currentPatient['id'],
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
@@ -371,7 +371,7 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(draw_OxygenSaturationChart);
 function draw_OxygenSaturationChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/oxygenlevel',
+        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/oxygenlevel',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();

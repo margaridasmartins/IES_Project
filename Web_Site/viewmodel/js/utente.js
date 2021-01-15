@@ -50,7 +50,7 @@ $(document).ready(function () {
 // LATEST DATA
 window.onload = function get_latestValues(){
     $.ajax({
-        url: 'http://localhost:8080/api/patients/'+userLogin['id']+'/latest',
+        url: 'http://192.168.160.217:8080/api/patients/'+userLogin['id']+'/latest',
         }).done(function (results) {
             console.log(results)
             document.getElementById('latest_bp').innerHTML = '-> '+results[0].low_value;
@@ -219,7 +219,7 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(draw_OxygenSaturationChart);
 function draw_OxygenSaturationChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/patients/'+userLogin['id']+'/oxygenlevel',
+        url: 'http://192.168.160.217:8080/api/patients/'+userLogin['id']+'/oxygenlevel',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
