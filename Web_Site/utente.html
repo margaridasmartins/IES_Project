@@ -49,10 +49,10 @@
             
                   <div id="navbar" class="navbar-collapse collapse">
                      <ul class="nav navbar-nav">
-                        <li><a  href="index.html">Home</a></li>
-                        <li><a class="active" href="utente.html">Clinical Status</a></li>
+                        <li><a class="active" id="cstatus" href="utente.html">Clinical Status</a></li>
                         <li><a  href="settings.html">Settings</a></li>
                         <li><a data-scroll href="#getintouch">Contact</a></li>
+                        <li><a href="index.html">Log Out</a></li>
                      </ul>
                   </div>
                </nav>
@@ -130,31 +130,37 @@
             <!-- LATEST VALUES -->
             <hr class="hr1">
                <div class="alignitems" style="margin-bottom: 30px;">
-                  <h1>Information from latest measurements</h1>
+                  <input type="button" value="Information from latest measurements" name="latestInfo" id="latestInfo"  class="switch-btn" onclick="">
                </div>
-            <div class="row">
-               <div> Blood Pressure
-                  <p id="latest_bp"></p>
+            <div id="latestInf">
+               <div class="row"> 
+                  <div class="col-md-4"> <b>Blood Pressure</b>
+                     <p id="latest_bp"></p>
+                  </div>
+
+                  <div class="col-md-4"> <b>Body Temperature</b>
+                     <p id="latest_bt"></p>
+                  </div>
+
+                  <div class="col-md-4"> <b>Heart Rate</b>
+                     <p id="latest_hr"></p>
+                  </div>
                </div>
-               <br><br>
-               <div> Body Temperature
-                  <p id="latest_bt"></p>
+
+               <br>
+               <div class="row"> 
+                  <div  class="col-md-6"> <b>Sugar Level</b>
+                     <p id="latest_sl"></p>
+                  </div>
+                  <div  class="col-md-6"> <b>Oxygen Saturation</b>
+                     <p id="latest_ol"></p>
+                  </div>
                </div>
-               <br><br>
-               <div> Heart Rate
-                  <p id="latest_hr"></p>
-               </div>
-               <br><br>
-               <div> Sugar Level
-                  <p id="latest_sl"></p>
-               </div>
-               <br><br>
-               <div> Oxygen Saturation
-                  <p id="latest_ol"></p>
-               </div>
-            </div>
             
             <!-- CHARTS -->
+            <div class="alignitems" style="margin-bottom: 30px;">
+               <h1>Information from last Month</h1>
+            </div>
             <div class="row">
                <div id="heartrate_chart"></div>
                <br><br>

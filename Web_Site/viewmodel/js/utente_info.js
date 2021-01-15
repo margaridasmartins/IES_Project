@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    $("#latestInf").fadeOut();
     currentPatient = JSON.parse(localStorage.getItem('currentPatient'));
     userLogin = JSON.parse(localStorage.getItem('login'));
     console.log(currentPatient);
@@ -55,6 +56,7 @@ $(document).ready(function () {
         $("#patientNewHeight").fadeOut();
         $("#editInformationDone").fadeOut();
         $("#editInformation").fadeIn();
+        editPatient(currentPatient);
         window.location.reload();
     }); 
 
@@ -80,7 +82,7 @@ $(document).ready(function () {
 
         $("#patientNewDisease").fadeOut();
         $("#addDiseaseDone").fadeOut();
-        //$("#addDisease").fadeIn();
+        editPatient(currentPatient);
         window.location.reload();
     }); 
     // REMOVE DISEASE
@@ -107,7 +109,7 @@ $(document).ready(function () {
         localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
         $("#patientRemovedDisease").fadeOut();
         $("#removeDiseaseDone").fadeOut();
-        //$("#removeDisease").fadeIn();
+        editPatient(currentPatient);
         window.location.reload();
     }); 
 
@@ -133,7 +135,7 @@ $(document).ready(function () {
 
         $("#patientNewMedication").fadeOut();
         $("#addMedicationDone").fadeOut();
-        //$("#addDisease").fadeIn();
+        editPatient(currentPatient);
         window.location.reload();
     });
     // REMOVE MEDICATION
@@ -160,7 +162,7 @@ $(document).ready(function () {
         localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
         $("#patientRemovedMedication").fadeOut();
         $("#removeMedicationDone").fadeOut();
-        //$("#removeDisease").fadeIn();
+        editPatient(currentPatient);
         window.location.reload();
     }); 
 
@@ -170,28 +172,45 @@ $(document).ready(function () {
         alert("Sorry, but this functionality has not been implemented yet! :(");
     });
 
+    $("#latestInfo").click(function(){
+        $("#latestInf").fadeToggle("slow");
+    })
+
 });
 
-// LATETST DATA
+// LATEST DATA
 window.onload = function get_latestValues(){
     $.ajax({
-        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/latest',
-        dataType: 'array',
+        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/latest',
         }).done(function (results) {
-            results.data.forEach(elem => {
-                // console.log(elem);
-                var bloodpressure = elem[0];
-                var bodytemperature = elem[1];
-                var heartrate = elem[2];
-                var sugarlevel = elem[3];
-                var oxygenlevel = elem[4];
-                document.getElementById('latest_bp').innerHTML = bloodpressure;
-                document.getElementById('latest_bt').innerHTML = bodytemperature;
-                document.getElementById('latest_hr').innerHTML = heartrate;
-                document.getElementById('latest_sl').innerHTML = sugarlevel;
-                document.getElementById('latest_ol').innerHTML = oxygenlevel;
-            })
+            document.getElementById('latest_bp').innerHTML = '-> '+results[0].low_value;
+            document.getElementById('latest_bt').innerHTML = '-> '+results[1].bodyTemp;
+            document.getElementById('latest_hr').innerHTML = '-> '+results[2].heartRate;
+            document.getElementById('latest_sl').innerHTML = '-> '+results[3].sugarLevel;
+            document.getElementById('latest_ol').innerHTML = '-> '+results[4].oxygenLevel;
         })
+}
+
+//PUT Patient
+function editPatient(data){
+    $.ajax({
+        type: "PUT",
+        url: "http://localhost:8080/api/patients/"+currentPatient['id'],
+        data: JSON.stringify(data),
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        success: function (data, status, jqXHR) {
+
+                 alert(status);
+                 console.log(data)
+             },
+
+             error: function (jqXHR, status) {
+                 // error handler
+                 console.log(jqXHR);
+                 alert('fail' + status.code);
+             }
+      });
 }
 
 
@@ -357,12 +376,12 @@ function draw_OxygenSaturationChart() {
      }).done(function (results) {
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'Day');
-        data.addColumn('percentage', '%');
+        data.addColumn('number', '%');  
 
         // Get users data
         results.data.forEach(element =>{
             var date = element['date'].split("-");
-            var value = element['oxygensaturation'];
+            var value = element['oxygenLevel'];
             //console.log(date, value);
             data.addRows([
                 [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]

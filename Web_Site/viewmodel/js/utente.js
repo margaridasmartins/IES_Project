@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    $("#latestInf").fadeOut();
     userLogin = JSON.parse(localStorage.getItem('login'));
     if (userLogin['type']== "Medic"){
         $('#cstatus').text("Dashboard");
@@ -40,27 +41,23 @@ $(document).ready(function () {
         alert("Sorry, but this functionality has not been implemented yet! :(");
     });
 
+    $("#latestInfo").click(function(){
+        $("#latestInf").fadeToggle("slow");
+    })
+
 });
 
 // LATEST DATA
 window.onload = function get_latestValues(){
     $.ajax({
-        url: 'http://192.168.160.217:8080/api/patients/'+userLogin['id']+'/latest',
-        dataType: 'array',
+        url: 'http://localhost:8080/api/patients/'+userLogin['id']+'/latest',
         }).done(function (results) {
-            results.data.forEach(elem => {
-                // console.log(elem);
-                var bloodpressure = elem[0];
-                var bodytemperature = elem[1];
-                var heartrate = elem[2];
-                var sugarlevel = elem[3];
-                var oxygenlevel = elem[4];
-                document.getElementById('latest_bp').innerHTML = bloodpressure;
-                document.getElementById('latest_bt').innerHTML = bodytemperature;
-                document.getElementById('latest_hr').innerHTML = heartrate;
-                document.getElementById('latest_sl').innerHTML = sugarlevel;
-                document.getElementById('latest_ol').innerHTML = oxygenlevel;
-            })
+            console.log(results)
+            document.getElementById('latest_bp').innerHTML = '-> '+results[0].low_value;
+            document.getElementById('latest_bt').innerHTML = '-> '+results[1].bodyTemp;
+            document.getElementById('latest_hr').innerHTML = '-> '+results[2].heartRate;
+            document.getElementById('latest_sl').innerHTML = '-> '+results[3].sugarLevel;
+            document.getElementById('latest_ol').innerHTML = '-> '+results[4].oxygenLevel;
         })
 }
 
@@ -227,12 +224,12 @@ function draw_OxygenSaturationChart() {
      }).done(function (results) {
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'Day');
-        data.addColumn('percentage', '%');
+        data.addColumn('number', '%');
 
         // Get users data
         results.data.forEach(element =>{
             var date = element['date'].split("-");
-            var value = element['oxygensaturation'];
+            var value = element['oxygenLevel'];
             //console.log(date, value);
             data.addRows([
                 [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
