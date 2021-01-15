@@ -67,42 +67,69 @@ public class ProfessionalRestController {
 
     @GetMapping
     @ResponseBody
-    public List<Professional> getAllProfessionals() {
-        return professionalRepository.findAll();
+    public List<Professional> getAllProfessionals(HttpServletRequest request) {
+
+        Principal principal = request.getUserPrincipal();
+
+        if (principal.getName().equals("admin")){
+            return professionalRepository.findAll();
+        } throw new AccessDeniedException("Cannot access this resource");
     }
 
     @PostMapping
-    public Professional createProfessional(@Valid @RequestBody Professional professional) {
+    public Professional createProfessional(@Valid @RequestBody Professional professional, HttpServletRequest request) {
+
         professional.setPassword(passwordEncoder.encode(professional.getPassword()));
         return professionalRepository.save(professional);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('Professional')")
-    public Professional replaceProfessional(@RequestBody Professional newProfessional, @PathVariable(value = "id") Long professionalId) 
+    public Professional replaceProfessional(@RequestBody Professional newProfessional, @PathVariable(value = "id") Long professionalId, HttpServletRequest request)
             throws ResourceNotFoundException{
+
+        Principal principal = request.getUserPrincipal();
+        Optional<Professional> op1 = professionalRepository.findByUsername(principal.getName());
+        Professional p = op1.get();
+
         Optional<Professional> op = professionalRepository.findById(professionalId);
-        if (op.isPresent()) {
-            Professional professional = op.get();
-            newProfessional = (Professional) PersistenceUtils.partialUpdate(professional, newProfessional);
-            return professionalRepository.save(newProfessional);
+
+
+        if (principal.getName().equals("admin") || p.getId()==professionalId){
+            if (op.isPresent()) {
+                Professional professional = op.get();
+                newProfessional = (Professional) PersistenceUtils.partialUpdate(professional, newProfessional);
+                return professionalRepository.save(newProfessional);
+            }
+            throw new ResourceNotFoundException("Professional not found for this id: " + professionalId);
         }
-        throw new ResourceNotFoundException("Professional not found for this id: " + professionalId);
+        throw new AccessDeniedException("Cannot access this resource");
+
+
     }
 
     @PostMapping("/{id}/picture")
     @PreAuthorize("hasRole('Professional')")
-    public Patient updatePhoto(@PathVariable(value = "id") Long patientId, @RequestParam("file") MultipartFile file)
+    public Professional updatePhoto(@PathVariable(value = "id") Long professionalId, @RequestParam("file") MultipartFile file, HttpServletRequest request)
             throws ResourceNotFoundException, IOException {
-		Optional<Patient> op=  patientRepository.findById(patientId);
-        if(op.isPresent()){
-            Patient p = op.get();
-            byte[] data = file.getBytes();
-            p.setImage(data);
-            patientRepository.save(p);
-            return p;
+
+        Principal principal = request.getUserPrincipal();
+        Optional<Professional> op1 = professionalRepository.findByUsername(principal.getName());
+        Professional prof = op1.get();
+
+        if (principal.getName().equals("admin") || prof.getId()==professionalId){
+            Optional<Professional> op =  professionalRepository.findById(professionalId);
+            if(op.isPresent()){
+                Professional p = op.get();
+                byte[] data = file.getBytes();
+                p.setImage(data);
+                professionalRepository.save(p);
+                return p;
+            }
+            throw new ResourceNotFoundException("Professional not found for this id: " + professionalId);
         }
-        throw new ResourceNotFoundException("Patient not found for this id: " + patientId);		
+        throw new AccessDeniedException("Cannot access this resource");
+
     }
 
     @GetMapping("/{id}")
