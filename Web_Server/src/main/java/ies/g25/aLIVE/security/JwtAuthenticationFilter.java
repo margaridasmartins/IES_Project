@@ -12,6 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ies.g25.aLIVE.service.JwtTokenService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import ies.g25.aLIVE.repository.UserRepository;
+import ies.g25.aLIVE.service.JwtTokenService;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,12 +29,15 @@ import io.jsonwebtoken.impl.DefaultClaims;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+
+    private UserRepository userRepository;
+
     private AuthenticationManager authenticationManager;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager,UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
         //this.setAuthenticationManager(authenticationManager);
-
+        this.userRepository = userRepository;
         setFilterProcessesUrl("/api/login");
     }
     
@@ -41,7 +48,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         HashMap<String, Object> responseBody = new HashMap<>();
 
         String username = ((UserDetails) authResult.getPrincipal()).getUsername();
-
+        String r = this.userRepository.findByUsername(username).get().getRole();
         List<String> authorities = authResult.getAuthorities().stream()
                 .map(role -> role.getAuthority())
                 .collect(Collectors.toList());
@@ -50,13 +57,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String token = JwtTokenService.generateToken(username, claims);
 
         responseBody.put("token", token);
+        responseBody.put("role", r);
+
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getWriter(), responseBody);
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        System.out.println(authenticationManager);
         return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getParameter("username"), request.getParameter("password")));
     }

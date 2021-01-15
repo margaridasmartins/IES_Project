@@ -1,5 +1,8 @@
 package ies.g25.aLIVE.security;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +15,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import ies.g25.aLIVE.repository.UserRepository;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -22,10 +28,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private PasswordEncoder passwordEncoder;
     private UserDetailsService userDetailsService;
 
+    private UserRepository userRepository;
+
     public WebSecurityConfig(PasswordEncoder passwordEncoder,
-                             @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
+                             @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -35,17 +44,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.csrf().disable().authorizeRequests()
+		httpSecurity.csrf().disable().cors().and().authorizeRequests()
 			.antMatchers(HttpMethod.GET, "/").permitAll()
             .antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
             .antMatchers(HttpMethod.GET, "/v2/api-docs").permitAll()
 			.antMatchers(HttpMethod.GET, "/webjars/**").permitAll()
 			.antMatchers(HttpMethod.GET, "/swagger-resources/**").permitAll()
             .antMatchers(HttpMethod.GET, "/api/login").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/sensors/**").permitAll()
             .antMatchers(HttpMethod.POST, "/api/patients").permitAll()
 			.anyRequest().authenticated()
 			.and()
-			.addFilter(new JwtAuthenticationFilter(authenticationManager()))
+			.addFilter(new JwtAuthenticationFilter(authenticationManager(),userRepository))
             .addFilter(new JWTAuthorizationFilter(authenticationManager()));
 
 	}
