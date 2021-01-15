@@ -190,25 +190,37 @@ public class ProfessionalRestController {
     @PutMapping("/{id}/patients/{idpatient}")
     @PreAuthorize("hasRole('Professional')")
     @ResponseBody
-    public Patient UpdateLastCheck(@PathVariable(value = "id") Long pId, @PathVariable(value = "idpatient") Long patId)
+    public Patient UpdateLastCheck(@PathVariable(value = "id") Long pId, @PathVariable(value = "idpatient") Long patId, HttpServletRequest request)
             throws ResourceNotFoundException {
+
+        Principal principal = request.getUserPrincipal();
+
         Optional<Professional> op = professionalRepository.findById(pId);
+        Optional<Professional> op1 = professionalRepository.findByUsername(principal.getName());
         Optional<Patient> opat = patientRepository.findById(patId);
-        
-        if(op.isPresent()){
-            if (opat.isPresent() & opat.get().getProfessional().getId()==pId){
+
+        if (op.isPresent()) {
+            if (opat.isPresent() & opat.get().getProfessional().getId() == pId) {
                 Patient patient = opat.get();
                 patient.setLastCheck(new Date());
-                return patientRepository.save(patient);
+                if (!principal.getName().equals("admin")) {
+                    if (op1.isPresent()) {
+                        Professional p = op1.get();
+                        if (p.getId() == pId) {
+                            return patientRepository.save(patient);
+                        }
+                        throw new AccessDeniedException("Cannot access this resource");
+                    }
+                    throw new AccessDeniedException("Cannot access this resource");
+                } else {
+                    return patientRepository.save(patient);
+                }
+            } else {
+                throw new ResourceNotFoundException("Patient with id: " + patId + " not found for requested professional");
             }
-            else{
-                throw new ResourceNotFoundException("Patient not found for this id: "+ patId);
-            }
-        }
-        else{
-            throw new ResourceNotFoundException("Professional not found for this id: " + pId);
         }
 
+        throw new ResourceNotFoundException("Professional not found for this id: " + pId);
     }
 
     public static class PersistenceUtils {
