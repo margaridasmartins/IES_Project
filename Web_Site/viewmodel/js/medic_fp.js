@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     console.log(jwt)
 
-   /* if (userLogin['type']== "Medic"){
+    /*if (userLogin['type']== "Medic"){
         $('#cstatus').text("Dashboard");
         $('#cstatus').attr('href','medic_fp.html');
     }
@@ -24,6 +24,7 @@ $(document).ready(function () {
         $('#cstatus').attr('href','utente.html');
     }
     */
+
     
 
     $.ajax({
@@ -71,7 +72,7 @@ $(document).ready(function () {
             if(danger == false){
                 $("#patientSection").append(`<div class="row" style="margin-top: 3%;">
                                         <div class="col-md-12">
-                                            <a href="#" onClick="selectPatient(${p.id});" id="currentPatient${p.id}" value="${p['id']}">
+                                            <a href="#" onClick="selectPatient(${p.id}, ${id});" id="currentPatient${p.id}" value="${p['id']}">
                                                 <div class="card " style="background-color: ${color};" >
                                                     <div class="card-body">
                                                         <div class="row ">
@@ -103,7 +104,7 @@ $(document).ready(function () {
             }else{
                     $("#patientSection").append(`<div class="row" style="margin-top: 3%;">
                                         <div class="col-md-12">
-                                            <a href="#"  onClick="selectPatient(${p.id});" id="currentPatient${p.id}" value="${p['id']}">
+                                            <a href="#"  onClick="selectPatient(${p.id}, ${id});" id="currentPatient${p.id}" value="${p['id']}">
                                                 <div class="card " style="background-color: ${color};" >
                                                     <div class="card-body">
                                                         <div class="row ">
@@ -397,11 +398,27 @@ function search_patient(){
 };
 
 // SELECT PATIENT TO SHOW DETAILS
-function selectPatient(id){
+function selectPatient(id, profid){
     $.ajax({
-        url: "http://192.168.160.217:8080/api/patients"
+        //url: "http://192.168.160.217:8080/api/patients",
+        url: "http://localhost:8080/api/professionals/" + profid + "/patients",
+        headers:{
+            //"Access-Control-Allow-Origin":"http://192.168.160.217",
+            "Access-Control-Allow-Origin":"http://localhost",
+            "Authorization": "Bearer " + jwt
+        },
+        statusCode: {
+            500: function(xhr){
+                console.log("There was an error connecting to the server, please try again!");
+                return;
+            },
+            403: function(xhr){
+                console.log("Invalid Credentials!");
+                return;
+            }
+        }
     }).then(function(data) {
-        data.forEach(p=>{
+        data.data.forEach(p=>{
             if(p.id == id){
                 localStorage.setItem('currentPatient', JSON.stringify(p));
                 //console.log(localStorage.getItem('currentPatient'));
@@ -416,11 +433,27 @@ function selectPatient(id){
 // GET ALL PATIENTS ASSIGNED
 function filter_doctorPatients(){
     $.ajax({
-        url: "http://192.168.160.217:8080/api/professionals/" +  userLogin["id"] + "/patients"
+        //url: "http://192.168.160.217:8080/api/professionals/" +  userLogin["id"] + "/patients"
+        url: "http://localhost:8080/api/professionals/" +  id + "/patients",
+        headers:{
+            //"Access-Control-Allow-Origin":"http://192.168.160.217",
+            "Access-Control-Allow-Origin":"http://localhost",
+            "Authorization": "Bearer " + jwt
+        },
+        statusCode: {
+            500: function(xhr){
+                console.log("There was an error connecting to the server, please try again!");
+                return;
+            },
+            403: function(xhr){
+                console.log("Invalid Credentials!");
+                return;
+            }
+        }
     }).then(function(data) {
         var myPatients = [];
         data.data.forEach(p=>{
-            if(p.doctorID == userLogin['id']){
+            if(p.doctorID == id){
                 myPatients.push(p);
                 //console.log(myPatients);
             }
