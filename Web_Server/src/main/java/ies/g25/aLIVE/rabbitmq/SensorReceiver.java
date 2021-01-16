@@ -26,6 +26,7 @@ import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.ProfessionalRepository;
 import ies.g25.aLIVE.repository.SensorRepository;
 import ies.g25.aLIVE.repository.SugarLevelRepository;
+import ies.g25.aLIVE.repository.UserRepository;
 import ies.g25.aLIVE.restcontroller.PatientRestController;
 import ies.g25.aLIVE.restcontroller.SensorRestController;
 import ies.g25.aLIVE.websocket.WarningController;
@@ -57,12 +58,15 @@ public class SensorReceiver {
     public ProfessionalRepository professionalRepository;
 
     @Autowired
+    public UserRepository userRepository;
+
+    @Autowired
     public SensorRestController controller = new SensorRestController(sensorRepository, patientRepository,
             heartRateRepository, sugarLevelRepository, oxygenLevelRepository, bloodPressureRepository, bodyTemperatureRepository);
 
     @Autowired
     public PatientRestController PatientController = new PatientRestController(patientRepository, heartRateRepository,
-            sugarLevelRepository, oxygenLevelRepository, bloodPressureRepository, bodyTemperatureRepository, professionalRepository);
+            sugarLevelRepository, oxygenLevelRepository, bloodPressureRepository, bodyTemperatureRepository, professionalRepository,userRepository );
 
     @Autowired
     public WarningController warningController = new WarningController();
@@ -275,13 +279,15 @@ public class SensorReceiver {
         } else if (risk < 15) {
             status = "unhealthy";
         } else {
-            try {
-                warningController.send(String.valueOf(p.getId())+":"+String.valueOf(p.getProfessional().getId()));
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            if(!p.getCurrentstate().equals("in-danger")){
+                try {
+                    warningController.send(String.valueOf(p.getId())+":"+String.valueOf(p.getProfessional().getId()));
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                status="in-danger";
             }
-            status="in-danger";
         }
 
         p.setCurrentstate(status);

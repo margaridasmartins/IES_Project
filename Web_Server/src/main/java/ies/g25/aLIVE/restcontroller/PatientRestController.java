@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ies.g25.aLIVE.exception.ResourceNotFoundException;
+import ies.g25.aLIVE.exception.UnprocessableEntityException;
 import ies.g25.aLIVE.model.BloodPressure;
 import ies.g25.aLIVE.model.BodyTemperature;
 import ies.g25.aLIVE.model.HeartRate;
@@ -48,6 +49,7 @@ import ies.g25.aLIVE.model.Patient;
 import ies.g25.aLIVE.model.PatientContext;
 import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.model.SugarLevel;
+import ies.g25.aLIVE.model.User;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
 import ies.g25.aLIVE.repository.HeartRateRepository;
@@ -55,6 +57,7 @@ import ies.g25.aLIVE.repository.OxygenLevelRepository;
 import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.ProfessionalRepository;
 import ies.g25.aLIVE.repository.SugarLevelRepository;
+import ies.g25.aLIVE.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/patients")
@@ -70,6 +73,7 @@ public class PatientRestController {
     public BodyTemperatureRepository bodyTemperatureRepository;
     public ProfessionalRepository professionalRepository;
     public OxygenLevelRepository oxygenLevelRepository;
+    public UserRepository userRepository;
 
     @Autowired
     public PasswordEncoder passwordEncoder;
@@ -78,7 +82,7 @@ public class PatientRestController {
     public PatientRestController(PatientRepository patientRepository, HeartRateRepository heartRateRepository,
             SugarLevelRepository sugarLevelRepository, OxygenLevelRepository oxygenLevelRepository, 
             BloodPressureRepository bloodPressureRepository, BodyTemperatureRepository bodyTemperatureRepository, 
-            ProfessionalRepository professionalRepository) {
+            ProfessionalRepository professionalRepository, UserRepository userRepository) {
         this.patientRepository = patientRepository;
         this.heartRateRepository = heartRateRepository;
         this.sugarLevelRepository = sugarLevelRepository;
@@ -86,6 +90,7 @@ public class PatientRestController {
         this.bloodPressureRepository = bloodPressureRepository;
         this.bodyTemperatureRepository = bodyTemperatureRepository;
         this.professionalRepository = professionalRepository;
+        this.userRepository= userRepository;
     }
 
     @GetMapping(produces="application/json")
@@ -101,15 +106,29 @@ public class PatientRestController {
 
 
     @PostMapping(produces="application/json", consumes="application/json")
-    public Patient createPatient(@Valid @RequestBody PatientContext patient)throws ResourceNotFoundException {
+    public Patient createPatient(@Valid @RequestBody PatientContext patient)throws ResourceNotFoundException,Exception, UnprocessableEntityException {
         Optional<Professional> p = professionalRepository.findByEmail(patient.getPemail());
         if(p.isPresent()){
-            Patient pat = patient.getPatient();
-            pat.setProfessional(p.get());
-            pat.setPassword(passwordEncoder.encode(pat.getPassword()));
-            return patientRepository.save(pat);
+            try{
+                Patient pat = patient.getPatient();
+                pat.setProfessional(p.get());
+                Optional<User> u1 = userRepository.findByEmail(pat.getEmail());
+                Optional<User> u2 = userRepository.findByUsername(pat.getUsername());
+                if(u2.isPresent()){
+                    throw new UnprocessableEntityException("Username already exists");
+                }
+                else if(u1.isPresent()){
+                    throw new UnprocessableEntityException("Email already exists");
+                }
+                pat.setPassword(passwordEncoder.encode(pat.getPassword()));
+                return patientRepository.save(pat);
+            }
+            catch (Exception e) {
+                throw new Exception(e.getMessage());
+            }
+            
         }
-        throw new ResourceNotFoundException("Professional not found for this id");
+        throw new ResourceNotFoundException("Professional not found for this email");
     }
 
     @PutMapping(value="/{id}",produces="application/json", consumes="application/json")
@@ -266,7 +285,7 @@ public class PatientRestController {
             
 
         } catch (Exception e) {
-            throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
+            throw new ResourceNotFoundException(e.getLocalizedMessage());
         } 
 
     }
