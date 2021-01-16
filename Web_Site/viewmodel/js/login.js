@@ -65,7 +65,9 @@ $(document).ready(function () {
             role_value = user['role'];
             document.cookie='access_token='+jwt_value+';';
             document.cookie+='role='+role_value+';';
-            if (user['role']="Patient"){
+            console.log(document.cookie)
+            console.log("TESTE")
+            if (user['role']=="Patient"){
                 window.location.replace("utente.html");
             }
             else{

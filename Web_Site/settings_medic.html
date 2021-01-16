@@ -67,30 +67,30 @@
       <!-- END LOADER -->
       <!-- HEADER -->
       <header>
-         <div class="header-top wow fadeIn">
-            <div class="container">
+        <div class="header-top wow fadeIn">
+           <div class="container">
                <img src="images/cover.png" alt="image" style="width: 15%;">
-            </div>
-         </div>
-         <div class="header-bottom wow fadeIn">
-            <div class="container">
-               <nav class="main-menu">
-                  <div class="navbar-header">
-                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><i class="fa fa-bars" aria-hidden="true"></i></button>
-                  </div>
-				  
-                  <div id="navbar" class="navbar-collapse collapse">
-                     <ul class="nav navbar-nav">
-                        <li><a id="cstatus" href="utente.html">Clinic Status</a></li>
-                        <li><a class="active" href="settings.html">Settings</a></li>
-                        <li><a data-scroll href="#getintouch">Contact</a></li>
-                        <li><a href="index.html">Log Out</a></li>
-                     </ul>
-                  </div>
-               </nav>
-            </div>
-         </div>
-      </header>
+           </div>
+        </div>
+        <div class="header-bottom wow fadeIn">
+           <div class="container">
+              <nav class="main-menu">
+                 <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><i class="fa fa-bars" aria-hidden="true"></i></button>
+                 </div>
+                 <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                       <li><a  href="medic_fp.html">Dashboard</a></li>
+                       <li><a href="patients_stats.html">Patients Stats</a></li>
+                       <li><a class="active" href="settings_medic.html">Settings</a></li>
+                       <li><a data-scroll href="#getintouch">Contact</a></li>
+                       <li><a  href="index.html">Log Out</a></li>
+                    </ul>
+                 </div>
+              </nav>
+           </div>
+        </div>
+     </header>
       <!-- END HEADER -->
       <hr><hr>
       <br>
@@ -114,18 +114,42 @@
 						<p></p>
 						<h4 id="userId"></h4>
 						<p></p>
-						<h4 id="userEmail"></h4>
+                  <h4 id="userEmail"></h4>
+                  <br>
+                  <div class="alignitems" style="margin-bottom: 30px;">
+                     <input type="button" value="Delete Account" name="deleteaccMed" id="deleteaccMed"  class="switch-btn">
+                  </div>
                </div>
                <div class="col-12 col-lg-8">
                   <br><br><br>
                   <p></p>
-                  <input type="text" name="demo-name" id="demo-name" value="" placeholder="Username">
+                  <div class="alignitems" style="margin-bottom: 30px;">
+                     <input type="button" value="Change Username" name="changeUsername" id="changeUsernameMed"  class="switch-btn">
+                  </div>
+                  <div id="changeUserMed">
+                     <input type="text" name="demo-name" id="usernameSetMed" value="" placeholder="Change Username">
+                  </div>
                   <br>
-						<input type="text" name="demo-name" id="demo-name" value="" placeholder="Email">
-						<br>
-						<p class="notImplemented link">Change Password</p>
-						<p></p>
-						<p class="notImplemented link">DELETE ACCOUNT</p>
+                  <div class="alignitems" style="margin-bottom: 30px;">
+                     <input type="button" value="Change Email" name="changeEmailMed" id="changeEmailMed"  class="switch-btn">
+                  </div>
+                  <div id="changeEmaMed">
+						   <input type="text" name="demo-name" id="emailSetMed" value="" placeholder="Change Email">
+                  </div>
+                  <br>
+                  <div class="alignitems" style="margin-bottom: 30px;">
+                     <input type="button" value="Change Password" name="changePassword" id="changePasswordMed"  class="switch-btn">
+                  </div>
+                  <div id="changePassMed">
+                     <input type="password" name="demo-name" id="passSetMed" value="" placeholder="New Password">
+                     <input type="password" name="demo-name" id="passSetMed2" value="" placeholder="Repeat New Password">
+                  </div>
+                  <br>
+                  <br>
+                  <p class="text-danger mt-5 mb-0 d-none" id="setErrorMed"></p>
+                  <div class="alignitems" style="margin-bottom: 30px;">
+                     <button type="button" id="saveSettingsMed">Save</button>
+                  </div>
                </div>
             </div>
             <!-- END ACCOUNT -->
@@ -349,6 +373,6 @@
       <!-- all plugins -->
       <script src="js/custom.js"></script>
       <!-- SETTINGS JS -->
-     <script src="viewmodel/js/settings.js"></script>
+     <script src="viewmodel/js/patients_stats.js"></script>
    </body>
 </html>
