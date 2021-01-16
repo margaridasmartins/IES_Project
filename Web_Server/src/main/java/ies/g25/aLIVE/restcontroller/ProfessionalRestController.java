@@ -44,8 +44,10 @@ import ies.g25.aLIVE.exception.ResourceNotFoundException;
 import ies.g25.aLIVE.exception.UnprocessableEntityException;
 import ies.g25.aLIVE.model.Patient;
 import ies.g25.aLIVE.model.Professional;
+import ies.g25.aLIVE.model.User;
 import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.ProfessionalRepository;
+import ies.g25.aLIVE.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/professionals")
@@ -61,9 +63,13 @@ public class ProfessionalRestController {
     @Autowired
     public ProfessionalRepository professionalRepository;
 
-    public ProfessionalRestController(PatientRepository patientRepository, ProfessionalRepository professionalRepository) {
+    @Autowired
+    public UserRepository userRepository;
+
+    public ProfessionalRestController(PatientRepository patientRepository, ProfessionalRepository professionalRepository, UserRepository userRepository) {
         this.patientRepository = patientRepository;
         this.professionalRepository=professionalRepository;
+        this.userRepository = userRepository;
     }
 
     @GetMapping
@@ -78,13 +84,21 @@ public class ProfessionalRestController {
     }
 
     @PostMapping
-    public Professional createProfessional(@Valid @RequestBody Professional professional, HttpServletRequest request) throws UnprocessableEntityException{
+    public Professional createProfessional(@Valid @RequestBody Professional professional, HttpServletRequest request) throws UnprocessableEntityException, Exception{
         try{
+            Optional<User> u1 = userRepository.findByEmail(professional.getEmail());
+            Optional<User> u2 = userRepository.findByUsername(professional.getUsername());
+            if(u2.isPresent()){
+                throw new UnprocessableEntityException("Username already exists");
+            }
+            else if(u1.isPresent()){
+                throw new UnprocessableEntityException("Email already exists");
+            }
             professional.setPassword(passwordEncoder.encode(professional.getPassword()));
             return professionalRepository.save(professional);
         }
         catch (Exception e) {
-            throw new UnprocessableEntityException(e.getLocalizedMessage());
+            throw new Exception(e.getLocalizedMessage());
         }
         
     }

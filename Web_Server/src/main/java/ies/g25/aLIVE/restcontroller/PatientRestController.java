@@ -49,6 +49,7 @@ import ies.g25.aLIVE.model.Patient;
 import ies.g25.aLIVE.model.PatientContext;
 import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.model.SugarLevel;
+import ies.g25.aLIVE.model.User;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
 import ies.g25.aLIVE.repository.HeartRateRepository;
@@ -56,6 +57,7 @@ import ies.g25.aLIVE.repository.OxygenLevelRepository;
 import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.ProfessionalRepository;
 import ies.g25.aLIVE.repository.SugarLevelRepository;
+import ies.g25.aLIVE.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/patients")
@@ -71,6 +73,7 @@ public class PatientRestController {
     public BodyTemperatureRepository bodyTemperatureRepository;
     public ProfessionalRepository professionalRepository;
     public OxygenLevelRepository oxygenLevelRepository;
+    public UserRepository userRepository;
 
     @Autowired
     public PasswordEncoder passwordEncoder;
@@ -79,7 +82,7 @@ public class PatientRestController {
     public PatientRestController(PatientRepository patientRepository, HeartRateRepository heartRateRepository,
             SugarLevelRepository sugarLevelRepository, OxygenLevelRepository oxygenLevelRepository, 
             BloodPressureRepository bloodPressureRepository, BodyTemperatureRepository bodyTemperatureRepository, 
-            ProfessionalRepository professionalRepository) {
+            ProfessionalRepository professionalRepository, UserRepository userRepository) {
         this.patientRepository = patientRepository;
         this.heartRateRepository = heartRateRepository;
         this.sugarLevelRepository = sugarLevelRepository;
@@ -87,6 +90,7 @@ public class PatientRestController {
         this.bloodPressureRepository = bloodPressureRepository;
         this.bodyTemperatureRepository = bodyTemperatureRepository;
         this.professionalRepository = professionalRepository;
+        this.userRepository= userRepository;
     }
 
     @GetMapping(produces="application/json")
@@ -102,17 +106,25 @@ public class PatientRestController {
 
 
     @PostMapping(produces="application/json", consumes="application/json")
-    public Patient createPatient(@Valid @RequestBody PatientContext patient)throws ResourceNotFoundException, UnprocessableEntityException {
+    public Patient createPatient(@Valid @RequestBody PatientContext patient)throws ResourceNotFoundException,Exception, UnprocessableEntityException {
         Optional<Professional> p = professionalRepository.findByEmail(patient.getPemail());
         if(p.isPresent()){
             try{
                 Patient pat = patient.getPatient();
                 pat.setProfessional(p.get());
+                Optional<User> u1 = userRepository.findByEmail(pat.getEmail());
+                Optional<User> u2 = userRepository.findByUsername(pat.getUsername());
+                if(u2.isPresent()){
+                    throw new UnprocessableEntityException("Username already exists");
+                }
+                else if(u1.isPresent()){
+                    throw new UnprocessableEntityException("Email already exists");
+                }
                 pat.setPassword(passwordEncoder.encode(pat.getPassword()));
                 return patientRepository.save(pat);
             }
             catch (Exception e) {
-                throw new UnprocessableEntityException(e.getLocalizedMessage());
+                throw new Exception(e.getMessage());
             }
             
         }
