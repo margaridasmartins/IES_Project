@@ -88,7 +88,7 @@ public class PatientRestController {
         this.professionalRepository = professionalRepository;
     }
 
-    @GetMapping
+    @GetMapping(produces="application/json")
     @ResponseBody
     public List<Patient> getAllPatients(HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
@@ -100,7 +100,7 @@ public class PatientRestController {
     }
 
 
-    @PostMapping
+    @PostMapping(produces="application/json", consumes="application/json")
     public Patient createPatient(@Valid @RequestBody PatientContext patient)throws ResourceNotFoundException {
         Optional<Professional> p = professionalRepository.findByEmail(patient.getPemail());
         if(p.isPresent()){
@@ -112,7 +112,7 @@ public class PatientRestController {
         throw new ResourceNotFoundException("Professional not found for this id");
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value="/{id}",produces="application/json", consumes="application/json")
     @PreAuthorize("hasRole('Patient')")
     public Patient replacePatient(@RequestBody Patient newPatient, @PathVariable(value = "id") Long patientId, HttpServletRequest request)
             throws ResourceNotFoundException{
@@ -136,7 +136,8 @@ public class PatientRestController {
     }
 
 
-    @GetMapping("/{id}")
+
+    @GetMapping(value="/{id}", produces = "application/json")
     public ResponseEntity<Patient> getPatientById(@PathVariable(value = "id") Long patientId, HttpServletRequest request)
             throws ResourceNotFoundException {
 
@@ -155,7 +156,7 @@ public class PatientRestController {
         } throw new AccessDeniedException("Cannot access this resource");
     }
 
-    @PostMapping("/{id}/picture")
+    @PostMapping(value="/{id}/picture", produces="application/json", consumes = "multipart/file")
     @PreAuthorize("hasRole('Patient')")
     public Patient updatePhoto(@PathVariable(value = "id") Long patientId, @RequestParam("file") MultipartFile file, HttpServletRequest request)
             throws ResourceNotFoundException, IOException {
@@ -182,7 +183,13 @@ public class PatientRestController {
     public ResponseEntity<Map<String, Object>> getBloodPressureByIdAndDate(@PathVariable(value = "id") Long patientId,
         @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
-         ) throws ResourceNotFoundException {
+         , HttpServletRequest request) throws ResourceNotFoundException {
+
+        Boolean checkPermission = checkUserPermissions(request, patientId);
+
+        if (!checkPermission){
+            throw new AccessDeniedException("Cannot access this resource");
+        }
 
         List<BloodPressure> bloodPressures;
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
@@ -222,7 +229,13 @@ public class PatientRestController {
     public ResponseEntity<Map<String, Object>> getHeartRateByIdAndDate(@PathVariable(value = "id") Long patientId,
         @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
-         ) throws ResourceNotFoundException {
+        , HttpServletRequest request ) throws ResourceNotFoundException {
+
+        Boolean checkPermission = checkUserPermissions(request, patientId);
+
+        if (!checkPermission){
+            throw new AccessDeniedException("Cannot access this resource");
+        }
 
         List<HeartRate> heartRates;
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
@@ -262,7 +275,13 @@ public class PatientRestController {
     public ResponseEntity<Map<String, Object>> getSugarLevelByIdAndDate(@PathVariable(value = "id") Long patientId,
         @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
-        ) throws ResourceNotFoundException {
+        , HttpServletRequest request) throws ResourceNotFoundException {
+
+        Boolean checkPermission = checkUserPermissions(request, patientId);
+
+        if (!checkPermission){
+            throw new AccessDeniedException("Cannot access this resource");
+        }
 
         List<SugarLevel> sugarlevels;
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
@@ -301,7 +320,13 @@ public class PatientRestController {
     public ResponseEntity<Map<String, Object>> getOxygenLevelByIdAndDate(@PathVariable(value = "id") Long patientId,
         @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
-        ) throws ResourceNotFoundException {
+        , HttpServletRequest request) throws ResourceNotFoundException {
+
+        Boolean checkPermission = checkUserPermissions(request, patientId);
+
+        if (!checkPermission){
+            throw new AccessDeniedException("Cannot access this resource");
+        }
 
         List<OxygenLevel> oxygenlevels;
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
@@ -341,7 +366,13 @@ public class PatientRestController {
     public ResponseEntity<Map<String, Object>> getBodyTemperatureByIdAndDate(@PathVariable(value = "id") Long patientId,
         @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
-        ) throws ResourceNotFoundException {
+        , HttpServletRequest request) throws ResourceNotFoundException {
+
+        Boolean checkPermission = checkUserPermissions(request, patientId);
+
+        if (!checkPermission){
+            throw new AccessDeniedException("Cannot access this resource");
+        }
 
         List<BodyTemperature> bodyTemperatures;
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
@@ -414,6 +445,42 @@ public class PatientRestController {
         }
     
     
+    }
+
+
+    public Boolean  checkUserPermissions(HttpServletRequest request, Long patientId){
+
+        Boolean flag = true;
+
+        // get request user
+        Principal principal = request.getUserPrincipal();
+        // try to get professional or patient from user
+        Optional<Patient> op1_pat = patientRepository.findByUsername(principal.getName());
+        Optional<Professional> op1_prof = professionalRepository.findByUsername(principal.getName());
+
+        // if user is a patient
+        if (op1_pat.isPresent()){
+            Patient patient = op1_pat.get();
+            if (patient.getId()!=patientId) {
+                flag = false;
+            }
+        }
+        // if user is a professional
+        else if (op1_prof.isPresent()){
+            Optional<Patient> op = patientRepository.findById(patientId);
+            Patient patient = op.get();
+            Professional prof = patient.getProfessional();
+            if (op1_prof.get().getId() != prof.getId()) {
+                flag = false;
+            }
+
+        }
+        // if is not either, check if is admin
+        else if (!principal.getName().equals("admin")) {
+            flag = false;
+        }
+
+        return flag;
     }
 
 }
