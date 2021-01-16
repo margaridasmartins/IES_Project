@@ -1,10 +1,14 @@
 $(document).ready(function () {
 
-    /* 
     // If user is logged in already, redirect to app
-    if (localStorage.getItem('login')!=null)
-        window.location.replace('user.html'); 
-    */
+    if (localStorage.getItem('login')!=null){
+        if (localStorage.getItem('type') == 'patient'){
+            window.location.replace('utente.html'); 
+        } else {
+            window.location.replace('medic_fp.html'); 
+        }
+    }
+
 
 
     /* LOCAL TESTING ONLY!
