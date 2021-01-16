@@ -13,8 +13,9 @@ $(document).ready(function () {
     userLogin = JSON.parse(localStorage.getItem('login'));
     allUsers = JSON.parse(localStorage.getItem('users'));
 
+    console.log(jwt)
 
-    if (userLogin['type']== "Medic"){
+   /* if (userLogin['type']== "Medic"){
         $('#cstatus').text("Dashboard");
         $('#cstatus').attr('href','medic_fp.html');
     }
@@ -22,12 +23,30 @@ $(document).ready(function () {
         $('#cstatus').text("Clinical Status");
         $('#cstatus').attr('href','utente.html');
     }
-
+    */
+    
 
     $.ajax({
-        url: "http://192.168.160.217:8080/api/professionals/" +  userLogin["id"] + "/patients"
-    }).then(function(data) {
+        url: "http://localhost:8080/api/professionals/" +  id + "/patients",
+        //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
+        headers:{
+            "Access-Control-Allow-Origin":"http://localhost",
+            "Authorization": "Bearer " + jwt
+        },
+        statusCode: {
+            500: function(xhr){
+                console.log("There was an error connecting to the server, please try again!");
+                return;
+            },
+            403: function(xhr){
+                console.log("Invalid Credentials!");
+                return;
+            }
+        }
 
+    }).then(function(data) {
+    
         data.data.forEach(p=>{
             //show the patients associated with the doctor       null -> userLogin['email']
 
@@ -426,3 +445,19 @@ function my_filter(myPatientsArray, condition){
     });
     return myPatients;
 }; 
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
