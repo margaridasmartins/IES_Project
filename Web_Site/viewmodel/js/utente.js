@@ -41,7 +41,7 @@ $(document).ready(function () {
         }
         $("#userWeight").text(userLogin['weight']);
         $("#userHeight").text(userLogin['height']);
-
+        $("#userPhoto").attr("src",'data:image/gif;base64,'+ userLogin['image']);
         var condArray = userLogin['med_conditions'];
         $.each(condArray, function(index, value) {
             //console.log(value);
