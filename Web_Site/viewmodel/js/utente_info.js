@@ -56,6 +56,7 @@ $(document).ready(function () {
         $("#patientNewHeight").fadeOut();
         $("#editInformationDone").fadeOut();
         $("#editInformation").fadeIn();
+        editPatient(currentPatient);
         window.location.reload();
     }); 
 
@@ -81,7 +82,7 @@ $(document).ready(function () {
 
         $("#patientNewDisease").fadeOut();
         $("#addDiseaseDone").fadeOut();
-        //$("#addDisease").fadeIn();
+        editPatient(currentPatient);
         window.location.reload();
     }); 
     // REMOVE DISEASE
@@ -108,7 +109,7 @@ $(document).ready(function () {
         localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
         $("#patientRemovedDisease").fadeOut();
         $("#removeDiseaseDone").fadeOut();
-        //$("#removeDisease").fadeIn();
+        editPatient(currentPatient);
         window.location.reload();
     }); 
 
@@ -134,7 +135,7 @@ $(document).ready(function () {
 
         $("#patientNewMedication").fadeOut();
         $("#addMedicationDone").fadeOut();
-        //$("#addDisease").fadeIn();
+        editPatient(currentPatient);
         window.location.reload();
     });
     // REMOVE MEDICATION
@@ -161,7 +162,7 @@ $(document).ready(function () {
         localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
         $("#patientRemovedMedication").fadeOut();
         $("#removeMedicationDone").fadeOut();
-        //$("#removeDisease").fadeIn();
+        editPatient(currentPatient);
         window.location.reload();
     }); 
 
@@ -180,15 +181,39 @@ $(document).ready(function () {
 // LATEST DATA
 window.onload = function get_latestValues(){
     $.ajax({
+
         url: 'http://192.168.160.217:8080/api/patients/'+userLogin['id']+'/latest',
         }).done(function (results) {
             console.log(results)
+
             document.getElementById('latest_bp').innerHTML = '-> '+results[0].low_value;
             document.getElementById('latest_bt').innerHTML = '-> '+results[1].bodyTemp;
             document.getElementById('latest_hr').innerHTML = '-> '+results[2].heartRate;
             document.getElementById('latest_sl').innerHTML = '-> '+results[3].sugarLevel;
             document.getElementById('latest_ol').innerHTML = '-> '+results[4].oxygenLevel;
         })
+}
+
+//PUT Patient
+function editPatient(data){
+    $.ajax({
+        type: "PUT",
+        url: "http://192.168.160.217:8080/api/patients/"+currentPatient['id'],
+        data: JSON.stringify(data),
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        success: function (data, status, jqXHR) {
+
+                 alert(status);
+                 console.log(data)
+             },
+
+             error: function (jqXHR, status) {
+                 // error handler
+                 console.log(jqXHR);
+                 alert('fail' + status.code);
+             }
+      });
 }
 
 
@@ -349,7 +374,7 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(draw_OxygenSaturationChart);
 function draw_OxygenSaturationChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/patients/'+currentPatient['id']+'/oxygenlevel',
+        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/oxygenlevel',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();

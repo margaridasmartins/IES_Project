@@ -310,7 +310,7 @@ utils.amendUrl = function(url) {
     if (url.indexOf('//') === 0) {
         url = dl.protocol + url;
     }
-    // '/abc' --> 'http://localhost:80/abc'
+    // '/abc' --> 'http://192.168.160.217:80/abc'
     if (url.indexOf('/') === 0) {
         url = dl.protocol + '//' + dl.host + url;
     }

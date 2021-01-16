@@ -111,6 +111,7 @@ $(document).ready(function () {
     
 });
 
+// SORTING FUNCTION
 function sortPositions(){
     console.log("sortPositions");
     var select, strValue, myPatientsArray, currentState;
@@ -195,6 +196,130 @@ function sortPositions(){
         };
 }
 
+// FILTER FUNCTION 
+function filterPositions(){
+    console.log("filterPositions");
+    var select, strValue, myPatientsArray, currentState;
+    select = document.getElementById("select_filter");
+    strValue = select.value;
+    myPatientsArray = filter_doctorPatients();
+    if (strValue == "diabetes"){
+        console.log("diabetes");
+        document.getElementById("patientOrder").innerHTML = ""; 
+        myPatientsArray = my_filter(myPatientsArray, "diabetes");
+        // console.log("FILTERED ", myPatientsArray);
+        myPatientsArray.forEach(p => {
+            $("#newPatientsDiv").fadeOut();
+            $("#allPatientsDiv").fadeOut();
+            $("#patientOrder").append(`<div class="row" style="margin-top: 3%;">
+                                            <div class="col-md-12">
+                                                <a class="currentP" href="#" value="${p['id']}">
+                                                    <div class="card " style="background-color: lightgreen;" >
+                                                        <div class="card-body">
+                                                            <div class="row ">
+                                                                <div class="col-md-2 my-auto">
+                                                                    <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
+                                                                </div>
+                                                                <div class="col-md-3 my-auto"> 
+                                                                    <b>Name: </b> 
+                                                                    <em>${p['fullname']} </em>
+                                                                </div>
+                                                                <div class="col-md-2 my-auto">
+                                                                    <b>Age: </b>
+                                                                    <em>${p['age']} </em>
+                                                                </div>
+                                                                
+                                                                <div class="col-md-3 my-auto" id="date">
+                                                                    <b>Last Check: </b>
+                                                                    <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>`)
+            });
+        };
+        if (strValue == "obesity"){
+            console.log("obesity");
+            document.getElementById("patientOrder").innerHTML = ""; 
+            myPatientsArray = my_filter(myPatientsArray, "obesity");
+            // console.log("FILTERED ", myPatientsArray);
+            myPatientsArray.forEach(p => {
+                $("#newPatientsDiv").fadeOut();
+                $("#allPatientsDiv").fadeOut();
+                $("#patientOrder").append(`<div class="row" style="margin-top: 3%;">
+                                                <div class="col-md-12">
+                                                    <a class="currentP" href="#" value="${p['id']}">
+                                                        <div class="card " style="background-color: lightgreen;" >
+                                                            <div class="card-body">
+                                                                <div class="row ">
+                                                                    <div class="col-md-2 my-auto">
+                                                                        <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
+                                                                    </div>
+                                                                    <div class="col-md-3 my-auto"> 
+                                                                        <b>Name: </b> 
+                                                                        <em>${p['fullname']} </em>
+                                                                    </div>
+                                                                    <div class="col-md-2 my-auto">
+                                                                        <b>Age: </b>
+                                                                        <em>${p['age']} </em>
+                                                                    </div>
+                                                                    
+                                                                    <div class="col-md-3 my-auto" id="date">
+                                                                        <b>Last Check: </b>
+                                                                        <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>`)
+            });
+        };
+        if (strValue == "asthma"){
+            console.log("Asthma");
+            document.getElementById("patientOrder").innerHTML = ""; 
+            myPatientsArray = my_filter(myPatientsArray, "asthma");
+            // console.log("FILTERED ", myPatientsArray);
+            myPatientsArray.forEach(p => {
+                $("#newPatientsDiv").fadeOut();
+                $("#allPatientsDiv").fadeOut();
+                $("#patientOrder").append(`<div class="row" style="margin-top: 3%;">
+                                                <div class="col-md-12">
+                                                    <a class="currentP" href="#" value="${p['id']}">
+                                                        <div class="card " style="background-color: lightgreen;" >
+                                                            <div class="card-body">
+                                                                <div class="row ">
+                                                                    <div class="col-md-2 my-auto">
+                                                                        <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
+                                                                    </div>
+                                                                    <div class="col-md-3 my-auto"> 
+                                                                        <b>Name: </b> 
+                                                                        <em>${p['fullname']} </em>
+                                                                    </div>
+                                                                    <div class="col-md-2 my-auto">
+                                                                        <b>Age: </b>
+                                                                        <em>${p['age']} </em>
+                                                                    </div>
+                                                                    
+                                                                    <div class="col-md-3 my-auto" id="date">
+                                                                        <b>Last Check: </b>
+                                                                        <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>`)
+            });
+        };
+}
+
+// SEARCH FUNCTION
 function search_patient(){
     console.log("search_patient");
     var input, filter, patientName, myPatientsArray;
@@ -240,10 +365,9 @@ function search_patient(){
                                         </div>`);
         }
     });
-
-    
 };
 
+// SELECT PATIENT TO SHOW DETAILS
 function selectPatient(id){
     $.ajax({
         url: "http://192.168.160.217:8080/api/patients"
@@ -260,6 +384,7 @@ function selectPatient(id){
     })
 };
 
+// GET ALL PATIENTS ASSIGNED
 function filter_doctorPatients(){
     $.ajax({
         url: "http://192.168.160.217:8080/api/professionals/" +  userLogin["id"] + "/patients"
@@ -276,16 +401,18 @@ function filter_doctorPatients(){
     });
 }; 
 
-
-// FOR LOCAL TESTING
-/* function filter_doctorPatients(){
-    //console.log(allUsers);
+// FILTER BASED ON MEDICAL CONDITIONS
+function my_filter(myPatientsArray, condition){
     var myPatients = [];
-    allUsers.forEach(p => {
-        if(p['doctorID'] == userLogin.id){
-            myPatients.push(p);   
+    myPatientsArray.forEach(p => {
+        // console.log(p);
+        p.medicalConditions.forEach(mc => {
+        //console.log(mc)
+        if(mc.toLowerCase() == condition.toLowerCase()){
+            myPatients.push(p);
         }
+        //console.log("NEW ARRAY ", myPatients) 
+        });
     });
-    //console.log("MY PATIENTS ", myPatients);
     return myPatients;
-}; */
+}; 

@@ -1,4 +1,26 @@
+var jwt;
+
 $(document).ready(function () {
+    cookie_array= document.cookie.split(";");
+    var temp = cookie_array[1].trim();
+    console.log(document.cookie)
+    jwt = temp.substring("access_token=".length,temp.length);
+    console.log(jwt)
+    $.ajax({
+        //http://192.168.160.217:8080
+        url: "http://localhost:8080/api/patients/3",
+        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        statusCode: {
+            500: function(xhr){
+                return;
+            },
+            403: function(xhr){
+                return;
+            }
+        }
+    }).then(function(user) {
+        console.log(user)
+    });
 
     $("#latestInf").fadeOut();
     userLogin = JSON.parse(localStorage.getItem('login'));
@@ -219,7 +241,7 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(draw_OxygenSaturationChart);
 function draw_OxygenSaturationChart() {
     $.ajax({
-        url: 'http://localhost:8080/api/patients/'+userLogin['id']+'/oxygenlevel',
+        url: 'http://192.168.160.217:8080/api/patients/'+userLogin['id']+'/oxygenlevel',
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();

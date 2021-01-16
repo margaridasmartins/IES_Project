@@ -85,10 +85,10 @@
                   </button>
                   <div class="collapse navbar-collapse" style="height:60px" id="navbar">
                      <ul class="nav navbar-nav">
-                        <li><a  href="index.html">Home</a></li>
                         <li><a id="cstatus" class="active" href="medic_fp.html">Dashboard</a></li>
-                        <li><a  href="settings.html">Settings</a></li>
+                        <li><a  href="settings_medic.html">Settings</a></li>
                         <li><a data-scroll href="#getintouch">Contact</a></li>
+                        <li><a  href="index.html">Log Out</a></li>
                      </ul>
                   </div>
                </nav>
@@ -115,8 +115,23 @@
                <div class="input-group col-md-3 offset-1 d-flex justify-content-end" >
                   <!-- ORDER BY SELECTION -->
                   <select class="form-control d-flex align-self-center" id="select_order" onchange="sortPositions();">
+                     <option value="default">Select order</option>
                      <option value="last">Order by Last Checked</option>
                      <option value="status">Order by Health status</option>
+                  </select>
+               </div>
+            </div>
+            <p></p>
+            <div class="row">
+               <div class="input-group col-md-8" >
+               </div>
+               <div class="input-group col-md-3 offset-1 d-flex justify-content-end" >
+                  <!-- FILTER BY SELECTION -->
+                  <select class="form-control d-flex align-self-center" id="select_filter" onchange="filterPositions();">
+                     <option value="default">Select filter</option>
+                     <option value="asthma">Filter - Asthma</option>
+                     <option value="diabetes">Filter - Diabetes</option>
+                     <option value="obesity">Filter - Obesity</option>
                   </select>
                </div>
             </div>
