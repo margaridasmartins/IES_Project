@@ -420,7 +420,7 @@ function selectPatient(id, profid){
     }).then(function(data) {
         data.data.forEach(p=>{
             if(p.id == id){
-                localStorage.setItem('currentPatient', JSON.stringify(p));
+                localStorage.setItem('currentPatient', p.id);
                 //console.log(localStorage.getItem('currentPatient'));
                 //console.log("currentPatient"+id);
                 document.getElementById("currentPatient"+id).setAttribute('href', 'utente_info.html');
