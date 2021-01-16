@@ -182,7 +182,35 @@ public class PatientRestController {
     public ResponseEntity<Map<String, Object>> getBloodPressureByIdAndDate(@PathVariable(value = "id") Long patientId,
         @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
-         ) throws ResourceNotFoundException {
+         , HttpServletRequest request) throws ResourceNotFoundException {
+
+        // get request user
+        Principal principal = request.getUserPrincipal();
+        // try to get professional or patient from user
+        Optional<Patient> op1_pat = patientRepository.findByUsername(principal.getName());
+        Optional<Professional> op1_prof = professionalRepository.findByUsername(principal.getName());
+
+        // if user is a patient
+        if (op1_pat.isPresent()){
+            Patient patient = op1_pat.get();
+            if (patient.getId()!=patientId) {
+                throw new AccessDeniedException("Cannot access this resource");
+            }
+        }
+        // if user is a professional
+        else if (op1_prof.isPresent()){
+            Optional<Patient> op = patientRepository.findById(patientId);
+            Patient patient = op.get();
+            Professional prof = patient.getProfessional();
+            if (op1_prof.get().getId() != prof.getId()) {
+                throw new AccessDeniedException("Cannot access this resource");
+            }
+
+        }
+        // if is not either, check if is admin
+        else if (!principal.getName().equals("admin")) {
+                throw new AccessDeniedException("Cannot access this resource");
+        }
 
         List<BloodPressure> bloodPressures;
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
