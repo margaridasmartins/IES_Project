@@ -165,19 +165,19 @@ public class PatientRestController {
     public ResponseEntity<Patient> getPatientById(@PathVariable(value = "id") Long patientId, HttpServletRequest request)
             throws ResourceNotFoundException {
 
-        Principal principal = request.getUserPrincipal();
-        Optional<Patient> op1 = patientRepository.findByUsername(principal.getName());
-        Patient p = op1.get();
+        Boolean checkPermission = checkUserPermissions(request, patientId);
 
-        if (principal.getName().equals("admin") || p.getId()==patientId) {
-            Optional<Patient> op = patientRepository.findById(patientId);
-            if (op.isPresent()) {
-                Patient patient = op.get();
-                return ResponseEntity.ok().body(patient);
-            }
-            throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+        if (!checkPermission){
+            throw new AccessDeniedException("Cannot access this resource");
+        }
 
-        } throw new AccessDeniedException("Cannot access this resource");
+        Optional<Patient> op = patientRepository.findById(patientId);
+        if (op.isPresent()) {
+            Patient patient = op.get();
+            return ResponseEntity.ok().body(patient);
+        }
+        throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+
     }
 
     @PostMapping(value="/{id}/picture", produces="application/json", consumes = "multipart/file")

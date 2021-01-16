@@ -31,17 +31,17 @@ class LoadDatabase {
 
     return args -> {
       Professional p = new Professional(passwordEncoder.encode("pass"),"carlitos","cls@jmail.com","Carlitos Sousa",34,"Male","Hospital de Braga", "Cardiologia","professional");
-      //p.setImage(Files.readAllBytes(Path.of("./src/main/resources/static/no_photo.png")) );
+
       Professional p2 = new Professional(passwordEncoder.encode("passita"),"anocas","anaaaa@jmail.com","Anocas Beatriz",44,"Female","Hospital de Aveiro", "Medicina Interna","professional");
-      //p2.setImage(Files.readAllBytes(Path.of("./src/main/resources/static/no_photo.png")) );
+
       Patient d = new Patient(passwordEncoder.encode("pass1"), "manel123", "manel@jmail.com", "Manel Ribeiro",62,"Male", new Date(), "normal",1.75,67);
-      //d.setImage(Files.readAllBytes(Path.of("./src/main/resources/static/no_photo.png")) );
+
       d.setProfessional(p);
       Patient d1 = new Patient(passwordEncoder.encode("pass2"), "silvia69", "silv@dmail.com", "Silvia Matos",74,"Female", new Date(), "in-danger", 1.66,70);
-      //d1.setImage(Files.readAllBytes(Path.of("./src/main/resources/static/no_photo.png")) );
+
       d1.setProfessional(p2);
       Patient d2 = new Patient(passwordEncoder.encode("pass3"), "ze321", "ze@dmail.com", "Zé Matos", 75,"Male", new Date(), "normal",1.69,80);
-      //d2.setImage(Files.readAllBytes(Path.of("./src/main/resources/static/no_photo.png")) );
+
       d2.setProfessional(p2);
 
       log.info("Preloading " + Pro.save(p));
