@@ -181,8 +181,11 @@ $(document).ready(function () {
 // LATEST DATA
 window.onload = function get_latestValues(){
     $.ajax({
-        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/latest',
+
+        url: 'http://192.168.160.217:8080/api/patients/'+userLogin['id']+'/latest',
         }).done(function (results) {
+            console.log(results)
+
             document.getElementById('latest_bp').innerHTML = '-> '+results[0].low_value;
             document.getElementById('latest_bt').innerHTML = '-> '+results[1].bodyTemp;
             document.getElementById('latest_hr').innerHTML = '-> '+results[2].heartRate;
@@ -376,7 +379,7 @@ function draw_OxygenSaturationChart() {
      }).done(function (results) {
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'Day');
-        data.addColumn('number', '%');  
+        data.addColumn('number', '%');
 
         // Get users data
         results.data.forEach(element =>{
