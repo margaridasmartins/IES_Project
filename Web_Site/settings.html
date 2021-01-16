@@ -108,24 +108,48 @@
                   <h2 class="settings-header">Account</h2>
                   <h3>IDENTIFICATION</h3>
                   <p></p>
-                  <img src="viewmodel/images/person1.jpg" alt="John" width="60%">
+                  <img src="images/oldman.png" width="60%">
                   <p></p>
                   <h4 id="userFullName"></h4>
 						<p></p>
 						<h4 id="userId"></h4>
 						<p></p>
-						<h4 id="userEmail"></h4>
+                  <h4 id="userEmail"></h4>
+                  <br>
+                  <div class="alignitems" style="margin-bottom: 30px;">
+                     <input type="button" value="Delete Account" name="deleteAcc" id="deleteAcc"  class="switch-btn">
+                  </div>
                </div>
                <div class="col-12 col-lg-8">
                   <br><br><br>
                   <p></p>
-                  <input type="text" name="demo-name" id="demo-name" value="" placeholder="Username">
+                  <div class="alignitems" style="margin-bottom: 30px;">
+                     <input type="button" value="Change Username" name="changeUsername" id="changeUsername"  class="switch-btn">
+                  </div>
+                  <div id="changeUser">
+                     <input type="text" name="demo-name" id="usernameSet" value="" placeholder="Change Username">
+                  </div>
                   <br>
-						<input type="text" name="demo-name" id="demo-name" value="" placeholder="Email">
-						<br>
-						<p class="notImplemented link">Change Password</p>
-						<p></p>
-						<p class="notImplemented link">DELETE ACCOUNT</p>
+                  <div class="alignitems" style="margin-bottom: 30px;">
+                     <input type="button" value="Change Email" name="changeEmail" id="changeEmail"  class="switch-btn">
+                  </div>
+                  <div id="changeEma">
+						   <input type="text" name="demo-name" id="emailSet" value="" placeholder="Change Email">
+                  </div>
+                  <br>
+                  <div class="alignitems" style="margin-bottom: 30px;">
+                     <input type="button" value="Change Password" name="changePassword" id="changePassword"  class="switch-btn">
+                  </div>
+                  <div id="changePass">
+                     <input type="password" name="demo-name" id="passSet" value="" placeholder="New Password">
+                     <input type="password" name="demo-name" id="passSet2" value="" placeholder="Repeat New Password">
+                  </div>
+                  <br>
+                  <br>
+                  <p class="text-danger mt-5 mb-0 d-none" id="setError"></p>
+                  <div class="alignitems" style="margin-bottom: 30px;">
+                     <button type="button" id="saveSettings">Save</button>
+                  </div>
                </div>
             </div>
             <!-- END ACCOUNT -->
