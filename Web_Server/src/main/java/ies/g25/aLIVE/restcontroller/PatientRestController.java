@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ies.g25.aLIVE.exception.ResourceNotFoundException;
+import ies.g25.aLIVE.exception.UnprocessableEntityException;
 import ies.g25.aLIVE.model.BloodPressure;
 import ies.g25.aLIVE.model.BodyTemperature;
 import ies.g25.aLIVE.model.HeartRate;
@@ -101,15 +102,21 @@ public class PatientRestController {
 
 
     @PostMapping(produces="application/json", consumes="application/json")
-    public Patient createPatient(@Valid @RequestBody PatientContext patient)throws ResourceNotFoundException {
+    public Patient createPatient(@Valid @RequestBody PatientContext patient)throws ResourceNotFoundException, UnprocessableEntityException {
         Optional<Professional> p = professionalRepository.findByEmail(patient.getPemail());
         if(p.isPresent()){
-            Patient pat = patient.getPatient();
-            pat.setProfessional(p.get());
-            pat.setPassword(passwordEncoder.encode(pat.getPassword()));
-            return patientRepository.save(pat);
+            try{
+                Patient pat = patient.getPatient();
+                pat.setProfessional(p.get());
+                pat.setPassword(passwordEncoder.encode(pat.getPassword()));
+                return patientRepository.save(pat);
+            }
+            catch (Exception e) {
+                throw new UnprocessableEntityException(e.getLocalizedMessage());
+            }
+            
         }
-        throw new ResourceNotFoundException("Professional not found for this id");
+        throw new ResourceNotFoundException("Professional not found for this email");
     }
 
     @PutMapping(value="/{id}",produces="application/json", consumes="application/json")
@@ -266,7 +273,7 @@ public class PatientRestController {
             
 
         } catch (Exception e) {
-            throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
+            throw new ResourceNotFoundException(e.getLocalizedMessage());
         } 
 
     }

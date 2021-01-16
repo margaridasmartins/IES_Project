@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ies.g25.aLIVE.exception.ResourceNotFoundException;
+import ies.g25.aLIVE.exception.UnprocessableEntityException;
 import ies.g25.aLIVE.model.Patient;
 import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.repository.PatientRepository;
@@ -77,10 +78,15 @@ public class ProfessionalRestController {
     }
 
     @PostMapping
-    public Professional createProfessional(@Valid @RequestBody Professional professional, HttpServletRequest request) {
-
-        professional.setPassword(passwordEncoder.encode(professional.getPassword()));
-        return professionalRepository.save(professional);
+    public Professional createProfessional(@Valid @RequestBody Professional professional, HttpServletRequest request) throws UnprocessableEntityException{
+        try{
+            professional.setPassword(passwordEncoder.encode(professional.getPassword()));
+            return professionalRepository.save(professional);
+        }
+        catch (Exception e) {
+            throw new UnprocessableEntityException(e.getLocalizedMessage());
+        }
+        
     }
 
     @PutMapping("/{id}")
