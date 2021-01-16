@@ -85,14 +85,14 @@ public class PatientRestController {
         this.professionalRepository = professionalRepository;
     }
 
-    @GetMapping
+    @GetMapping(produces="application/json")
     @ResponseBody
     public List<Patient> getAllPatients() {
         return patientRepository.findAll();
     }
 
 
-    @PostMapping
+    @PostMapping(produces="application/json", consumes="application/json")
     public Patient createPatient(@Valid @RequestBody PatientContext patient)throws ResourceNotFoundException {
         Optional<Professional> p= professionalRepository.findByEmail(patient.getPemail());
         if(p.isPresent()){
@@ -104,7 +104,7 @@ public class PatientRestController {
         throw new ResourceNotFoundException("Professional not found for this id");
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value="/{id}",produces="application/json", consumes="application/json")
     @PreAuthorize("hasRole('Patient')")
     public Patient replacePatient(@RequestBody Patient newPatient, @PathVariable(value = "id") Long patientId) 
             throws ResourceNotFoundException{
@@ -118,7 +118,7 @@ public class PatientRestController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}", produces="application/json")
     public ResponseEntity<Patient> getPatientById(@PathVariable(value = "id") Long patientId)
             throws ResourceNotFoundException {
         Optional<Patient> op = patientRepository.findById(patientId);
@@ -129,7 +129,7 @@ public class PatientRestController {
         throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
     }
 
-    @PostMapping("/{id}/picture")
+    @PostMapping(value="/{id}/picture", produces="application/json", consumes = "multipart/file")
     @PreAuthorize("hasRole('Patient')")
     public Patient updatePhoto(@PathVariable(value = "id") Long patientId, @RequestParam("file") MultipartFile file)
             throws ResourceNotFoundException, IOException {
