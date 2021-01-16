@@ -130,29 +130,32 @@
             <!-- LATEST VALUES -->
             <hr class="hr1">
                <div class="alignitems" style="margin-bottom: 30px;">
-                  <h1>Information from latest measurements</h1>
+                  <input type="button" value="Information from latest measurements" name="latestInfo" id="latestInfo"  class="switch-btn" onclick="">
                </div>
-            <div class="row">
-               <div> Blood Pressure
-                  <p id="latest_bp"></p>
+            <div id="latestInf">
+               <div class="row"> 
+                  <div class="col-md-4"> <b>Blood Pressure</b>
+                     <p id="latest_bp"></p>
+                  </div>
+
+                  <div class="col-md-4"> <b>Body Temperature</b>
+                     <p id="latest_bt"></p>
+                  </div>
+
+                  <div class="col-md-4"> <b>Heart Rate</b>
+                     <p id="latest_hr"></p>
+                  </div>
                </div>
-               <br><br>
-               <div> Body Temperature
-                  <p id="latest_bt"></p>
+
+               <br>
+               <div class="row"> 
+                  <div  class="col-md-6"> <b>Sugar Level</b>
+                     <p id="latest_sl"></p>
+                  </div>
+                  <div  class="col-md-6"> <b>Oxygen Saturation</b>
+                     <p id="latest_ol"></p>
+                  </div>
                </div>
-               <br><br>
-               <div> Heart Rate
-                  <p id="latest_hr"></p>
-               </div>
-               <br><br>
-               <div> Sugar Level
-                  <p id="latest_sl"></p>
-               </div>
-               <br><br>
-               <div> Oxygen Saturation
-                  <p id="latest_ol"></p>
-               </div>
-            </div>
             
             <!-- CHARTS -->
             <div class="row">
