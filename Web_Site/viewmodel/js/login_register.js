@@ -20,6 +20,7 @@ $("#registerPatient").click(function(){
     var data_post={}
     
     var name = $("#registerName").val();
+    var username = $("#regUsername").val();
     var email = $("#registerEmail").val();
     var age = $("#registerAge").val();
     var gender = $("#registerGender").val();
@@ -29,7 +30,7 @@ $("#registerPatient").click(function(){
     var pass2 = $("#registerPass2").val();
     var professional = $("#registerProf").val(); 
 
-    if(name == "" || email == "" || age == ""){
+    if(name == "" || email == "" || age == ""|| username==""){
         $("#registerErrorPat").text("Fill all the fields!");
         $("#registerErrorPat").fadeIn();
         return;
@@ -42,7 +43,7 @@ $("#registerPatient").click(function(){
     }
 
     data_post["fullname"]=name;
-    data_post["username"]=email.split("@")[0];
+    data_post["username"]=username;
     data_post["email"]=email;
     data_post["age"]=age;
     data_post["password"]=pass1;
@@ -51,46 +52,45 @@ $("#registerPatient").click(function(){
     data_post["height"]=parseFloat(height);
     data_post["lastcheck"]= new Date();
     
+    var data ={};
+    data["pemail"]= professional;
+    data["patient"]= data_post;
+
+    
     $.ajax({
-        url: "http://192.168.160.217:8080/api/professionals"
-    }).then(function(dataPro) {
-        pro_exists=true;                                //Associar o paciente ao medico
-        /*dataPro.forEach((value, index) => {
-            if(value["email"]==professional){
-                pro_exists=true;
-                data_post["professional"]=value;
+        //url: "http://192.168.160.217:8080/api/patients"
+        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217"},
+        type:"POST",
+        url: "http://localhost:8080/api/patients",
+        headers:{"Access-Control-Allow-Origin":"http://localhost"},
+        data: JSON.stringify(data),
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        success: function (data, status) {
+            alert("Registed Successfully!");
+            window.location.replace("index.html");
+        },
+        error: function (jqXHR, status) {
+            if(status.code==500){
+                $("#registerErrorPat").text("There was an error connecting to the server, please try again!");
+                $("#registerErrorPat").fadeIn();
+                return;
             }
-        })*/
-        if (pro_exists){
-            $.ajax({
-                url: "http://192.168.160.217:8080/api/patients"
-            }).then(function(data) {
-                var email_exists=false;
-                for(u in data){
-                    if(data[u].email == email){
-                        email_exists = true;
-                    };
-                };
-                if(email_exists){
-                    $("#registerErrorPat").text("This email is already registered!");
-                    $("#registerErrorPat").fadeIn();
-                    return;
-                }
-                else{
-                    //"Everything" is legal
-                    //console.log(data_post)
-                    
-                    postPatient(data_post);
-                    alert("Patient saved!");
-                    window.location.replace("index.html");
-                };
-            });
+            else if (status.code==422){
+                var err = JSON.parse(xhr.responseText);
+                $("#loginError").text(err.Message);
+                $("#loginError").fadeIn();
+                return;
+            }
+            else if(status.code==404) {
+                $("#registerErrorPat").text("Professional email does not exist");
+                $("#registerErrorPat").fadeIn();
+                return;
+            }
         }
-        else{
-            $("#registerErrorPat").text("This Professional is not registered!");
-            $("#registerErrorPat").fadeIn();
-        }
+
     })
+
   });
 
 $("#registerProfessional").click(function(){
@@ -99,6 +99,7 @@ $("#registerProfessional").click(function(){
     var data_post={}
     
     var name = $("#regName").val();
+    var username = $("#regUsername").val();
     var email = $("#regEmail").val();
     var age = $("#regAge").val();
     var gender = $("#regGender").val();
@@ -108,7 +109,7 @@ $("#registerProfessional").click(function(){
     var speciality = $("#regSpeciality").val();
     
     data_post["fullname"]=name;
-    data_post["username"]=email.split("@")[0];
+    data_post["username"]=username;
     data_post["email"]=email;
     data_post["age"]=age;
     data_post["password"]=pass1;
@@ -116,7 +117,7 @@ $("#registerProfessional").click(function(){
     data_post["workplace"]=workplace;
     data_post["speciality"]=speciality;
 
-    if(name == "" || email == "" || age == "" || workplace == "" || speciality == "" || pass1 == ""){
+    if(name == "" || email == "" || age == "" || workplace == "" || speciality == "" || pass1 == "" || username==""){
         $("#registerErrorPro").text("Fill all the fields!");
         $("#registerErrorPro").fadeIn();
         return;
@@ -128,76 +129,34 @@ $("#registerProfessional").click(function(){
         return;
     }
 
-    
-
     $.ajax({
-        url: "http://192.168.160.217:8080/api/professionals"
-    }).then(function(data) {
-        var email_exists=false;
-        for(u in data){
-            if(data[u].email == email){
-                email_exists = true;
-            };
-        };
-        if(email_exists){
-            $("#registerErrorPro").text("This email is already registered!");
-            $("#registerErrorPro").fadeIn();
-            return;
-        }
-        else{
-            //"Everything" is legal
-            console.log(data_post)
-            
-            postProfessional(data_post);
-            alert("Patient saved!");
-            window.location.replace("index.html");
-        };
-    });
-    
-  });
-
-//Post Patient
-function postPatient(data){
-
-    $.ajax({
-        type: "POST",
-        url: "http://192.168.160.217:8080/api/patients",
-        data: JSON.stringify(data),
-        dataType: "json",
-        contentType: "application/json; charset=utf-8",
-        success: function (data, status, jqXHR) {
-
-                 alert(status);
-                 console.log(data)
-             },
-
-             error: function (jqXHR, status) {
-                 // error handler
-                 console.log(jqXHR);
-                 alert('fail' + status.code);
-             }
-      });
-}
-
-//Post Professional
-function postProfessional(data){
-
-    $.ajax({
-        type: "POST",
-        url: "http://192.168.160.217:8080/api/professionals",
-        data: JSON.stringify(data),
+        //url: "http://192.168.160.217:8080/api/patients"
+        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217"},
+        type:"POST",
+        url: "http://localhost:8080/api/professionals",
+        headers:{"Access-Control-Allow-Origin":"http://localhost"},
+        data: JSON.stringify(data_post),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: function (data, status) {
+            alert("Registed Successfully!");
+            window.location.replace("index.html");
+        },
 
-                 alert(status);
-                 console.log(data)
-             },
+        error: function (jqXHR, status) {
+            if(status.code==500){
+                $("#registerErrorPat").text("There was an error connecting to the server, please try again!");
+                $("#registerErrorPat").fadeIn();
+                return;
+            }
+            else if(status.code==422){
+                var err = JSON.parse(jqXHR.responseText);
+                $("#loginError").text(err.Message);
+                $("#loginError").fadeIn();
+                return;
+            }
+        }
+    })       
 
-             error: function (jqXHR, status) {
-                 // error handler
-                 console.log(jqXHR);
-                 alert('fail' + status.code);
-             }
-      });
-}
+        
+  });

@@ -1,10 +1,32 @@
-$(document).ready(function () {
+var jwt;
+var id;
 
+$(document).ready(function () {
+    cookie_array= document.cookie.split("&");
+    var temp = cookie_array[0].trim();
+    jwt = temp.substring("access_token=".length,temp.length);
+    var temp = cookie_array[1].trim();
+    id = temp.substring("id=".length,temp.length);
+
+    $.ajax({
+        //http://192.168.160.217:8080
+        url: "http://localhost:8080/api/patients/"+ id,
+        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        statusCode: {
+            500: function(xhr){
+                return;
+            },
+            403: function(xhr){
+                return;
+            }
+        }
+    }).then(function(user) {
+       currentPatient=JSON.parse(user);
+    });
     $("#latestInf").fadeOut();
-    currentPatient = JSON.parse(localStorage.getItem('currentPatient'));
-    userLogin = JSON.parse(localStorage.getItem('login'));
+
     console.log(currentPatient);
-    console.log(userLogin);
+
 
     
     // Add content to HTML
@@ -182,7 +204,8 @@ $(document).ready(function () {
 window.onload = function get_latestValues(){
     $.ajax({
 
-        url: 'http://192.168.160.217:8080/api/patients/'+userLogin['id']+'/latest',
+        url: 'http://localhost:8080/api/patients/'+id+'/latest',
+        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
         }).done(function (results) {
             console.log(results)
 
@@ -198,7 +221,8 @@ window.onload = function get_latestValues(){
 function editPatient(data){
     $.ajax({
         type: "PUT",
-        url: "http://192.168.160.217:8080/api/patients/"+currentPatient['id'],
+        url: "http://localhost:8080/api/patients/"+id,
+        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
@@ -226,7 +250,8 @@ var currentPatient = localStorage.getItem('currentPatient');
 //console.log(userLogin);
 function draw_HeartRateChart() {
     $.ajax({
-        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/heartrate',
+        url: 'http://localhost:8080/api/patients/'+id+'/heartrate',
+        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
@@ -264,7 +289,8 @@ google.charts.load('current', {'packages':['bar']});
 google.charts.setOnLoadCallback(draw_BloodPressureChart);
 function draw_BloodPressureChart() {
     $.ajax({
-        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/bloodpressure',
+        url: 'http://localhost:8080/api/patients/'+id+'/bloodpressure',
+        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
         dataType: 'json',
      }).done(function (results) {
         //console.log(results)
@@ -304,7 +330,8 @@ google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(draw_TemperatureChart);
 function draw_TemperatureChart() {
     $.ajax({
-        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/bodytemperature',
+        url: 'http://localhost:8080/api/patients/'+id+'/bodytemperature',
+        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
@@ -339,7 +366,8 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(draw_BloodSugarChart);
 function draw_BloodSugarChart() {
     $.ajax({
-        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/sugarlevel',
+        url: 'http://localhost:8080/api/patients/'+id+'/sugarlevel',
+        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
@@ -374,7 +402,8 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(draw_OxygenSaturationChart);
 function draw_OxygenSaturationChart() {
     $.ajax({
-        url: 'http://192.168.160.217:8080/api/patients/'+currentPatient['id']+'/oxygenlevel',
+        url: 'http://localhost:8080/api/patients/'+id+'/oxygenlevel',
+        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
         dataType: 'json',
      }).done(function (results) {
         var data = new google.visualization.DataTable();
