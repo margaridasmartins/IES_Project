@@ -67,42 +67,69 @@ public class ProfessionalRestController {
 
     @GetMapping
     @ResponseBody
-    public List<Professional> getAllProfessionals() {
-        return professionalRepository.findAll();
+    public List<Professional> getAllProfessionals(HttpServletRequest request) {
+
+        Principal principal = request.getUserPrincipal();
+
+        if (principal.getName().equals("admin")){
+            return professionalRepository.findAll();
+        } throw new AccessDeniedException("Cannot access this resource");
     }
 
     @PostMapping
-    public Professional createProfessional(@Valid @RequestBody Professional professional) {
+    public Professional createProfessional(@Valid @RequestBody Professional professional, HttpServletRequest request) {
+
         professional.setPassword(passwordEncoder.encode(professional.getPassword()));
         return professionalRepository.save(professional);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('Professional')")
-    public Professional replaceProfessional(@RequestBody Professional newProfessional, @PathVariable(value = "id") Long professionalId) 
+    public Professional replaceProfessional(@RequestBody Professional newProfessional, @PathVariable(value = "id") Long professionalId, HttpServletRequest request)
             throws ResourceNotFoundException{
+
+        Principal principal = request.getUserPrincipal();
+        Optional<Professional> op1 = professionalRepository.findByUsername(principal.getName());
+        Professional p = op1.get();
+
         Optional<Professional> op = professionalRepository.findById(professionalId);
-        if (op.isPresent()) {
-            Professional professional = op.get();
-            newProfessional = (Professional) PersistenceUtils.partialUpdate(professional, newProfessional);
-            return professionalRepository.save(newProfessional);
+
+
+        if (principal.getName().equals("admin") || p.getId()==professionalId){
+            if (op.isPresent()) {
+                Professional professional = op.get();
+                newProfessional = (Professional) PersistenceUtils.partialUpdate(professional, newProfessional);
+                return professionalRepository.save(newProfessional);
+            }
+            throw new ResourceNotFoundException("Professional not found for this id: " + professionalId);
         }
-        throw new ResourceNotFoundException("Professional not found for this id: " + professionalId);
+        throw new AccessDeniedException("Cannot access this resource");
+
+
     }
 
     @PostMapping("/{id}/picture")
     @PreAuthorize("hasRole('Professional')")
-    public Patient updatePhoto(@PathVariable(value = "id") Long patientId, @RequestParam("file") MultipartFile file)
+    public Professional updatePhoto(@PathVariable(value = "id") Long professionalId, @RequestParam("file") MultipartFile file, HttpServletRequest request)
             throws ResourceNotFoundException, IOException {
-		Optional<Patient> op=  patientRepository.findById(patientId);
-        if(op.isPresent()){
-            Patient p = op.get();
-            byte[] data = file.getBytes();
-            p.setImage(data);
-            patientRepository.save(p);
-            return p;
+
+        Principal principal = request.getUserPrincipal();
+        Optional<Professional> op1 = professionalRepository.findByUsername(principal.getName());
+        Professional prof = op1.get();
+
+        if (principal.getName().equals("admin") || prof.getId()==professionalId){
+            Optional<Professional> op =  professionalRepository.findById(professionalId);
+            if(op.isPresent()){
+                Professional p = op.get();
+                byte[] data = file.getBytes();
+                p.setImage(data);
+                professionalRepository.save(p);
+                return p;
+            }
+            throw new ResourceNotFoundException("Professional not found for this id: " + professionalId);
         }
-        throw new ResourceNotFoundException("Patient not found for this id: " + patientId);		
+        throw new AccessDeniedException("Cannot access this resource");
+
     }
 
     @GetMapping("/{id}")
@@ -134,67 +161,93 @@ public class ProfessionalRestController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> AllPatientsByProfessionalId(@PathVariable(value = "id") Long pId, @RequestParam(defaultValue = "0") 
         int page,@RequestParam(defaultValue = "10") int size, @RequestParam(required = false) String name, @RequestParam(required = false) String state,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end_date)
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end_date, HttpServletRequest request)
             throws ResourceNotFoundException {
+
+        Principal principal = request.getUserPrincipal();
+
         Optional<Professional> op = professionalRepository.findById(pId);
 
         List<Patient> patients;
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "lastcheck"));
         Page<Patient> pt;
-        
-        try{
-            if(op.isPresent()){
-                Professional p = op.get();
-                if(start_date!=null && end_date!=null){
-                    pt = patientRepository.findByProfessionalAndLastCheckDate(p, start_date,end_date, paging);
-                }
-                else if(name!=null){
-                    pt = patientRepository.findByProfessionalAndFullnameContaining(p, name, paging);
-                }else if(state!=null){
-                    pt = patientRepository.findByProfessionalAndCurrentstate(p, state, paging);
-                } else{
-                    pt = patientRepository.findByProfessional(p, paging);
-                }
-            }
-            else{
-                throw new ResourceNotFoundException("Professional not found for this id: " + pId);
-            }
-            patients = pt.getContent();
-            Map<String, Object> response = new HashMap<>();
-            response.put("data", patients);
-            response.put("currentPage", pt.getNumber());
-            response.put("totalItems", pt.getTotalElements());
-            response.put("totalPages", pt.getTotalPages());
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-            throw new ResourceNotFoundException(e.getMessage()+e.getLocalizedMessage());
-        } 
-    }
-
-    @PutMapping("/{id}/patients/{idpatient}")
-    @PreAuthorize("hasRole('Professional')")
-    @ResponseBody
-    public Patient UpdateLastCheck(@PathVariable(value = "id") Long pId, @PathVariable(value = "idpatient") Long patId)
-            throws ResourceNotFoundException {
-        Optional<Professional> op = professionalRepository.findById(pId);
-        Optional<Patient> opat = patientRepository.findById(patId);
-        
         if(op.isPresent()){
-            if (opat.isPresent() & opat.get().getProfessional().getId()==pId){
-                Patient patient = opat.get();
-                patient.setLastCheck(new Date());
-                return patientRepository.save(patient);
+            Professional p = op.get();
+            if(start_date!=null && end_date!=null){
+                pt = patientRepository.findByProfessionalAndLastCheckDate(p, start_date,end_date, paging);
             }
-            else{
-                throw new ResourceNotFoundException("Patient not found for this id: "+ patId);
+            else if(name!=null){
+                pt = patientRepository.findByProfessionalAndFullnameContaining(p, name, paging);
+            }else if(state!=null){
+                pt = patientRepository.findByProfessionalAndCurrentstate(p, state, paging);
+            } else{
+                pt = patientRepository.findByProfessional(p, paging);
             }
         }
         else{
             throw new ResourceNotFoundException("Professional not found for this id: " + pId);
         }
+        patients = pt.getContent();
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", patients);
+        response.put("currentPage", pt.getNumber());
+        response.put("totalItems", pt.getTotalElements());
+        response.put("totalPages", pt.getTotalPages());
 
+
+        Optional<Professional> op1 = professionalRepository.findByUsername(principal.getName());
+
+        if (!principal.getName().equals("admin")){
+            if (op1.isPresent()) {
+                Professional p = op1.get();
+                if(p.getId() == pId){
+                    return new ResponseEntity<>(response, HttpStatus.OK);
+                }
+                throw new AccessDeniedException("Cannot access this resource");
+            }
+            throw new AccessDeniedException("Cannot access this resource");
+        }
+        else{
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+    }
+
+    @PutMapping("/{id}/patients/{idpatient}")
+    @PreAuthorize("hasRole('Professional')")
+    @ResponseBody
+    public Patient UpdateLastCheck(@PathVariable(value = "id") Long pId, @PathVariable(value = "idpatient") Long patId, HttpServletRequest request)
+            throws ResourceNotFoundException {
+
+        Principal principal = request.getUserPrincipal();
+
+        Optional<Professional> op = professionalRepository.findById(pId);
+        Optional<Professional> op1 = professionalRepository.findByUsername(principal.getName());
+        Optional<Patient> opat = patientRepository.findById(patId);
+
+        if (op.isPresent()) {
+            if (opat.isPresent() & opat.get().getProfessional().getId() == pId) {
+                Patient patient = opat.get();
+                patient.setLastCheck(new Date());
+                if (!principal.getName().equals("admin")) {
+                    if (op1.isPresent()) {
+                        Professional p = op1.get();
+                        if (p.getId() == pId) {
+                            return patientRepository.save(patient);
+                        }
+                        throw new AccessDeniedException("Cannot access this resource");
+                    }
+                    throw new AccessDeniedException("Cannot access this resource");
+                } else {
+                    return patientRepository.save(patient);
+                }
+            } else {
+                throw new ResourceNotFoundException("Patient with id: " + patId + " not found for requested professional");
+            }
+        }
+
+        throw new ResourceNotFoundException("Professional not found for this id: " + pId);
     }
 
     public static class PersistenceUtils {

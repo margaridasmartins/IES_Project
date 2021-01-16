@@ -2,6 +2,7 @@ package ies.g25.aLIVE.restcontroller;
 
 import java.beans.FeatureDescriptor;
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
@@ -23,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -87,14 +90,19 @@ public class PatientRestController {
 
     @GetMapping(produces="application/json")
     @ResponseBody
-    public List<Patient> getAllPatients() {
-        return patientRepository.findAll();
+    public List<Patient> getAllPatients(HttpServletRequest request) {
+        Principal principal = request.getUserPrincipal();
+
+        if (principal.getName().equals("admin")){
+            return patientRepository.findAll();
+        } throw new AccessDeniedException("Cannot access this resource");
+
     }
 
 
     @PostMapping(produces="application/json", consumes="application/json")
     public Patient createPatient(@Valid @RequestBody PatientContext patient)throws ResourceNotFoundException {
-        Optional<Professional> p= professionalRepository.findByEmail(patient.getPemail());
+        Optional<Professional> p = professionalRepository.findByEmail(patient.getPemail());
         if(p.isPresent()){
             Patient pat = patient.getPatient();
             pat.setProfessional(p.get());
@@ -106,49 +114,82 @@ public class PatientRestController {
 
     @PutMapping(value="/{id}",produces="application/json", consumes="application/json")
     @PreAuthorize("hasRole('Patient')")
-    public Patient replacePatient(@RequestBody Patient newPatient, @PathVariable(value = "id") Long patientId) 
+    public Patient replacePatient(@RequestBody Patient newPatient, @PathVariable(value = "id") Long patientId, HttpServletRequest request)
             throws ResourceNotFoundException{
-        Optional<Patient> op = patientRepository.findById(patientId);
-        if (op.isPresent()) {
-            Patient patient = op.get();
-            newPatient = (Patient) PersistenceUtils.partialUpdate(patient, newPatient);
-            return patientRepository.save(newPatient);
-        }
-        throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+
+        Principal principal = request.getUserPrincipal();
+        Optional<Patient> op1 = patientRepository.findByUsername(principal.getName());
+        Patient p = op1.get();
+
+        if (principal.getName().equals("admin") || p.getId()==patientId) {
+
+            Optional<Patient> op = patientRepository.findById(patientId);
+            if (op.isPresent()) {
+                Patient patient = op.get();
+                newPatient = (Patient) PersistenceUtils.partialUpdate(patient, newPatient);
+                return patientRepository.save(newPatient);
+            }
+            throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+
+        } throw new AccessDeniedException("Cannot access this resource");
+
     }
 
 
-    @GetMapping(value="/{id}", produces="application/json")
-    public ResponseEntity<Patient> getPatientById(@PathVariable(value = "id") Long patientId)
+
+    @GetMapping(value="/{id}", produces = "application/json")
+    public ResponseEntity<Patient> getPatientById(@PathVariable(value = "id") Long patientId, HttpServletRequest request)
             throws ResourceNotFoundException {
-        Optional<Patient> op = patientRepository.findById(patientId);
-        if (op.isPresent()) {
-            Patient p = op.get();
-            return ResponseEntity.ok().body(p);
-        }
-        throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+
+        Principal principal = request.getUserPrincipal();
+        Optional<Patient> op1 = patientRepository.findByUsername(principal.getName());
+        Patient p = op1.get();
+
+        if (principal.getName().equals("admin") || p.getId()==patientId) {
+            Optional<Patient> op = patientRepository.findById(patientId);
+            if (op.isPresent()) {
+                Patient patient = op.get();
+                return ResponseEntity.ok().body(patient);
+            }
+            throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+
+        } throw new AccessDeniedException("Cannot access this resource");
     }
 
     @PostMapping(value="/{id}/picture", produces="application/json", consumes = "multipart/file")
     @PreAuthorize("hasRole('Patient')")
-    public Patient updatePhoto(@PathVariable(value = "id") Long patientId, @RequestParam("file") MultipartFile file)
+    public Patient updatePhoto(@PathVariable(value = "id") Long patientId, @RequestParam("file") MultipartFile file, HttpServletRequest request)
             throws ResourceNotFoundException, IOException {
-		Optional<Patient> op=  patientRepository.findById(patientId);
-        if(op.isPresent()){
-            Patient p = op.get();
-            byte[] data = file.getBytes();
-            p.setImage(data);
-            patientRepository.save(p);
-            return p;
-        }
-        throw new ResourceNotFoundException("Patient not found for this id: " + patientId);		
+
+        Principal principal = request.getUserPrincipal();
+        Optional<Patient> op1 = patientRepository.findByUsername(principal.getName());
+        Patient p = op1.get();
+
+        if (principal.getName().equals("admin") || p.getId()==patientId) {
+            Optional<Patient> op=  patientRepository.findById(patientId);
+            if(op.isPresent()){
+                Patient patient = op.get();
+                byte[] data = file.getBytes();
+                patient.setImage(data);
+                patientRepository.save(patient);
+                return patient;
+            }
+            throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+
+        } throw new AccessDeniedException("Cannot access this resource");
     }
     
     @GetMapping("{id}/bloodpressure")
     public ResponseEntity<Map<String, Object>> getBloodPressureByIdAndDate(@PathVariable(value = "id") Long patientId,
         @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
-         ) throws ResourceNotFoundException {
+         , HttpServletRequest request) throws ResourceNotFoundException {
+
+        Boolean checkPermission = checkUserPermissions(request, patientId);
+
+        if (!checkPermission){
+            throw new AccessDeniedException("Cannot access this resource");
+        }
 
         List<BloodPressure> bloodPressures;
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
@@ -188,7 +229,13 @@ public class PatientRestController {
     public ResponseEntity<Map<String, Object>> getHeartRateByIdAndDate(@PathVariable(value = "id") Long patientId,
         @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
-         ) throws ResourceNotFoundException {
+        , HttpServletRequest request ) throws ResourceNotFoundException {
+
+        Boolean checkPermission = checkUserPermissions(request, patientId);
+
+        if (!checkPermission){
+            throw new AccessDeniedException("Cannot access this resource");
+        }
 
         List<HeartRate> heartRates;
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
@@ -228,7 +275,13 @@ public class PatientRestController {
     public ResponseEntity<Map<String, Object>> getSugarLevelByIdAndDate(@PathVariable(value = "id") Long patientId,
         @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
-        ) throws ResourceNotFoundException {
+        , HttpServletRequest request) throws ResourceNotFoundException {
+
+        Boolean checkPermission = checkUserPermissions(request, patientId);
+
+        if (!checkPermission){
+            throw new AccessDeniedException("Cannot access this resource");
+        }
 
         List<SugarLevel> sugarlevels;
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
@@ -267,7 +320,13 @@ public class PatientRestController {
     public ResponseEntity<Map<String, Object>> getOxygenLevelByIdAndDate(@PathVariable(value = "id") Long patientId,
         @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
-        ) throws ResourceNotFoundException {
+        , HttpServletRequest request) throws ResourceNotFoundException {
+
+        Boolean checkPermission = checkUserPermissions(request, patientId);
+
+        if (!checkPermission){
+            throw new AccessDeniedException("Cannot access this resource");
+        }
 
         List<OxygenLevel> oxygenlevels;
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
@@ -307,7 +366,13 @@ public class PatientRestController {
     public ResponseEntity<Map<String, Object>> getBodyTemperatureByIdAndDate(@PathVariable(value = "id") Long patientId,
         @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start_date, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date      
-        ) throws ResourceNotFoundException {
+        , HttpServletRequest request) throws ResourceNotFoundException {
+
+        Boolean checkPermission = checkUserPermissions(request, patientId);
+
+        if (!checkPermission){
+            throw new AccessDeniedException("Cannot access this resource");
+        }
 
         List<BodyTemperature> bodyTemperatures;
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
@@ -380,6 +445,42 @@ public class PatientRestController {
         }
     
     
+    }
+
+
+    public Boolean  checkUserPermissions(HttpServletRequest request, Long patientId){
+
+        Boolean flag = true;
+
+        // get request user
+        Principal principal = request.getUserPrincipal();
+        // try to get professional or patient from user
+        Optional<Patient> op1_pat = patientRepository.findByUsername(principal.getName());
+        Optional<Professional> op1_prof = professionalRepository.findByUsername(principal.getName());
+
+        // if user is a patient
+        if (op1_pat.isPresent()){
+            Patient patient = op1_pat.get();
+            if (patient.getId()!=patientId) {
+                flag = false;
+            }
+        }
+        // if user is a professional
+        else if (op1_prof.isPresent()){
+            Optional<Patient> op = patientRepository.findById(patientId);
+            Patient patient = op.get();
+            Professional prof = patient.getProfessional();
+            if (op1_prof.get().getId() != prof.getId()) {
+                flag = false;
+            }
+
+        }
+        // if is not either, check if is admin
+        else if (!principal.getName().equals("admin")) {
+            flag = false;
+        }
+
+        return flag;
     }
 
 }
