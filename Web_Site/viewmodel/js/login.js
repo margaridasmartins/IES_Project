@@ -43,7 +43,8 @@ $(document).ready(function () {
             return;
         }
         $.ajax({
-            //http://192.168.160.217:8080
+            //url: "http://192.168.160.217:8080/api/login?username=" + $("#loginEmail").val().trim() + "&password=" + $("#loginPassword").val().trim(),
+            //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
             url: "http://localhost:8080/api/login?username=" + $("#loginEmail").val().trim() + "&password=" + $("#loginPassword").val().trim(),
             headers:{"Access-Control-Allow-Origin":"http://localhost"},
             statusCode: {
@@ -63,10 +64,8 @@ $(document).ready(function () {
             $("#loginError").hide();
             jwt_value = user['token'];
             role_value = user['role'];
-            document.cookie='access_token='+jwt_value+';';
-            document.cookie+='role='+role_value+';';
-            console.log(document.cookie)
-            console.log("TESTE")
+            id = user['id'];
+            document.cookie='access_token='+jwt_value+'&'+ 'role='+role_value+'&'+'id='+id+';';
             if (user['role']=="Patient"){
                 window.location.replace("utente.html");
             }

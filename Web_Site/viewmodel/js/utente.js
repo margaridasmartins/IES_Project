@@ -1,14 +1,18 @@
 var jwt;
+var id;
+var userLogin;
+
 
 $(document).ready(function () {
-    cookie_array= document.cookie.split(";");
-    var temp = cookie_array[1].trim();
-    console.log(document.cookie)
+    cookie_array= document.cookie.split("&");
+    var temp = cookie_array[0].trim();
     jwt = temp.substring("access_token=".length,temp.length);
-    console.log(jwt)
+    var temp = cookie_array[2].trim();
+    id = temp.substring("id=".length,temp.length);
+    
     $.ajax({
         //http://192.168.160.217:8080
-        url: "http://localhost:8080/api/patients/3",
+        url: "http://localhost:8080/api/patients/"+ id,
         headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
         statusCode: {
             500: function(xhr){
@@ -20,55 +24,55 @@ $(document).ready(function () {
         }
     }).then(function(user) {
         console.log(user)
+        userLogin=user
+    
+        $("#latestInf").fadeOut();
+        //serLogin = JSON.parse(localStorage.getItem('login'));
+        if (userLogin['role']== "Medic"){
+            $('#cstatus').text("Dashboard");
+            $('#cstatus').attr('href','medic_fp.html');
+        }
+        else{
+            $('#cstatus').text("Clinical Status");
+            $('#cstatus').attr('href','utente.html');
+        }
+        // Add content to HTML
+        $("#userFullName").text(userLogin['fullname']);
+        $("#userId").text(userLogin['username']);
+        $("#userEmail").text(userLogin['email']);
+        $("#userAge").text(userLogin['age']);
+        if (userLogin['gender']== "Male"){
+            $("#userGender").text("Male");
+        }
+        else{
+            $("#userGender").text("Female");
+        }
+        $("#userWeight").text(userLogin['weight']);
+        $("#userHeight").text(userLogin['height']);
+
+        var condArray = userLogin['med_conditions'];
+        $.each(condArray, function(index, value) {
+            //console.log(value);
+            $("#userConditionList").append("<li>" + value + "</li>");
+        });
+
+        var medicationArray = userLogin['medication'];
+        $.each(medicationArray, function(index, value) {
+            //console.log(value);
+            $("#userMedicationList").append("<li>" + value + "</li>");
+        });
+
+        // Functionality not implemented yet
+        $(".notImplemented").click(function () {
+            alert("Sorry, but this functionality has not been implemented yet! :(");
+        });
+
+        $("#latestInfo").click(function(){
+            $("#latestInf").fadeToggle("slow");
+        })
     });
-
-    $("#latestInf").fadeOut();
-    userLogin = JSON.parse(localStorage.getItem('login'));
-    if (userLogin['type']== "Medic"){
-        $('#cstatus').text("Dashboard");
-        $('#cstatus').attr('href','medic_fp.html');
-    }
-    else{
-        $('#cstatus').text("Clinical Status");
-        $('#cstatus').attr('href','utente.html');
-    }
-    // Add content to HTML
-    $("#userFullName").text(userLogin['fullname']);
-    $("#userId").text(userLogin['username']);
-    $("#userEmail").text(userLogin['email']);
-    $("#userAge").text(userLogin['age']);
-    if (userLogin['gender']== "Male"){
-        $("#userGender").text("Male");
-    }
-    else{
-        $("#userGender").text("Female");
-    }
-    $("#userWeight").text(userLogin['weight']);
-    $("#userHeight").text(userLogin['height']);
-
-    var condArray = userLogin['med_conditions'];
-    $.each(condArray, function(index, value) {
-        //console.log(value);
-        $("#userConditionList").append("<li>" + value + "</li>");
-    });
-
-    var medicationArray = userLogin['medication'];
-    $.each(medicationArray, function(index, value) {
-        //console.log(value);
-        $("#userMedicationList").append("<li>" + value + "</li>");
-    });
-
-    // Functionality not implemented yet
-    $(".notImplemented").click(function () {
-        alert("Sorry, but this functionality has not been implemented yet! :(");
-    });
-
-    $("#latestInfo").click(function(){
-        $("#latestInf").fadeToggle("slow");
-    })
-
 });
-
+/*
 // LATEST DATA
 window.onload = function get_latestValues(){
     $.ajax({
@@ -90,8 +94,6 @@ window.onload = function get_latestValues(){
 google.charts.load('current', {packages: ['line']});
 google.charts.setOnLoadCallback(draw_HeartRateChart);
 var userLogin = localStorage.getItem('login');
-console.log(userLogin)
-console.log("Certo!")
 function draw_HeartRateChart() {
     $.ajax({
         url: 'http://192.168.160.217:8080/api/patients/'+userLogin['id']+'/heartrate',
@@ -270,3 +272,4 @@ function draw_OxygenSaturationChart() {
         chart.draw(data, options);
      })
 }
+*/

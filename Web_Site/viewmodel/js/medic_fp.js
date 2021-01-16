@@ -1,4 +1,14 @@
+var jwt;
+var id;
+var userLogin;
+
 $(document).ready(function () {
+
+    cookie_array= document.cookie.split("&");
+    var temp = cookie_array[0].trim();
+    jwt = temp.substring("access_token=".length,temp.length);
+    var temp = cookie_array[2].trim();
+    id = temp.substring("id=".length,temp.length);
 
     userLogin = JSON.parse(localStorage.getItem('login'));
     allUsers = JSON.parse(localStorage.getItem('users'));
