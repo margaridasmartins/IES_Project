@@ -322,3 +322,8 @@ function updateLastCheck(id, patientid) {
         }
     
   }
+
+  function goToPatient(){
+    localStorage.setItem('currentPatient', localStorage.getItem("mPatient"));
+    window.location.replace("utente_info.html");
+}
