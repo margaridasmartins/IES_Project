@@ -64,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/api/sensors/**").permitAll()
             .antMatchers(HttpMethod.POST, "/api/patients").permitAll()
             .antMatchers(HttpMethod.POST, "/api/professionals").permitAll()
+            .antMatchers("http://localhost:8080/chat/**").permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.addFilter(new JwtAuthenticationFilter(authenticationManager(),userRepository))

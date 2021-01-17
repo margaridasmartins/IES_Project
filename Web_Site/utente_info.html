@@ -37,31 +37,37 @@
 
          cookie_array= document.cookie.split("&");
 
-         var temp = cookie_array[1].trim();
+         var temp = cookie_array[0].trim();
+         jwt = temp.substring("access_token=".length,temp.length);
+         var temp = cookie_array[2].trim();
          id = temp.substring("id=".length,temp.length);
 
-         /*
          var stompClient = null;
          //var socket = new SockJS('http://192.168.160.217:8080/chat');
          var socket = new SockJS('http://localhost:8080/chat');
          stompClient = Stomp.over(socket);
-
-         stompClient.connect({}, function(frame) {
+         var headers = {
+            // additional header
+            "Access-Control-Allow-Origin":"http://localhost",
+            "Authorization":"Bearer "+ jwt
+         };
+         stompClient.connect(headers, function(frame) {
 
             console.log('Connected: ' + frame);
             stompClient.subscribe('/healthstatus/messages', function(messageOutput) {   
                   message= messageOutput.body.split(":");
+                  console.log(message);
                   if (message[1]== id){
                      $.ajax({
                      //http://192.168.160.217:8080
-                     url: "http://localhost:8080/api/patients/"+ id,
+                     url: "http://localhost:8080/api/patients/"+ message[0],
                      headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
                      }).done(function (results) {
                         document.getElementById('ModalPatient').innerHTML = '-> '+"Patient"+ results['fullname']+"is in danger";
                      });
                      $.ajax({
                      //http://192.168.160.217:8080
-                     url: "http://localhost:8080/api/patients/"+ id+'/latest',
+                     url: "http://localhost:8080/api/patients/"+  message[0]+'/latest',
                      headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
                      }).done(function (results) {
                            console.log(results)
@@ -75,7 +81,7 @@
                   }
             });
          });
-         */
+
       </script>
       <!-- [if lt IE 9] -->
       <!-- GOOGLE CHARTS -->
