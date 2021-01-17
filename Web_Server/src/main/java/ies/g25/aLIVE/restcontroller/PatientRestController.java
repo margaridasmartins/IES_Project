@@ -55,6 +55,7 @@ import ies.g25.aLIVE.model.PatientContext;
 import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.model.SugarLevel;
 import ies.g25.aLIVE.model.User;
+import ies.g25.aLIVE.model.Sensor;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
 import ies.g25.aLIVE.repository.HeartRateRepository;
@@ -126,6 +127,7 @@ public class PatientRestController {
                     throw new UnprocessableEntityException("Email already exists");
                 }
                 pat.setPassword(passwordEncoder.encode(pat.getPassword()));
+                Sensor s1 =new Sensor(pat);
                 return patientRepository.save(pat);
             }
             catch (Exception e) {

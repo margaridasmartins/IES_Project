@@ -67,10 +67,12 @@ class LoadDatabase {
       Sensor s1 =new Sensor( d);
       Sensor s2 = new Sensor( d1);
       Sensor s3 = new Sensor(d2);
+      Sensor s4 = new Sensor(d3);
 
       log.info("Preloading " + Srep.save(s1));
       log.info("Preloading " + Srep.save(s2));
       log.info("Preloading " + Srep.save(s3));
+      log.info("Preloading " + Srep.save(s4));
     };
   }
 
