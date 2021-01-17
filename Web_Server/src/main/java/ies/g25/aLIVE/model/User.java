@@ -61,6 +61,7 @@ public class User {
         this.fullname = fullname;
         this.age = age;
         this.gender = gender;
+        this.image= Constants.NO_PHOTO;
     }
 
     public String getEmail(){

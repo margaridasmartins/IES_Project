@@ -18,8 +18,11 @@
       <!-- Bootstrap CSS -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
+      <!--script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
+      <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>-->
+      <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">-->
       <!-- Site CSS -->
       <link rel="stylesheet" href="style.css">
       <!-- Colors CSS -->
@@ -38,25 +41,52 @@
    
       <script type="text/javascript">
 
-         userLogin = JSON.parse(localStorage.getItem('login'));
+         cookie_array= document.cookie.split("&");
+         var temp = cookie_array[0].trim();
+         var jwt = temp.substring("access_token=".length,temp.length);
+         var temp1 = cookie_array[2].trim();
+         var id_medic = temp1.substring("id=".length,temp1.length);
+         var stompClient = null;
+         //var socket = new SockJS('http://192.168.160.217:8080/chat');
+         var socket = new SockJS('http://localhost:8080/chat');
+         stompClient = Stomp.over(socket);
+         var headers = {
+            // additional header
+            "Access-Control-Allow-Origin":"http://localhost",
+            "Authorization":"Bearer "+ jwt
+         };
+         stompClient.connect(headers, function(frame) {
 
-         if (localStorage.getItem('type')=="professional"){
-            var stompClient = null;
-
-            var socket = new SockJS('http://192.168.160.217:8080/chat');
-            stompClient = Stomp.over(socket);
-
-            stompClient.connect({}, function(frame) {
-
-               console.log('Connected: ' + frame);
-               stompClient.subscribe('/healthstatus/messages', function(messageOutput) {   
-                     message= messageOutput.body.split(":");
-                     if (message[1]== userLogin["id"]){
-                        alert("hello");
-                     }
-               });
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/healthstatus/messages', function(messageOutput) {   
+                  message= messageOutput.body.split(":");;
+                  if (message[1]== id_medic){
+                     $.ajax({
+                     //http://192.168.160.217:8080
+                     url: "http://localhost:8080/api/patients/"+ message[0],
+                     headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+                     }).done(function (results) {
+                        document.getElementById('ModalPatient').innerHTML = " Patient "+ results['fullname']+" is in danger!";
+                     });
+                     $.ajax({
+                     //http://192.168.160.217:8080
+                     url: "http://localhost:8080/api/patients/"+  message[0]+'/latest',
+                     headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+                     }).done(function (results) {
+                           console.log(results)
+                           document.getElementById('modal_latest_bp').innerHTML = '-> '+results[0].low_value;
+                           document.getElementById('modal_latest_bt').innerHTML = '-> '+results[1].bodyTemp;
+                           document.getElementById('modal_latest_hr').innerHTML = '-> '+results[2].heartRate;
+                           document.getElementById('modal_latest_sl').innerHTML = '-> '+results[3].sugarLevel;
+                           document.getElementById('modal_latest_ol').innerHTML = '-> '+results[4].oxygenLevel;
+                           localStorage.setItem("mPatient",message[0]);
+                           console.log("entrou aquiiii");
+                           $('#myModal').modal("show");
+                     });
+                  }
             });
-         }
+         });
+
       </script>
       <!-- [if lt IE 9] -->
       <style>
@@ -98,6 +128,58 @@
       </header>
       <!-- END NAVBAR-->
 
+      <!--Alert Danger-->
+      <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="myModal" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+         <div class="modal-dialog modal-lg">
+           <div class="modal-content">
+
+            <div class="modal-header">
+               <h3 class="modal-title" id="ModalPatient"></h3>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="container">
+                  <div class="row">
+                     <h3>Latest Values</h3>
+                  </div>
+                  <div class="row"> 
+                     <div class="col-md-12"> <b>Blood Pressure</b>
+                        <p id="modal_latest_bp"></p>
+                     </div>
+                  </div>
+                  <div class="row"> 
+                     <div class="col-md-12"> <b>Body Temperature</b>
+                        <p id="modal_latest_bt"></p>
+                     </div>
+                  </div>
+                  <div class="row"> 
+                     <div class="col-md-12"> <b>Heart Rate</b>
+                        <p id="modal_latest_hr"></p>
+                     </div>
+                  </div>
+
+                  <div class="row"> 
+                     <div  class="col-md-12"> <b>Sugar Level</b>
+                        <p id="modal_latest_sl"></p>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div  class="col-md-12"> <b>Oxygen Saturation</b>
+                        <p id="modal_latest_ol"></p>
+                     </div>
+                  </div>        
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               <button type="button" class="btn btn-primary" onclick="goToPatient()">See patient data</button>
+            </div>
+           </div>
+         </div>
+       </div>
+      <!--End Danger-->
       <br></br>
 
       <!-- SEARCH/FILTERING DIV -->
@@ -108,16 +190,15 @@
                   <!-- SEARCH BOX -->
                   <input type="text" class="form-control input-lg" placeholder="Search for patient" id="searchbox_patient"/>
                   <span class="input-group-btn">
-                     <button class="btn btn-info btn-lg" type="button" onclick="search_patient();">
+                     <button class="btn btn-info btn-lg" type="button" onclick="sortAndFilterPositions();">
                         <i class="fa fa-search" aria-hidden="true"></i>
                      </button>
                   </span>
                </div>
                <div class="input-group col-md-3 offset-1 d-flex justify-content-end" >
                   <!-- ORDER BY SELECTION -->
-                  <select class="form-control d-flex align-self-center" id="select_order" onchange="sortPositions();">
-                     <option value="default">Select order</option>
-                     <option value="last">Order by Last Checked</option>
+                  <select class="form-control d-flex align-self-center" id="select_order" onchange="sortAndFilterPositions();">
+                     <option value="default">Order by Last Checked</option>
                      <option value="status">Order by Health status</option>
                   </select>
                </div>
@@ -128,8 +209,8 @@
                </div>
                <div class="input-group col-md-3 offset-1 d-flex justify-content-end" >
                   <!-- FILTER BY SELECTION -->
-                  <select class="form-control d-flex align-self-center" id="select_filter" onchange="filterPositions();">
-                     <option value="default">Select filter</option>
+                  <select class="form-control d-flex align-self-center" id="select_filter" onchange="sortAndFilterPositions();">
+                     <option value="default">All</option>
                      <option value="asthma">Filter - Asthma</option>
                      <option value="diabetes">Filter - Diabetes</option>
                      <option value="obesity">Filter - Obesity</option>

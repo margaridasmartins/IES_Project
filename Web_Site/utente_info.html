@@ -35,25 +35,52 @@
    
       <script type="text/javascript">
 
-         userLogin = JSON.parse(localStorage.getItem('login'));
+         cookie_array= document.cookie.split("&");
+         var temp = cookie_array[0].trim();
+         var jwt = temp.substring("access_token=".length,temp.length);
+         var temp1 = cookie_array[2].trim();
+         var id_medic = temp1.substring("id=".length,temp1.length);
+         var stompClient = null;
+         //var socket = new SockJS('http://192.168.160.217:8080/chat');
+         var socket = new SockJS('http://localhost:8080/chat');
+         stompClient = Stomp.over(socket);
+         var headers = {
+            // additional header
+            "Access-Control-Allow-Origin":"http://localhost",
+            "Authorization":"Bearer "+ jwt
+         };
+         stompClient.connect(headers, function(frame) {
 
-         if (localStorage.getItem('type')=="professional"){
-            var stompClient = null;
-
-            var socket = new SockJS('http://192.168.160.217:8080/chat');
-            stompClient = Stomp.over(socket);
-
-            stompClient.connect({}, function(frame) {
-
-               console.log('Connected: ' + frame);
-               stompClient.subscribe('/healthstatus/messages', function(messageOutput) {   
-                     message= messageOutput.body.split(":");
-                     if (message[1]== userLogin["id"]){
-                        alert("hello");
-                     }
-               });
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/healthstatus/messages', function(messageOutput) {   
+                  message= messageOutput.body.split(":");;
+                  if (message[1]== id_medic){
+                     console.log("entrei");
+                     $.ajax({
+                     //http://192.168.160.217:8080
+                     url: "http://localhost:8080/api/patients/"+ message[0],
+                     headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+                     }).done(function (results) {
+                        document.getElementById('ModalPatient').innerHTML = " Patient "+ results['fullname']+" is in danger!";
+                     });
+                     $.ajax({
+                     //http://192.168.160.217:8080
+                     url: "http://localhost:8080/api/patients/"+  message[0]+'/latest',
+                     headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+                     }).done(function (results) {
+                           console.log(results)
+                           document.getElementById('modal_latest_bp').innerHTML = '-> '+results[0].low_value;
+                           document.getElementById('modal_latest_bt').innerHTML = '-> '+results[1].bodyTemp;
+                           document.getElementById('modal_latest_hr').innerHTML = '-> '+results[2].heartRate;
+                           document.getElementById('modal_latest_sl').innerHTML = '-> '+results[3].sugarLevel;
+                           document.getElementById('modal_latest_ol').innerHTML = '-> '+results[4].oxygenLevel;
+                           localStorage.setItem("mPatient",message[0]);
+                           $('#myModal').modal("show");
+                     });
+                  }
             });
-         }
+         });
+
       </script>
       <!-- [if lt IE 9] -->
       <!-- GOOGLE CHARTS -->
@@ -87,6 +114,58 @@
             </div>
          </div>
       </header>
+      <!--Alert Danger-->
+      <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="myModal" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+         <div class="modal-dialog modal-lg">
+           <div class="modal-content">
+
+            <div class="modal-header">
+               <h3 class="modal-title" id="ModalPatient"></h3>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="container">
+                  <div class="row">
+                     <h3>Latest Values</h3>
+                  </div>
+                  <div class="row"> 
+                     <div class="col-md-12"> <b>Blood Pressure</b>
+                        <p id="modal_latest_bp"></p>
+                     </div>
+                  </div>
+                  <div class="row"> 
+                     <div class="col-md-12"> <b>Body Temperature</b>
+                        <p id="modal_latest_bt"></p>
+                     </div>
+                  </div>
+                  <div class="row"> 
+                     <div class="col-md-12"> <b>Heart Rate</b>
+                        <p id="modal_latest_hr"></p>
+                     </div>
+                  </div>
+
+                  <div class="row"> 
+                     <div  class="col-md-12"> <b>Sugar Level</b>
+                        <p id="modal_latest_sl"></p>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div  class="col-md-12"> <b>Oxygen Saturation</b>
+                        <p id="modal_latest_ol"></p>
+                     </div>
+                  </div>        
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               <button type="button" class="btn btn-primary" onclick="goToPatient()">See patient data</button>
+            </div>
+           </div>
+         </div>
+       </div>
+      <!--End Danger-->
       <br></br>
       <br></br>
       <div id="home" class="section wow fadeIn">
@@ -250,14 +329,62 @@
             </div>
             <div class="row">
                <div id="heartrate_chart"></div>
+            </div>
+            <div class="row">
+               <div class="col-5 "></div>
+               <div class="col-5 ">
+                  <div class="btn-group btn-group-toggle"  data-toggle="buttons">
+                     <label class="btn btn-secondary active" onclick="draw_HeartRateChart('D')" >
+                        <input type="radio"   name="options" id="option1" autocomplete="off" checked> Past 24 hours
+                     </label>
+                     <label class="btn btn-secondary" onclick="draw_HeartRateChart('W')">
+                        <input type="radio"  name="options" id="option2" autocomplete="off"> Past Week
+                     </label>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
                <br><br>
                <div id="bodytemperature_chart"></div>
+                  <div class="btn-group btn-group-toggle"  data-toggle="buttons">
+                     <label class="btn btn-secondary active" onclick="draw_TemperatureChart('W')">
+                     <input type="radio"   name="options1" id="option1" autocomplete="off" checked> Past Week
+                     </label>
+                     <label class="btn btn-secondary" onclick="draw_TemperatureChart('M')">
+                     <input type="radio"  name="options1" id="option2" autocomplete="off"> Past Month
+                     </label>
+                  </div>
                <br><br>
                <div id="bloodglucose_chart"></div>
+               <div class="btn-group btn-group-toggle"  data-toggle="buttons">
+                  <label class="btn btn-secondary active" onclick="draw_BloodSugarChart('W')">
+                  <input type="radio"   name="options2" id="option1" autocomplete="off" checked> Past Week
+                  </label>
+                  <label class="btn btn-secondary" onclick="draw_BloodSugarChart('M')">
+                  <input type="radio"  name="options2" id="option2" autocomplete="off"> Past Month
+                  </label>
+               </div>
                <br><br>
                <div id="bloodpressure_chart"></div>
+                  <div class="btn-group btn-group-toggle"  data-toggle="buttons">
+                     <label class="btn btn-secondary active" onclick="draw_BloodPressureChart('W')" >
+                        <input type="radio"   name="options3" id="option1" autocomplete="off" checked> Past Week
+                     </label>
+                     <label class="btn btn-secondary" onclick="draw_BloodPressureChart('M')">
+                        <input type="radio"  name="options3" id="option2" autocomplete="off"> Past Month
+                     </label>
+                  </div>
                <br><br>
                <div id="oxygensaturation_chart"></div>
+               <div class="btn-group btn-group-toggle"  data-toggle="buttons">
+                  <label class="btn btn-secondary active" onclick="draw_OxygenSaturationChart('D')" >
+                     <input type="radio"   name="options4" id="option1" autocomplete="off" checked> Past 24 hours
+                  </label>
+                  <label class="btn btn-secondary" onclick="draw_OxygenSaturationChart('W')">
+                     <input type="radio"  name="options4" id="option2" autocomplete="off"> Past Week
+                  </label>
+               </div>
+
             </div>
          </div>
          <!-- end container -->
