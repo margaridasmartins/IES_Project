@@ -1,7 +1,10 @@
 package ies.g25.aLIVE.restcontroller;
 
 import java.beans.FeatureDescriptor;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +52,7 @@ import ies.g25.aLIVE.model.User;
 import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.ProfessionalRepository;
 import ies.g25.aLIVE.repository.UserRepository;
+import springfox.documentation.spring.web.paths.Paths;
 
 @RestController
 @RequestMapping("/api/professionals")
@@ -98,7 +103,7 @@ public class ProfessionalRestController {
             return professionalRepository.save(professional);
         }
         catch (Exception e) {
-            throw new Exception(e.getLocalizedMessage());
+            throw e;
         }
         
     }

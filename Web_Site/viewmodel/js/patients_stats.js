@@ -7,10 +7,12 @@ $(document).ready(function () {
     jwt = temp.substring("access_token=".length,temp.length);
     var temp = cookie_array[2].trim();
     id = temp.substring("id=".length,temp.length);
+
     $("#logOut").click(function(){
         document.cookie='access_token= & role= & id= ;';
         window.location.replace('index.html'); 
     })
+
 
 });
 

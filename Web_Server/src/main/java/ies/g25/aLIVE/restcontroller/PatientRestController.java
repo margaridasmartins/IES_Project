@@ -1,7 +1,11 @@
 package ies.g25.aLIVE.restcontroller;
 
 import java.beans.FeatureDescriptor;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -50,6 +55,7 @@ import ies.g25.aLIVE.model.PatientContext;
 import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.model.SugarLevel;
 import ies.g25.aLIVE.model.User;
+import ies.g25.aLIVE.model.Sensor;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
 import ies.g25.aLIVE.repository.HeartRateRepository;
@@ -121,6 +127,7 @@ public class PatientRestController {
                     throw new UnprocessableEntityException("Email already exists");
                 }
                 pat.setPassword(passwordEncoder.encode(pat.getPassword()));
+                Sensor s1 =new Sensor(pat);
                 return patientRepository.save(pat);
             }
             catch (Exception e) {
@@ -160,19 +167,19 @@ public class PatientRestController {
     public ResponseEntity<Patient> getPatientById(@PathVariable(value = "id") Long patientId, HttpServletRequest request)
             throws ResourceNotFoundException {
 
-        Principal principal = request.getUserPrincipal();
-        Optional<Patient> op1 = patientRepository.findByUsername(principal.getName());
-        Patient p = op1.get();
+        Boolean checkPermission = checkUserPermissions(request, patientId);
 
-        if (principal.getName().equals("admin") || p.getId()==patientId) {
-            Optional<Patient> op = patientRepository.findById(patientId);
-            if (op.isPresent()) {
-                Patient patient = op.get();
-                return ResponseEntity.ok().body(patient);
-            }
-            throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+        if (!checkPermission){
+            throw new AccessDeniedException("Cannot access this resource");
+        }
 
-        } throw new AccessDeniedException("Cannot access this resource");
+        Optional<Patient> op = patientRepository.findById(patientId);
+        if (op.isPresent()) {
+            Patient patient = op.get();
+            return ResponseEntity.ok().body(patient);
+        }
+        throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+
     }
 
     @PostMapping(value="/{id}/picture", produces="application/json", consumes = "multipart/file")

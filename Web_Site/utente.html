@@ -64,7 +64,7 @@
       <div id="utente" class="section wow fadeIn">
          <div class="container">
             <div class="heading">
-               <span class="icon-logo"><img src="images/icon-logo.png" alt="#"></span>
+               <span class="icon-logo"><img id="logo" src="images/icon-logo.png" alt="#"></span>
                <h2>Personal Clinical Status</h2>
                <br>
             </div>
@@ -118,7 +118,7 @@
                <!-- end col -->
                <div class="col-6 col-md-4">
                   <div class="post-media wow fadeIn" style="height: 50%; width: 50%;">
-                     <img src="images/oldman.png" alt="" class="img-responsive" > 
+                     <img src="" id="userPhoto" alt="" class="img-responsive" > 
                   </div>
                   <!-- end media -->
                </div>
@@ -164,14 +164,61 @@
             </div>
             <div class="row">
                <div id="heartrate_chart"></div>
+            </div>
+            <div class="row">
+               <div class="col-5 "></div>
+               <div class="col-5 ">
+                  <div class="btn-group btn-group-toggle"  data-toggle="buttons">
+                     <label class="btn btn-secondary active" onclick="draw_HeartRateChart('D')" >
+                        <input type="radio"   name="options" id="option1" autocomplete="off" checked> Past 24 hours
+                     </label>
+                     <label class="btn btn-secondary" onclick="draw_HeartRateChart('W')">
+                        <input type="radio"  name="options" id="option2" autocomplete="off"> Past Week
+                     </label>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
                <br><br>
                <div id="bodytemperature_chart"></div>
+                  <div class="btn-group btn-group-toggle"  data-toggle="buttons">
+                     <label class="btn btn-secondary active" onclick="draw_TemperatureChart('W')">
+                     <input type="radio"   name="options1" id="option1" autocomplete="off" checked> Past Week
+                     </label>
+                     <label class="btn btn-secondary" onclick="draw_TemperatureChart('M')">
+                     <input type="radio"  name="options1" id="option2" autocomplete="off"> Past Month
+                     </label>
+                  </div>
                <br><br>
                <div id="bloodglucose_chart"></div>
+               <div class="btn-group btn-group-toggle"  data-toggle="buttons">
+                  <label class="btn btn-secondary active" onclick="draw_BloodSugarChart('W')">
+                  <input type="radio"   name="options2" id="option1" autocomplete="off" checked> Past Week
+                  </label>
+                  <label class="btn btn-secondary" onclick="draw_BloodSugarChart('M')">
+                  <input type="radio"  name="options2" id="option2" autocomplete="off"> Past Month
+                  </label>
+               </div>
                <br><br>
                <div id="bloodpressure_chart"></div>
+                  <div class="btn-group btn-group-toggle"  data-toggle="buttons">
+                     <label class="btn btn-secondary active" onclick="draw_BloodPressureChart('W')" >
+                        <input type="radio"   name="options3" id="option1" autocomplete="off" checked> Past Week
+                     </label>
+                     <label class="btn btn-secondary" onclick="draw_BloodPressureChart('M')">
+                        <input type="radio"  name="options3" id="option2" autocomplete="off"> Past Month
+                     </label>
+                  </div>
                <br><br>
                <div id="oxygensaturation_chart"></div>
+               <div class="btn-group btn-group-toggle"  data-toggle="buttons">
+                  <label class="btn btn-secondary active" onclick="draw_OxygenSaturationChart('D')" >
+                     <input type="radio"   name="options4" id="option1" autocomplete="off" checked> Past 24 hours
+                  </label>
+                  <label class="btn btn-secondary" onclick="draw_OxygenSaturationChart('W')">
+                     <input type="radio"  name="options4" id="option2" autocomplete="off"> Past Week
+                  </label>
+               </div>
 
             </div>
             <!-- end row -->

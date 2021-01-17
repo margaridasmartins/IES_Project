@@ -45,7 +45,7 @@ $(document).ready(function () {
         }
         $("#userWeight").text(userLogin['weight']);
         $("#userHeight").text(userLogin['height']);
-
+        $("#userPhoto").attr("src",'data:image/gif;base64,'+ userLogin['image']);
         var condArray = userLogin['med_conditions'];
         $.each(condArray, function(index, value) {
             //console.log(value);
@@ -67,7 +67,8 @@ $(document).ready(function () {
             $("#latestInf").fadeToggle("slow");
             get_latestValues();
         })
-        
+
+        get_latestValues();
         loadCharts();
     });
 });
@@ -92,206 +93,299 @@ function loadCharts(){
 
     // Heart Rate
     google.charts.load('current', {packages: ['line']});
-    google.charts.setOnLoadCallback(draw_HeartRateChart);
+    google.charts.setOnLoadCallback(function() { draw_HeartRateChart("D");});
 
     // Blood Pressure
     google.charts.load('current', {'packages':['bar']});
-    google.charts.setOnLoadCallback(draw_BloodPressureChart);
+    google.charts.setOnLoadCallback(function() { draw_BloodPressureChart("M");});
 
     // Temperatue
     google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(draw_TemperatureChart);
+    google.charts.setOnLoadCallback(function() { draw_TemperatureChart("M");});
 
     // Blood Sugar
     google.charts.load('current', {packages: ['corechart', 'bar']});
-    google.charts.setOnLoadCallback(draw_BloodSugarChart);
+    google.charts.setOnLoadCallback(function() { draw_BloodSugarChart("M")});
 
     // Oxygen Saturation
     google.charts.load('current', {packages: ['corechart', 'bar']});
-    google.charts.setOnLoadCallback(draw_OxygenSaturationChart);
+    google.charts.setOnLoadCallback(function() { draw_OxygenSaturationChart("D");});
 
 }
 // CHARTS
 
 // Heart Rate
-var userLogin = localStorage.getItem('login');
-function draw_HeartRateChart() {
-    $.ajax({
-        //http://192.168.160.217:8080
-        url: "http://localhost:8080/api/patients/"+ id+"/heartrate",
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
-        dataType: 'json',
-     }).done(function (results) {
-        var data = new google.visualization.DataTable();
-        data.addColumn('date', 'Day');
-        data.addColumn('number', 'Beats Per Minute');
-        // Get users data
-        results.data.forEach(elem =>{
-            console.log(elem)
-
-            var date = elem['date'].split("-");
-            var value = elem['heartRate'];
-            //console.log(date, value);
-            data.addRows([
-                [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
-            ]);
-        })
-        
-        var options = {
-            title: 'Resting Heart Rate',
-            height: 350,
-            hAxis: { title: 'Time' },
-            vAxis: { title: 'Heart Raten in BPM' },
-            legend: { position: "none" },
-            tooltip: {isHtml: true}
-        };
-        
-        var chart = new google.visualization.LineChart(document.getElementById('heartrate_chart'));
-        chart.draw(data, options);
-     })
-}
-
-
-function draw_BloodPressureChart() {
-    $.ajax({
-        //http://192.168.160.217:8080
-        url: "http://localhost:8080/api/patients/"+ id+"/bloodpressure",
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
-        dataType: 'json',
-     }).done(function (results) {
-        var data = new google.visualization.DataTable();
-        data.addColumn('date', 'Day');
-        data.addColumn('number', 'Diastolic, mm Hg');
-
-        // Get users data
-        results.data.forEach(elem =>{
-            var date = elem['date'].split("-");
-            var high_value = elem['high_value'];
-            var low_value = elem['low_value'];
-            //console.log(date, value_diast, value_sys);
-            data.addRows([
-                [new Date(date[0], date[1]-1, date[2].split("T")[0]), low_value]
-            ]);
-        })
-
-        var options = {
-            chart: {
-                title: 'Blood Pressure',
-                subtitle: 'Diastolic'
-            },
-            height: 350,
-            hAxis: { title: 'Day' },
-            vAxis: { title: 'Blood Pressure, in mm Hg' },
-            legend: { position: "top" }
-        };
-     
-        var chart = new google.charts.Bar(document.getElementById('bloodpressure_chart'));
-        chart.draw(data, google.charts.Bar.convertOptions(options));
+function draw_HeartRateChart(int_date) {
+    var start_date;
+    var end_date= new Date().toISOString()
+    results=[]
+    if(int_date=="D"){
+        start_date = new Date(Date.now() - 86400 * 1000).toISOString()
+    }
+    else{
+        start_date = new Date(Date.now() - 86400*7 * 1000).toISOString()
+    }
+    i_page=0;
+    pcount =0;
+    do {
+        $.ajax({
+            //http://192.168.160.217:8080
+            url: "http://localhost:8080/api/patients/"+ id+"/heartrate?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            dataType: 'json',
+            async: false
+         }).done(function (r) {
+            pcount= r.totalPages;
+            results=results.concat(r.data);
+            i_page+=1;
+         })
+    } while (i_page<pcount);
+    var data = new google.visualization.DataTable();
+    data.addColumn('date', 'Day');
+    data.addColumn('number', 'Beats Per Minute');
+    // Get users data
+    results.forEach(elem =>{
+        var date = elem['date'].split("-");
+        var hours=date[2].split("T")[1].split(":")
+        var value = elem['heartRate'];
+        //console.log(date, value);
+        data.addRows([
+            [new Date(date[0], date[1]-1, date[2].split("T")[0],hours[0],hours[1]), value]
+        ]);
     })
+    
+    var options = {
+        title: 'Resting Heart Rate',
+        height: 350,
+        hAxis: { title: 'Time' },
+        vAxis: { title: 'Heart Raten in BPM' },
+        legend: { position: "none" },
+        tooltip: {isHtml: true}
+    };
+    
+    var chart = new google.visualization.LineChart(document.getElementById('heartrate_chart'));
+    chart.draw(data, options);
 }
 
 
-function draw_TemperatureChart() {
-    $.ajax({
-        //http://192.168.160.217:8080
-        url: "http://localhost:8080/api/patients/"+ id+"/bodytemperature",
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
-        dataType: 'json',
-     }).done(function (results) {
-        var data = new google.visualization.DataTable();
-        data.addColumn('date', 'Day');
-        data.addColumn('number', 'C*');
-
-        // Get users data
-        results.data.forEach(element =>{
-            var date = element['date'].split("-");
-            var value = element['bodyTemp'];
-            //console.log(date, value);
-            data.addRows([
-                [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
-            ]);
-        })
-
-        var options = {
-            title: 'Body Temperature',
-            height: 350,
-            hAxis: { title: 'Day' },
-            vAxis: { title: 'Temperature, in C*' },
-            legend: { position: "none" },
-            tooltip: {isHtml: true}
-        };
-
-        var chart = new google.visualization.LineChart(document.getElementById('bodytemperature_chart'));
-        chart.draw(data, options);
+function draw_BloodPressureChart(int_date) {
+    var start_date;
+    var end_date= new Date().toISOString()
+    results=[]
+    if(int_date=="W"){
+        start_date = new Date(Date.now() - 86400* 7 * 1000).toISOString()
+    }
+    else{
+        start_date = new Date(Date.now() - 86400* 30 * 1000).toISOString()
+    }
+    i_page=0;
+    pcount =0;
+    do {
+        $.ajax({
+            //http://192.168.160.217:8080
+            url: "http://localhost:8080/api/patients/"+ id+"/bloodpressure?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            dataType: 'json',
+            async: false
+         }).done(function (r) {
+            pcount= r.totalPages;
+            results=results.concat(r.data);
+            i_page+=1;
+         })
+    } while (i_page<pcount);
+    var data = new google.visualization.DataTable();
+    data.addColumn('date', 'Day');
+    data.addColumn('number', 'Diastolic, mm Hg');
+    data.addColumn('number', 'Sistolic, mm Hg');
+    // Get users data
+    results.forEach(elem =>{
+        var date = elem['date'].split("-");
+        var high_value = elem['high_value'];
+        var low_value = elem['low_value'];
+        //console.log(date, value_diast, value_sys);
+        data.addRows([
+            [new Date(date[0], date[1]-1, date[2].split("T")[0],date[2].split("T")[1].split(":")[0]), low_value, high_value]
+        ]);
     })
+
+    var options = {
+        chart: {
+            title: 'Blood Pressure',
+            subtitle: 'Diastolic'
+        },
+        height: 350,
+        hAxis: { 
+            title: 'Time',
+            minValue: start_date,
+            maxValue:end_date
+        },
+        vAxis: { title: 'Blood Pressure, in mm Hg' },
+        legend: { position: "top" },
+    };
+    
+    var chart = new google.charts.Bar(document.getElementById('bloodpressure_chart'));
+    chart.draw(data, google.charts.Bar.convertOptions(options));
+
 }
 
 
-function draw_BloodSugarChart() {
-    $.ajax({
-        //http://192.168.160.217:8080
-        url: "http://localhost:8080/api/patients/"+ id+"/sugarlevel",
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
-        dataType: 'json',
-     }).done(function (results) {
-        var data = new google.visualization.DataTable();
-        data.addColumn('date', 'Day');
-        data.addColumn('number', 'mg/dL');
+function draw_TemperatureChart(int_date) {
+    var start_date;
+    var end_date= new Date().toISOString()
+    results=[]
+    if(int_date=="W"){
+        start_date = new Date(Date.now() - 86400* 7 * 1000).toISOString()
+    }
+    else{
+        start_date = new Date(Date.now() - 86400* 30 * 1000).toISOString()
+    }
+    i_page=0;
+    pcount =0;
+    do {
+        $.ajax({
+            //http://192.168.160.217:8080
+            url: "http://localhost:8080/api/patients/"+ id+"/bodytemperature?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            dataType: 'json',
+            async: false
+         }).done(function (r) {
+            pcount= r.totalPages;
+            results=results.concat(r.data);
+            i_page+=1;
+         })
+    } while (i_page<pcount);
 
-        // Get users data
-        results.data.forEach(element =>{
-            var date = element['date'].split("-");
-            var value = element['sugarLevel'];
-            //console.log(date, value);
-            data.addRows([
-                [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
-            ]);
-        })
+    var data = new google.visualization.DataTable();
+    data.addColumn('date', 'Day');
+    data.addColumn('number', 'C*');
 
-        var options = {
-            title: "Blood Glucose Level",
-            height: 350,
-            hAxis: { title: 'Day' },
-            vAxis: { title: 'Blood Glucose, in mg/dL' },
-            legend: { position: "none" },
-            tooltip: {isHtml: true}
-        };
-        var chart = new google.visualization.ColumnChart(document.getElementById('bloodglucose_chart'));
-        chart.draw(data, options);
-     })
+    // Get users data
+    results.forEach(element =>{
+        var date = element['date'].split("-");
+        var value = element['bodyTemp'];
+        //console.log(date, value);
+        data.addRows([
+            [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
+        ]);
+    })
+
+    var options = {
+        title: 'Body Temperature',
+        height: 350,
+        hAxis: { title: 'Time' },
+        vAxis: { title: 'Temperature, in C*' },
+        legend: { position: "none" },
+        tooltip: {isHtml: true}
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('bodytemperature_chart'));
+    chart.draw(data, options);
 }
 
 
-function draw_OxygenSaturationChart() {
-    $.ajax({
-        //http://192.168.160.217:8080
-        url: "http://localhost:8080/api/patients/"+ id+"/oxygenlevel",
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
-        dataType: 'json',
-     }).done(function (results) {
-        var data = new google.visualization.DataTable();
-        data.addColumn('date', 'Day');
-        data.addColumn('number', '%');
+function draw_BloodSugarChart(int_date) {
+    var start_date;
+    var end_date= new Date().toISOString()
+    results=[]
+    if(int_date=="W"){
+        start_date = new Date(Date.now() - 86400* 7 * 1000).toISOString()
+    }
+    else{
+        start_date = new Date(Date.now() - 86400* 30 * 1000).toISOString()
+    }
+    i_page=0;
+    pcount =0;
+    do {
+        $.ajax({
+            //http://192.168.160.217:8080
+            url: "http://localhost:8080/api/patients/"+ id+"/sugarlevel?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            dataType: 'json',
+            async: false
+         }).done(function (r) {
+            pcount= r.totalPages;
+            results=results.concat(r.data);
+            i_page+=1;
+         })
+    } while (i_page<pcount);
+    var data = new google.visualization.DataTable();
+    data.addColumn('date', 'Day');
+    data.addColumn('number', 'mg/dL');
 
-        // Get users data
-        results.data.forEach(element =>{
-            var date = element['date'].split("-");
-            var value = element['oxygenLevel'];
-            //console.log(date, value);
-            data.addRows([
-                [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
-            ]);
-        })
+    // Get users data
+    results.forEach(element =>{
+        var date = element['date'].split("-");
+        var value = element['sugarLevel'];
+        //console.log(date, value);
+        data.addRows([
+            [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
+        ]);
+    })
 
-        var options = {
-            title: "Oxygen Saturation",
-            height: 350,
-            hAxis: { title: 'Day' },
-            vAxis: { title: 'Oxygen Saturation, in %' },
-            legend: { position: "none" },
-            tooltip: {isHtml: true}
-        };
-        var chart = new google.visualization.ColumnChart(document.getElementById('oxygensaturation_chart'));
-        chart.draw(data, options);
-     })
+    var options = {
+        title: "Blood Glucose Level",
+        height: 350,
+        hAxis: { title: 'Time' },
+        vAxis: { title: 'Blood Glucose, in mg/dL' },
+        legend: { position: "none" },
+        tooltip: {isHtml: true}
+    };
+    var chart = new google.visualization.ColumnChart(document.getElementById('bloodglucose_chart'));
+    chart.draw(data, options);
 }
+
+
+function draw_OxygenSaturationChart(int_date) {
+    var start_date;
+    var end_date= new Date().toISOString()
+    
+    results=[]
+    if(int_date=="D"){
+        start_date = new Date(Date.now() - 86400* 1000).toISOString()
+    }
+    else{
+        start_date = new Date(Date.now() - 86400* 7 * 1000).toISOString()
+    }
+    i_page=0;
+    pcount =0;
+    do {
+        $.ajax({
+            //http://192.168.160.217:8080
+            url: "http://localhost:8080/api/patients/"+ id+"/oxygenlevel?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            dataType: 'json',
+            async: false
+         }).done(function (r) {
+            pcount= r.totalPages;
+            results=results.concat(r.data);
+            i_page+=1;
+         })
+    } while (i_page<pcount);
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('date', 'Day');
+    data.addColumn('number', '%');
+
+    // Get users data
+    results.forEach(element =>{
+        var date = element['date'].split("-");
+        var value = element['oxygenLevel'];
+        var hours=date[2].split("T")[1].split(":")
+        //console.log(date, value);
+        data.addRows([
+            [new Date(date[0], date[1]-1, date[2].split("T")[0],hours[0],hours[1]), value]
+        ]);
+    })
+
+    var options = {
+        title: "Oxygen Saturation",
+        height: 350,
+        hAxis: { title: 'Time' },
+        vAxis: { title: 'Oxygen Saturation, in %' },
+        legend: { position: "none" },
+        tooltip: {isHtml: true}
+    };
+    var chart = new google.visualization.ColumnChart(document.getElementById('oxygensaturation_chart'));
+    chart.draw(data, options);
+}
+
