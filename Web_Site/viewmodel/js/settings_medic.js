@@ -1,67 +1,106 @@
+var jwt;
+var id;
+
 $(document).ready(function () {
-    $("#changeUserMed").fadeOut();
-    $("#changeEmaMed").fadeOut();
-    $("#changePassMed").fadeOut();
-    userLogin = JSON.parse(localStorage.getItem('login'));
-    console.log(userLogin)
-    // Add content to HTML
-    $("#userFullName").text(userLogin['fullname']);
-    $("#userId").text(userLogin['username']);
-    $("#userEmail").text(userLogin['email']);
-    
-    // Functionality not implemented yet
-    $(".notImplemented").click(function () {
-        alert("Sorry, but this functionality has not been implemented yet! :(");
-    });
+    cookie_array= document.cookie.split("&");
+    var temp = cookie_array[0].trim();
+    jwt = temp.substring("access_token=".length,temp.length);
+    var temp = cookie_array[2].trim();
+    id = temp.substring("id=".length,temp.length);
 
-
-    $("#changeUsernameMed").click(function(){
-        $("#changeUserMed").fadeToggle("slow");
-    })
-    $("#changeEmailMed").click(function(){
-        $("#changeEmaMed").fadeToggle("slow");
-    })
-    $("#changePasswordMed").click(function(){
-        $("#changePassMed").fadeToggle("slow");
+    $("#logOut").click(function(){
+        document.cookie='access_token= & role= & id= ;';
+        window.location.replace('index.html'); 
     })
 
-    $("#saveSettingsMed").click(function(){
-        var username = $("#usernameSetMed").val();
-        var email = $("#emailSetMed").val();
-        var pass1 = $("#passSetMed").val();
-        var pass2 = $("#passSetMed2").val();
-        console.log(username)
-        console.log(email)
-        console.log(pass1)
-        console.log(pass2)
+    $.ajax({
+        //http://192.168.160.217:8080
+        url: "http://localhost:8080/api/professionals/"+ id,
+        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        statusCode: {
+            500: function(xhr){
+                return;
+            },
+            403: function(xhr){
+                return;
+            }
+        }
+    }).then(function(user) {
+        console.log(user)
+        $("#changeUserMed").fadeOut();
+        $("#changeEmaMed").fadeOut();
+        $("#changePassMed").fadeOut();
+        $("#changeSpecMed").fadeOut();
+        $("#changePlaceMed").fadeOut();
+        // Add content to HTML
+        $("#userFullName").text(user['fullname']);
+        $("#userId").text(user['username']);
+        $("#userEmail").text(user['email']);
+        $("#userSpeciality").text(user['speciality']);
+        $("#userWorkplace").text(user['workplace']);
+        
 
-        if(pass1 != pass2){
-            $("#setErrorMed").text("The passwords don't match!");
-            $("#setErrorMed").fadeIn();
-            return;
-        }
-        if(username != ''){
-            userLogin['username'] = username;
-        }
-        if(email != ''){
-            userLogin['email'] = email;
-        }
-        if(pass1 != ''){
-            userLogin['password'] = pass1;
-        }
+        $("#changeUsernameMed").click(function(){
+            $("#changeUserMed").fadeToggle("slow");
+        })
+        $("#changeEmailMed").click(function(){
+            $("#changeEmaMed").fadeToggle("slow");
+        })
+        $("#changePasswordMed").click(function(){
+            $("#changePassMed").fadeToggle("slow");
+        })
+        $("#changeWorkplaceMed").click(function(){
+            $("#changePlaceMed").fadeToggle("slow");
+        })
+        $("#changeSpecialityMed").click(function(){
+            $("#changeSpecMed").fadeToggle("slow");
+        })
 
-        editPro(userLogin)
-        localStorage.setItem('login', JSON.stringify(userLogin));
-        window.location.reload();
+        $("#saveSettingsMed").click(function(){
+            var username = $("#usernameSetMed").val();
+            var email = $("#emailSetMed").val();
+            var pass1 = $("#passSetMed").val();
+            var pass2 = $("#passSetMed2").val();
+            var speciality = $("#specialityMed").val();
+            var workplace = $("#workplaceMed").val();
+            console.log(username)
+            console.log(email)
+            console.log(pass1)
+            console.log(pass2)
+
+            if(pass1 != pass2){
+                $("#setErrorMed").text("The passwords don't match!");
+                $("#setErrorMed").fadeIn();
+                return;
+            }
+            if(username != ''){
+                user['username'] = username;
+            }
+            if(email != ''){
+                user['email'] = email;
+            }
+            if(pass1 != ''){
+                user['password'] = pass1;
+            }
+            if(speciality != ''){
+                user['speciality'] = speciality;
+            }
+            if(workplace != ''){
+                user['workplace'] = workplace;
+            }
+
+            editPro(user)
+            window.location.reload();
+        })
     })
-
 });
 
 //PUT Patient
 function editPro(data){
     $.ajax({
         type: "PUT",
-        url: "http://localhost:8080/api/professionals/"+userLogin['id'],
+        url: "http://localhost:8080/api/professionals/"+id,
+        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json; charset=utf-8",

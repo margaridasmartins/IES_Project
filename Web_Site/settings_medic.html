@@ -84,7 +84,7 @@
                        <li><a href="patients_stats.html">Patients Stats</a></li>
                        <li><a class="active" href="settings_medic.html">Settings</a></li>
                        <li><a data-scroll href="#getintouch">Contact</a></li>
-                       <li><a  href="index.html">Log Out</a></li>
+                       <li><a href="#" id="logOut">Log Out</a></li>
                     </ul>
                  </div>
               </nav>
@@ -110,45 +110,71 @@
                   <p></p>
                   <img src="viewmodel/images/person1.jpg" alt="John" width="60%">
                   <p></p>
-                  <h4 id="userFullName"></h4>
-						<p></p>
-						<h4 id="userId"></h4>
-						<p></p>
-                  <h4 id="userEmail"></h4>
-                  <br>
+                  <b>Name: </b>
+                  <em id ="userFullName"></em>
+                  <p></p>
+                  <b>Username: </b>
+						<em id="userId"></em>
+                  <p></p>
+                  <b>Email: </b>
+                  <em id="userEmail"></em>
+                  <p></p>
+                  <b>Speciality: </b>
+						<em id="userSpeciality"></em>
+                  <p></p>
+                  <b>Workplace: </b>
+                  <em id="userWorkplace"></em>
+                  <br><br>
                   <div class="alignitems" style="margin-bottom: 30px;">
-                     <input type="button" value="Delete Account" name="deleteaccMed" id="deleteaccMed"  class="switch-btn">
+                     <input style="background-color:#ec3462;color: white;" type="button"  value="Delete Account" name="deleteaccMed" id="deleteaccMed"  class="switch-btn">
                   </div>
                </div>
-               <div class="col-12 col-lg-8">
+               <div class="col-md-4">
                   <br><br><br>
                   <p></p>
                   <div class="alignitems" style="margin-bottom: 30px;">
                      <input type="button" value="Change Username" name="changeUsername" id="changeUsernameMed"  class="switch-btn">
                   </div>
                   <div id="changeUserMed">
-                     <input type="text" name="demo-name" id="usernameSetMed" value="" placeholder="Change Username">
+                     <input type="text" id="usernameSetMed" value="" placeholder="Change Username">
                   </div>
-                  <br>
+                  <br><br>
+                  
                   <div class="alignitems" style="margin-bottom: 30px;">
                      <input type="button" value="Change Email" name="changeEmailMed" id="changeEmailMed"  class="switch-btn">
                   </div>
                   <div id="changeEmaMed">
-						   <input type="text" name="demo-name" id="emailSetMed" value="" placeholder="Change Email">
+						   <input type="text" id="emailSetMed" value="" placeholder="Change Email">
                   </div>
-                  <br>
+                  <br><br>
+                  <div class="alignitems" style="margin-bottom: 30px;">
+                     <input type="button" value="Change Speciality" name="changeSpeciality" id="changeSpecialityMed"  class="switch-btn">
+                  </div>
+                  <div id="changeSpecMed">
+                     <input type="text" id="specialityMed" value="" placeholder="New Speciality">
+                  </div>
+               </div>
+               <div class="col-md-3">
+                  <br><br><br>
+                  <p></p>
                   <div class="alignitems" style="margin-bottom: 30px;">
                      <input type="button" value="Change Password" name="changePassword" id="changePasswordMed"  class="switch-btn">
                   </div>
                   <div id="changePassMed">
-                     <input type="password" name="demo-name" id="passSetMed" value="" placeholder="New Password">
-                     <input type="password" name="demo-name" id="passSetMed2" value="" placeholder="Repeat New Password">
+                     <input type="password" id="passSetMed" value="" placeholder="New Password">
+                     <input type="password" id="passSetMed2" value="" placeholder="Repeat New Password">
                   </div>
-                  <br>
-                  <br>
+                  <br><br>
+                  <div class="alignitems" style="margin-bottom: 30px;">
+                     <input type="button" value="Change Workplace" name="changeWorkplace" id="changeWorkplaceMed"  class="switch-btn">
+                  </div>
+                  <div id="changePlaceMed">
+                     <input type="text" id="workplaceMed" value="" placeholder="New Workplace">
+                  </div>
+                  <br><br>
                   <p class="text-danger mt-5 mb-0 d-none" id="setErrorMed"></p>
                   <div class="alignitems" style="margin-bottom: 30px;">
-                     <button type="button" id="saveSettingsMed">Save</button>
+                     <button type="button" id="saveSettingsMed" style="background-color: #1d86df;color: white;">Save</button>
                   </div>
                </div>
             </div>
@@ -220,7 +246,7 @@
                      <form method="post" action="#">
                         <div class="row gtr-uniform">
                            <div class="col-12 col-lg-6">
-                              <input type="text" name="demo-name" id="demo-name" value="" placeholder="Name">
+                              <input type="text" id="demo-name" value="" placeholder="Name">
                            </div>
                            <div class="col-12 col-lg-6">
                               <input type="email" name="demo-email" id="demo-email" value="" placeholder="Email">

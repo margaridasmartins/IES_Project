@@ -84,7 +84,7 @@
                         <li><a id="cstatus" href="utente.html">Clinic Status</a></li>
                         <li><a class="active" href="settings.html">Settings</a></li>
                         <li><a data-scroll href="#getintouch">Contact</a></li>
-                        <li><a href="index.html">Log Out</a></li>
+                        <li><a href="#" id="logOut">Log Out</a></li>
                      </ul>
                   </div>
                </nav>
@@ -110,14 +110,17 @@
                   <p></p>
                   <img src="images/oldman.png" width="60%">
                   <p></p>
-                  <h4 id="userFullName"></h4>
-						<p></p>
-						<h4 id="userId"></h4>
-						<p></p>
-                  <h4 id="userEmail"></h4>
-                  <br>
+                  <b>Name: </b>
+                  <em id ="userFullName"></em>
+                  <p></p>
+                  <b>Username: </b>
+						<em id="userId"></em>
+                  <p></p>
+                  <b>Email: </b>
+                  <em id="userEmail"></em>
+                  <br><br>
                   <div class="alignitems" style="margin-bottom: 30px;">
-                     <input type="button" value="Delete Account" name="deleteAcc" id="deleteAcc"  class="switch-btn">
+                     <input style="background-color:#ec3462;color: white;" type="button" value="Delete Account" name="deleteAcc" id="deleteAcc"  class="switch-btn">
                   </div>
                </div>
                <div class="col-12 col-lg-8">
@@ -148,7 +151,7 @@
                   <br>
                   <p class="text-danger mt-5 mb-0 d-none" id="setError"></p>
                   <div class="alignitems" style="margin-bottom: 30px;">
-                     <button type="button" id="saveSettings">Save</button>
+                     <button type="button" id="saveSettings" style="background-color: #1d86df;color: white;">Save</button>
                   </div>
                </div>
             </div>

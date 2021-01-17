@@ -11,23 +11,34 @@ $(document).ready(function () {
     id = temp.substring("id=".length,temp.length);
 
     userLogin = JSON.parse(localStorage.getItem('login'));
-    allUsers = JSON.parse(localStorage.getItem('users'));
-
-
-    if (userLogin['type']== "Medic"){
-        $('#cstatus').text("Dashboard");
-        $('#cstatus').attr('href','medic_fp.html');
-    }
-    else{
-        $('#cstatus').text("Clinical Status");
-        $('#cstatus').attr('href','utente.html');
-    }
-
+    console.log(jwt)
+    
+    $("#logOut").click(function(){
+        document.cookie='access_token= & role= & id= ;';
+        window.location.replace('index.html'); 
+    })
 
     $.ajax({
-        url: "http://192.168.160.217:8080/api/professionals/" +  userLogin["id"] + "/patients"
-    }).then(function(data) {
+        url: "http://localhost:8080/api/professionals/" +  id + "/patients",
+        //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
+        headers:{
+            "Access-Control-Allow-Origin":"http://localhost",
+            "Authorization": "Bearer " + jwt
+        },
+        statusCode: {
+            500: function(xhr){
+                console.log("There was an error connecting to the server, please try again!");
+                return;
+            },
+            403: function(xhr){
+                console.log("Invalid Credentials!");
+                return;
+            }
+        }
 
+    }).then(function(data) {
+    
         data.data.forEach(p=>{
             //show the patients associated with the doctor       null -> userLogin['email']
 
@@ -52,7 +63,7 @@ $(document).ready(function () {
             if(danger == false){
                 $("#patientSection").append(`<div class="row" style="margin-top: 3%;">
                                         <div class="col-md-12">
-                                            <a href="#" onClick="selectPatient(${p.id});" id="currentPatient${p.id}" value="${p['id']}">
+                                            <a href="#" onClick="selectPatient(${p.id}, ${id});" id="currentPatient${p.id}" value="${p['id']}">
                                                 <div class="card " style="background-color: ${color};" >
                                                     <div class="card-body">
                                                         <div class="row ">
@@ -84,7 +95,7 @@ $(document).ready(function () {
             }else{
                     $("#patientSection").append(`<div class="row" style="margin-top: 3%;">
                                         <div class="col-md-12">
-                                            <a href="#"  onClick="selectPatient(${p.id});" id="currentPatient${p.id}" value="${p['id']}">
+                                            <a href="#"  onClick="selectPatient(${p.id}, ${id});" id="currentPatient${p.id}" value="${p['id']}">
                                                 <div class="card " style="background-color: ${color};" >
                                                     <div class="card-body">
                                                         <div class="row ">
@@ -378,13 +389,29 @@ function search_patient(){
 };
 
 // SELECT PATIENT TO SHOW DETAILS
-function selectPatient(id){
+function selectPatient(id, profid){
     $.ajax({
-        url: "http://192.168.160.217:8080/api/patients"
+        //url: "http://192.168.160.217:8080/api/patients",
+        url: "http://localhost:8080/api/professionals/" + profid + "/patients",
+        headers:{
+            //"Access-Control-Allow-Origin":"http://192.168.160.217",
+            "Access-Control-Allow-Origin":"http://localhost",
+            "Authorization": "Bearer " + jwt
+        },
+        statusCode: {
+            500: function(xhr){
+                console.log("There was an error connecting to the server, please try again!");
+                return;
+            },
+            403: function(xhr){
+                console.log("Invalid Credentials!");
+                return;
+            }
+        }
     }).then(function(data) {
-        data.forEach(p=>{
+        data.data.forEach(p=>{
             if(p.id == id){
-                localStorage.setItem('currentPatient', JSON.stringify(p));
+                localStorage.setItem('currentPatient', p.id);
                 //console.log(localStorage.getItem('currentPatient'));
                 //console.log("currentPatient"+id);
                 document.getElementById("currentPatient"+id).setAttribute('href', 'utente_info.html');
@@ -397,11 +424,27 @@ function selectPatient(id){
 // GET ALL PATIENTS ASSIGNED
 function filter_doctorPatients(){
     $.ajax({
-        url: "http://192.168.160.217:8080/api/professionals/" +  userLogin["id"] + "/patients"
+        //url: "http://192.168.160.217:8080/api/professionals/" +  userLogin["id"] + "/patients"
+        url: "http://localhost:8080/api/professionals/" +  id + "/patients",
+        headers:{
+            //"Access-Control-Allow-Origin":"http://192.168.160.217",
+            "Access-Control-Allow-Origin":"http://localhost",
+            "Authorization": "Bearer " + jwt
+        },
+        statusCode: {
+            500: function(xhr){
+                console.log("There was an error connecting to the server, please try again!");
+                return;
+            },
+            403: function(xhr){
+                console.log("Invalid Credentials!");
+                return;
+            }
+        }
     }).then(function(data) {
         var myPatients = [];
         data.data.forEach(p=>{
-            if(p.doctorID == userLogin['id']){
+            if(p.doctorID == id){
                 myPatients.push(p);
                 //console.log(myPatients);
             }
@@ -426,3 +469,19 @@ function my_filter(myPatientsArray, condition){
     });
     return myPatients;
 }; 
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }

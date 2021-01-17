@@ -1,39 +1,20 @@
 $(document).ready(function () {
-
     // If user is logged in already, redirect to app
-    if (localStorage.getItem('login')!=null){
-        if (localStorage.getItem('type') == 'patient'){
-            window.location.replace('utente.html'); 
-        } else {
-            window.location.replace('medic_fp.html'); 
+
+    if(document.cookie!=''){
+        cookie_array= document.cookie.split("&");
+        console.log(document.cookie)
+        var temp = cookie_array[1].trim();
+        user_rule = temp.substring("role=".length,temp.length);
+        if (user_rule == 'Patient'){
+            window.location.replace('utente.html');
+            return; 
         }
+        if (user_rule == 'Professional'){
+            window.location.replace('medic_fp.html');
+            return; 
+        }  
     }
-
-
-
-    /* LOCAL TESTING ONLY!
-    // Load users database
-    /* $.ajax({
-        url: "http://192.168.160.217:8080/api/patients"
-    }).then(function(patient) {
-        localStorage.setItem('users', JSON.stringify(patient))
-        }
-    )
-
-    $.ajax({
-        url: "http://192.168.160.217:8080/api/professionals"
-    }).then(function(professional) {
-        localStorage.getItem('users').append(professional)
-        }
-    )
-
-
-    $.getJSON("https://itskikat.github.io/ies_itskikat/DB/users.json", function(json) {
-        //console.log(json)
-        localStorage.setItem('users', JSON.stringify(json));
-    });
-    */
-
     // Login
     $("#loginButton").click(function(){
         // Validate user data
@@ -66,6 +47,7 @@ $(document).ready(function () {
             role_value = user['role'];
             id = user['id'];
             document.cookie='access_token='+jwt_value+'&'+ 'role='+role_value+'&'+'id='+id+';';
+            console.log(document.cookie)
             if (user['role']=="Patient"){
                 window.location.replace("utente.html");
             }
