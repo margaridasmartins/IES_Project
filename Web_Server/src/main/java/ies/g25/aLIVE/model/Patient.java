@@ -33,10 +33,10 @@ public class Patient extends User {
     private String currentstate;
 
     @Column(name = "med_conditions")
-    private ArrayList<String> med_conditions;
+    private ArrayList<String> med_conditions = new ArrayList<>();
 
     @Column(name = "medication")
-    private ArrayList<String> medication; //dic medicamento:quantidade?
+    private ArrayList<String> medication = new ArrayList<>(); //dic medicamento:quantidade?
 
     @Column(name = "weight")
     private double weight;
@@ -112,11 +112,11 @@ public class Patient extends User {
     }
 
     public void addMedication(String med){
-        this.med_conditions.add(med);
+        this.medication.add(med);
     }
 
     public void removeMedication(String med){
-        this.med_conditions.remove(med);
+        this.medication.remove(med);
     }
 
     public String getCurrentstate(){
