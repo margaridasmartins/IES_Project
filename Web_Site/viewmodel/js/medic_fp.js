@@ -177,24 +177,6 @@ function sortAndFilterPositions(){
 }
 
 
-// SEARCH FUNCTION
-function search_patient(){
-    console.log("search_patient");
-    var input, filter, patientName;
-    input = document.getElementById("searchbox_patient");
-    filter = input.value.toUpperCase();
-    document.getElementById("patientSection").innerHTML = ""; 
-
-    myPatientsArray.forEach(p => {
-        patientName = p['fullname'].toUpperCase();
-        if(patientName.indexOf(filter) > -1){
-            $("#newPatientsDiv").fadeOut();
-            $("#allPatientsDiv").fadeOut();
-            fillDash(p);
-        }
-    });
-};
-
 // SELECT PATIENT TO SHOW DETAILS
 function selectPatient(id, profid){
     $.ajax({
@@ -220,63 +202,15 @@ function selectPatient(id, profid){
             if(p.id == id){
                 localStorage.setItem('currentPatient', p.id);
                 updateLastCheck(profid, p.id);
-                //console.log(localStorage.getItem('currentPatient'));
-                //console.log("currentPatient"+id);
                 document.getElementById("currentPatient"+id).setAttribute('href', 'utente_info.html');
                 document.getElementById("currentPatient"+id).click();
-                
-                //window.location.replace("utente_info.html");
             }
             
         })
     })
 };
 
-// GET ALL PATIENTS ASSIGNED
-function filter_doctorPatients(){
-    var myPatients = [];
-    $.ajax({
-        //url: "http://192.168.160.217:8080/api/professionals/" +  userLogin["id"] + "/patients"
-        url: "http://localhost:8080/api/professionals/" +  id + "/patients",
-        headers:{
-            //"Access-Control-Allow-Origin":"http://192.168.160.217",
-            "Access-Control-Allow-Origin":"http://localhost",
-            "Authorization": "Bearer " + jwt
-        },
-        statusCode: {
-            500: function(xhr){
-                console.log("There was an error connecting to the server, please try again!");
-                return;
-            },
-            403: function(xhr){
-                console.log("Invalid Credentials!");
-                return;
-            }
-        }
-    }).then(function(data) {
-        data.data.forEach(p=>{
-            myPatients.push(p);
-            //console.log(myPatients);
-        });
-    });
-    return myPatients;
-}; 
 
-// FILTER BASED ON MEDICAL CONDITIONS
-function my_filter(myPatientsArray, condition){
-    var myPatients = [];
-    myPatientsArray.forEach(p => {
-        // console.log(p);
-        p['med_conditions'].forEach(mc => {
-        //console.log(mc)
-        if(mc.toLowerCase() == condition.toLowerCase()){
-            myPatients.push(p);
-        }
-        //console.log("NEW ARRAY ", myPatients) 
-        });
-    });
-    return myPatients;
-}; 
 
 function updateLastCheck(id, patientid) {
     $.ajax({
