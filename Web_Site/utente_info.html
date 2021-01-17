@@ -36,12 +36,10 @@
       <script type="text/javascript">
 
          cookie_array= document.cookie.split("&");
-
          var temp = cookie_array[0].trim();
-         jwt = temp.substring("access_token=".length,temp.length);
-         var temp = cookie_array[2].trim();
-         id = temp.substring("id=".length,temp.length);
-
+         var jwt = temp.substring("access_token=".length,temp.length);
+         var temp1 = cookie_array[2].trim();
+         var id_medic = temp1.substring("id=".length,temp1.length);
          var stompClient = null;
          //var socket = new SockJS('http://192.168.160.217:8080/chat');
          var socket = new SockJS('http://localhost:8080/chat');
@@ -55,15 +53,15 @@
 
             console.log('Connected: ' + frame);
             stompClient.subscribe('/healthstatus/messages', function(messageOutput) {   
-                  message= messageOutput.body.split(":");
-                  console.log(message);
-                  if (message[1]== id){
+                  message= messageOutput.body.split(":");;
+                  if (message[1]== id_medic){
+                     console.log("entrei");
                      $.ajax({
                      //http://192.168.160.217:8080
                      url: "http://localhost:8080/api/patients/"+ message[0],
                      headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
                      }).done(function (results) {
-                        document.getElementById('ModalPatient').innerHTML = '-> '+"Patient"+ results['fullname']+"is in danger";
+                        document.getElementById('ModalPatient').innerHTML = " Patient "+ results['fullname']+" is in danger!";
                      });
                      $.ajax({
                      //http://192.168.160.217:8080
@@ -76,6 +74,7 @@
                            document.getElementById('modal_latest_hr').innerHTML = '-> '+results[2].heartRate;
                            document.getElementById('modal_latest_sl').innerHTML = '-> '+results[3].sugarLevel;
                            document.getElementById('modal_latest_ol').innerHTML = '-> '+results[4].oxygenLevel;
+                           localStorage.setItem("mPatient",message[0]);
                            $('#myModal').modal();
                      });
                   }
@@ -115,49 +114,52 @@
          </div>
       </header>
       <!--Alert Danger-->
-      <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" in="myModal" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="myModal" aria-labelledby="myLargeModalLabel" aria-hidden="true">
          <div class="modal-dialog modal-lg">
            <div class="modal-content">
 
             <div class="modal-header">
-               <h5 class="modal-title" id="ModalPatient"></h5>
+               <h3 class="modal-title" id="ModalPatient"></h3>
                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                </button>
             </div>
             <div class="modal-body">
-               <div >
+               <div class="container">
                   <div class="row">
-                     <h4>Latest Values</h4>
+                     <h3>Latest Values</h3>
                   </div>
                   <div class="row"> 
-                     <div class="col-md-4"> <b>Blood Pressure</b>
+                     <div class="col-md-12"> <b>Blood Pressure</b>
                         <p id="modal_latest_bp"></p>
                      </div>
-   
-                     <div class="col-md-4"> <b>Body Temperature</b>
+                  </div>
+                  <div class="row"> 
+                     <div class="col-md-12"> <b>Body Temperature</b>
                         <p id="modal_latest_bt"></p>
                      </div>
-   
-                     <div class="col-md-4"> <b>Heart Rate</b>
+                  </div>
+                  <div class="row"> 
+                     <div class="col-md-12"> <b>Heart Rate</b>
                         <p id="modal_latest_hr"></p>
                      </div>
                   </div>
-   
-                  <br>
+
                   <div class="row"> 
-                     <div  class="col-md-6"> <b>Sugar Level</b>
+                     <div  class="col-md-12"> <b>Sugar Level</b>
                         <p id="modal_latest_sl"></p>
                      </div>
-                     <div  class="col-md-6"> <b>Oxygen Saturation</b>
+                  </div>
+                  <div class="row">
+                     <div  class="col-md-12"> <b>Oxygen Saturation</b>
                         <p id="modal_latest_ol"></p>
                      </div>
-                  </div>
+                  </div>        
                </div>
             </div>
             <div class="modal-footer">
                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-               <button type="button" class="btn btn-primary">Save changes</button>
+               <button type="button" class="btn btn-primary" onclick="goToPatient()">See patient data</button>
             </div>
            </div>
          </div>

@@ -564,3 +564,8 @@ function draw_OxygenSaturationChart(int_date) {
     var chart = new google.visualization.ColumnChart(document.getElementById('oxygensaturation_chart'));
     chart.draw(data, options);
 }
+
+function goToPatient(){
+    localStorage.setItem('currentPatient', localStorage.getItem("mPatient"));
+    window.location.reload();
+}
