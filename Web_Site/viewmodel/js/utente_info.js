@@ -15,6 +15,11 @@ $(document).ready(function () {
     console.log(currid);
     console.log(jwt)
 
+    $("#logOut").click(function(){
+        document.cookie='access_token= & role= & id= ;';
+        window.location.replace('index.html'); 
+    })
+
 
     $.ajax({
         //http://192.168.160.217:8080
@@ -201,6 +206,7 @@ $(document).ready(function () {
        }); 
    
         loadCharts()
+
    
        // Functionality not implemented yet
        $(".notImplemented").click(function () {

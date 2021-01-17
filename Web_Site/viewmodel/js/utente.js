@@ -10,6 +10,10 @@ $(document).ready(function () {
     var temp = cookie_array[2].trim();
     id = temp.substring("id=".length,temp.length);
     
+    $("#logOut").click(function(){
+        document.cookie='access_token= & role= & id= ;';
+        window.location.replace('index.html'); 
+    })
     $.ajax({
         //http://192.168.160.217:8080
         url: "http://localhost:8080/api/patients/"+ id,
@@ -61,7 +65,9 @@ $(document).ready(function () {
 
         $("#latestInfo").click(function(){
             $("#latestInf").fadeToggle("slow");
+            get_latestValues();
         })
+
         get_latestValues();
         loadCharts();
     });
@@ -382,3 +388,4 @@ function draw_OxygenSaturationChart(int_date) {
     var chart = new google.visualization.ColumnChart(document.getElementById('oxygensaturation_chart'));
     chart.draw(data, options);
 }
+

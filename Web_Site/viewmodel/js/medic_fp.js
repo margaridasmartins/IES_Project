@@ -10,11 +10,14 @@ $(document).ready(function () {
     jwt = temp.substring("access_token=".length,temp.length);
     var temp = cookie_array[2].trim();
     id = temp.substring("id=".length,temp.length);
-
-    userLogin = JSON.parse(localStorage.getItem('login'));
-    allUsers = JSON.parse(localStorage.getItem('users'));
-
+  
     console.log(jwt)
+    
+    $("#logOut").click(function(){
+        document.cookie='access_token= & role= & id= ;';
+        window.location.replace('index.html'); 
+    })
+
 
     $.ajax({
         url: "http://localhost:8080/api/professionals/" +  id + "/patients",
@@ -40,8 +43,8 @@ $(document).ready(function () {
         data.data.forEach(p=>{
             myPatientsArray.push(p);
             console.log(p)
-
             fillDash(p);
+
         })
         console.log(myPatientsArray);
         
@@ -201,6 +204,7 @@ function selectPatient(id, profid){
         data.data.forEach(p=>{
             if(p.id == id){
                 localStorage.setItem('currentPatient', p.id);
+
                 updateLastCheck(profid, p.id);
                 document.getElementById("currentPatient"+id).setAttribute('href', 'utente_info.html');
                 document.getElementById("currentPatient"+id).click();
@@ -214,6 +218,7 @@ function selectPatient(id, profid){
 
 function updateLastCheck(id, patientid) {
     $.ajax({
+
         type:"PUT",
         //url: "http://192.168.160.217:8080/api/professionals/" +  userLogin["id"] + "/patients"
         url: "http://localhost:8080/api/professionals/" +  id + "/patients/" + patientid,
