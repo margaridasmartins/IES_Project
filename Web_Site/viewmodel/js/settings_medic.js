@@ -117,3 +117,8 @@ function editPro(data){
              }
       });
 }
+
+function goToPatient(){
+    localStorage.setItem('currentPatient', localStorage.getItem("mPatient"));
+    window.location.reload();
+}

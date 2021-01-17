@@ -394,3 +394,8 @@ function draw_HealthChart() {
 
 
 }
+
+function goToPatient(){
+    localStorage.setItem('currentPatient', localStorage.getItem("mPatient"));
+    window.location.reload();
+}
