@@ -1,6 +1,7 @@
 var jwt;
 var id;
 var userLogin;
+var myPatientsArray = [];
 
 $(document).ready(function () {
 
@@ -49,6 +50,7 @@ $(document).ready(function () {
     }).then(function(data) {
     
         data.data.forEach(p=>{
+            myPatientsArray.push(p);
             //show the patients associated with the doctor       null -> userLogin['email']
 
             console.log(p)
@@ -90,7 +92,7 @@ $(document).ready(function () {
                                                             
                                                             <div class="col-md-3 my-auto" id="date">
                                                                 <b>Last Check: </b>
-                                                                <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
+                                                                <em>${new Date(p['lastCheck']).toLocaleDateString()} </em>
                                                             </div>
                                             
                                                         </div>
@@ -122,7 +124,7 @@ $(document).ready(function () {
                                                             
                                                             <div class="col-md-3 my-auto" id="date">
                                                                 <b>Last Check: </b>
-                                                                <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
+                                                                <em>${new Date(p['lastCheck']).toLocaleDateString()} </em>
                                                             </div>
                                                             <div class="col-md-1 my-auto">
                                                                 <img src="./images/danger.png" style="max-width:50px; max-height:50px;">
@@ -135,6 +137,7 @@ $(document).ready(function () {
                                     </div>`);
                 }
         })
+        console.log(myPatientsArray);
         
        
     });
@@ -144,22 +147,143 @@ $(document).ready(function () {
 // SORTING FUNCTION
 function sortPositions(){
     console.log("sortPositions");
-    var select, strValue, myPatientsArray, currentState;
+    var select, strValue; 
+    //var myPatientsArray = [];
     select = document.getElementById("select_order");
     strValue = select.value;
-    myPatientsArray = filter_doctorPatients();
+    //myPatientsArray = filter_doctorPatients();
     if (strValue == "status"){
         console.log("status");
-        document.getElementById("patientOrder").innerHTML = ""; 
-        myPatientsArray.sort(function(a, b){return a.currentState - b.currentState});
+        document.getElementById("patientSection").innerHTML = ""; 
+        console.log(myPatientsArray);
+        myPatientsArray.sort(function(a, b){
+            var sort_array = ['healthy', 'normal', 'unhealthy', 'in-danger']
+            return sort_array.indexOf(a['currentstate']) - sort_array.indexOf(b['currentstate'])
+        });
+        console.log(myPatientsArray);
         //console.log("SORTED ", myPatientsArray);
         myPatientsArray.forEach(p => {
+            console.log("entrou");
             $("#newPatientsDiv").fadeOut();
             $("#allPatientsDiv").fadeOut();
-            $("#patientOrder").append(`<div class="row" style="margin-top: 3%;">
+
+            var danger=false
+            var currentState=p['currentstate'];
+            var color;
+            if(currentState=="normal"){
+                color="lightgreen";
+            }
+            if(currentState=="healthy"){
+                color="Chartreuse";
+            }
+            if(currentState=="unhealthy"){
+                color="#FFFF66";
+            }
+            if(currentState=="in-danger"){
+                danger = true;
+                color="red";
+            }
+            //Without danger icon
+            if(danger == false){
+                $("#patientSection").append(`<div class="row" style="margin-top: 3%;">
+                                        <div class="col-md-12">
+                                            <a href="#" onClick="selectPatient(${p.id}, ${id});" id="currentPatient${p.id}" value="${p['id']}">
+                                                <div class="card " style="background-color: ${color};" >
+                                                    <div class="card-body">
+                                                        <div class="row ">
+                                                            <div class="col-md-2 my-auto">
+                                                                <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
+                                                            </div>
+                                                            <div class="col-md-3 my-auto"> 
+                                                                <b>Name: </b> 
+                                                                <em>${p['fullname']} </em>
+                                                            </div>
+                                                            <div class="col-md-2 my-auto">
+                                                                <b>Age: </b>
+                                                                <em>${p['age']} </em>
+                                                            </div>
+                                                            
+                                                            <div class="col-md-3 my-auto" id="date">
+                                                                <b>Last Check: </b>
+                                                                <em>${new Date(p['lastCheck']).toLocaleDateString()} </em>
+                                                            </div>
+                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>`);
+            
+            //With danger icon
+            }else{
+                    $("#patientSection").append(`<div class="row" style="margin-top: 3%;">
+                                        <div class="col-md-12">
+                                            <a href="#"  onClick="selectPatient(${p.id}, ${id});" id="currentPatient${p.id}" value="${p['id']}">
+                                                <div class="card " style="background-color: ${color};" >
+                                                    <div class="card-body">
+                                                        <div class="row ">
+                                                            <div class="col-md-2 my-auto">
+                                                                <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
+                                                            </div>
+                                                            <div class="col-md-3 my-auto"> 
+                                                                <b>Name: </b> 
+                                                                <em>${p['fullname']} </em>
+                                                            </div>
+                                                            <div class="col-md-2 my-auto">
+                                                                <b>Age: </b>
+                                                                <em>${p['age']} </em>
+                                                            </div>
+                                                            
+                                                            <div class="col-md-3 my-auto" id="date">
+                                                                <b>Last Check: </b>
+                                                                <em>${new Date(p['lastCheck']).toLocaleDateString()} </em>
+                                                            </div>
+                                                            <div class="col-md-1 my-auto">
+                                                                <img src="./images/danger.png" style="max-width:50px; max-height:50px;">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>`);
+                }
+            });
+        };
+        if (strValue == "last"){
+            console.log("last");
+            document.getElementById("patientSection").innerHTML = ""; 
+            myPatientsArray.sort(function(a, b){
+                console.log(new Date(a['lastCheck']).getTime() - new Date(b['lastCheck']).getTime())
+                return new Date(a['lastCheck']).getTime() - new Date(b['lastCheck']).getTime()
+            });
+            //console.log("SORTED ", myPatientsArray);
+            myPatientsArray.forEach(p => {
+                $("#newPatientsDiv").fadeOut();
+                $("#allPatientsDiv").fadeOut();
+                var danger=false
+                var currentState=p['currentstate'];
+                var color;
+                if(currentState=="normal"){
+                    color="lightgreen";
+                }
+                if(currentState=="healthy"){
+                    color="Chartreuse";
+                }
+                if(currentState=="unhealthy"){
+                    color="#FFFF66";
+                }
+                if(currentState=="in-danger"){
+                    danger = true;
+                    color="red";
+                }
+                //Without danger icon
+                if(danger == false){
+                    $("#patientSection").append(`<div class="row" style="margin-top: 3%;">
                                             <div class="col-md-12">
-                                                <a class="currentP" href="#" value="${p['id']}">
-                                                    <div class="card " style="background-color: lightgreen;" >
+                                                <a href="#" onClick="selectPatient(${p.id}, ${id});" id="currentPatient${p.id}" value="${p['id']}">
+                                                    <div class="card " style="background-color: ${color};" >
                                                         <div class="card-body">
                                                             <div class="row ">
                                                                 <div class="col-md-2 my-auto">
@@ -176,52 +300,50 @@ function sortPositions(){
                                                                 
                                                                 <div class="col-md-3 my-auto" id="date">
                                                                     <b>Last Check: </b>
-                                                                    <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
+                                                                    <em>${new Date(p['lastCheck']).toLocaleDateString()} </em>
+                                                                </div>
+                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>`);
+                
+                //With danger icon
+                }else{
+                        $("#patientSection").append(`<div class="row" style="margin-top: 3%;">
+                                            <div class="col-md-12">
+                                                <a href="#"  onClick="selectPatient(${p.id}, ${id});" id="currentPatient${p.id}" value="${p['id']}">
+                                                    <div class="card " style="background-color: ${color};" >
+                                                        <div class="card-body">
+                                                            <div class="row ">
+                                                                <div class="col-md-2 my-auto">
+                                                                    <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
+                                                                </div>
+                                                                <div class="col-md-3 my-auto"> 
+                                                                    <b>Name: </b> 
+                                                                    <em>${p['fullname']} </em>
+                                                                </div>
+                                                                <div class="col-md-2 my-auto">
+                                                                    <b>Age: </b>
+                                                                    <em>${p['age']} </em>
+                                                                </div>
+                                                                
+                                                                <div class="col-md-3 my-auto" id="date">
+                                                                    <b>Last Check: </b>
+                                                                    <em>${new Date(p['lastCheck']).toLocaleDateString()} </em>
+                                                                </div>
+                                                                <div class="col-md-1 my-auto">
+                                                                    <img src="./images/danger.png" style="max-width:50px; max-height:50px;">
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </a>
                                             </div>
-                                        </div>`)
-            });
-        };
-        if (strValue == "last"){
-            console.log("last");
-            document.getElementById("patientOrder").innerHTML = ""; 
-            myPatientsArray.sort(function(a, b){return new Date(a.lastcheck).toLocaleDateString() - new Date(b.lastcheck).toLocaleDateString()});
-            //console.log("SORTED ", myPatientsArray);
-            myPatientsArray.forEach(p => {
-                $("#newPatientsDiv").fadeOut();
-                $("#allPatientsDiv").fadeOut();
-                $("#patientOrder").append(`<div class="row" style="margin-top: 3%;">
-                                                <div class="col-md-12">
-                                                    <a class="currentP" href="#" value="${p['id']}">
-                                                        <div class="card " style="background-color: lightgreen;" >
-                                                            <div class="card-body">
-                                                                <div class="row ">
-                                                                    <div class="col-md-2 my-auto">
-                                                                        <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
-                                                                    </div>
-                                                                    <div class="col-md-3 my-auto"> 
-                                                                        <b>Name: </b> 
-                                                                        <em>${p['fullname']} </em>
-                                                                    </div>
-                                                                    <div class="col-md-2 my-auto">
-                                                                        <b>Age: </b>
-                                                                        <em>${p['age']} </em>
-                                                                    </div>
-                                                                    
-                                                                    <div class="col-md-3 my-auto" id="date">
-                                                                        <b>Last Check: </b>
-                                                                        <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </div>`)
+                                        </div>`);
+                    }
             });
         };
 }
@@ -261,7 +383,7 @@ function filterPositions(){
                                                                 
                                                                 <div class="col-md-3 my-auto" id="date">
                                                                     <b>Last Check: </b>
-                                                                    <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
+                                                                    <em>${new Date(p['lastCheck']).toLocaleDateString()} </em>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -299,7 +421,7 @@ function filterPositions(){
                                                                     
                                                                     <div class="col-md-3 my-auto" id="date">
                                                                         <b>Last Check: </b>
-                                                                        <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
+                                                                        <em>${new Date(p['lastCheck']).toLocaleDateString()} </em>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -337,7 +459,7 @@ function filterPositions(){
                                                                     
                                                                     <div class="col-md-3 my-auto" id="date">
                                                                         <b>Last Check: </b>
-                                                                        <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
+                                                                        <em>${new Date(p['lastCheck']).toLocaleDateString()} </em>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -382,7 +504,7 @@ function search_patient(){
                                                                 
                                                                 <div class="col-md-3 my-auto" id="date">
                                                                     <b>Last Check: </b>
-                                                                    <em>${new Date(p['lastcheck']).toLocaleDateString()} </em>
+                                                                    <em>${new Date(p['lastCheck']).toLocaleDateString()} </em>
                                                                 </div>
                                                                 <div class="col-md-1 my-auto">
                                                                     <img src="./images/danger.png" style="max-width:50px; max-height:50px;">
@@ -421,6 +543,7 @@ function selectPatient(id, profid){
         data.data.forEach(p=>{
             if(p.id == id){
                 localStorage.setItem('currentPatient', p.id);
+                updateLastCheck(profid, p.id);
                 //console.log(localStorage.getItem('currentPatient'));
                 //console.log("currentPatient"+id);
                 document.getElementById("currentPatient"+id).setAttribute('href', 'utente_info.html');
@@ -432,6 +555,7 @@ function selectPatient(id, profid){
 
 // GET ALL PATIENTS ASSIGNED
 function filter_doctorPatients(){
+    var myPatients = [];
     $.ajax({
         //url: "http://192.168.160.217:8080/api/professionals/" +  userLogin["id"] + "/patients"
         url: "http://localhost:8080/api/professionals/" +  id + "/patients",
@@ -451,16 +575,12 @@ function filter_doctorPatients(){
             }
         }
     }).then(function(data) {
-        var myPatients = [];
         data.data.forEach(p=>{
-            if(p.doctorID == id){
-                myPatients.push(p);
-                //console.log(myPatients);
-            }
-            
+            myPatients.push(p);
+            //console.log(myPatients);
         });
-        return myPatients;
     });
+    return myPatients;
 }; 
 
 // FILTER BASED ON MEDICAL CONDITIONS
@@ -479,18 +599,27 @@ function my_filter(myPatientsArray, condition){
     return myPatients;
 }; 
 
-function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
+function updateLastCheck(id, patientid) {
+    $.ajax({
+        type:"PUT",
+        //url: "http://192.168.160.217:8080/api/professionals/" +  userLogin["id"] + "/patients"
+        url: "http://localhost:8080/api/professionals/" +  id + "/patients/" + patientid,
+        headers:{
+            //"Access-Control-Allow-Origin":"http://192.168.160.217",
+            "Access-Control-Allow-Origin":"http://localhost",
+            "Authorization": "Bearer " + jwt
+        },
+        statusCode: {
+            500: function(xhr){
+                console.log("There was an error connecting to the server, please try again!");
+                return;
+            },
+            403: function(xhr){
+                console.log("Invalid Credentials!");
+                return;
+            }
+        }
+    }).then(function(data) {
+        console.log(data);
+    });
   }
