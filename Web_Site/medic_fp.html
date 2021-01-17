@@ -107,16 +107,15 @@
                   <!-- SEARCH BOX -->
                   <input type="text" class="form-control input-lg" placeholder="Search for patient" id="searchbox_patient"/>
                   <span class="input-group-btn">
-                     <button class="btn btn-info btn-lg" type="button" onclick="search_patient();">
+                     <button class="btn btn-info btn-lg" type="button" onclick="sortAndFilterPositions();">
                         <i class="fa fa-search" aria-hidden="true"></i>
                      </button>
                   </span>
                </div>
                <div class="input-group col-md-3 offset-1 d-flex justify-content-end" >
                   <!-- ORDER BY SELECTION -->
-                  <select class="form-control d-flex align-self-center" id="select_order" onchange="sortPositions();">
-                     <option value="default">Select order</option>
-                     <option value="last">Order by Last Checked</option>
+                  <select class="form-control d-flex align-self-center" id="select_order" onchange="sortAndFilterPositions();">
+                     <option value="default">Order by Last Checked</option>
                      <option value="status">Order by Health status</option>
                   </select>
                </div>
@@ -127,8 +126,8 @@
                </div>
                <div class="input-group col-md-3 offset-1 d-flex justify-content-end" >
                   <!-- FILTER BY SELECTION -->
-                  <select class="form-control d-flex align-self-center" id="select_filter" onchange="filterPositions();">
-                     <option value="default">Select filter</option>
+                  <select class="form-control d-flex align-self-center" id="select_filter" onchange="sortAndFilterPositions();">
+                     <option value="default">All</option>
                      <option value="asthma">Filter - Asthma</option>
                      <option value="diabetes">Filter - Diabetes</option>
                      <option value="obesity">Filter - Obesity</option>

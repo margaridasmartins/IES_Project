@@ -36,15 +36,23 @@ class LoadDatabase {
 
       Patient d = new Patient(passwordEncoder.encode("pass1"), "manel123", "manel@jmail.com", "Manel Ribeiro",62,"Male", new Date(System.currentTimeMillis()-72*60*60*1000), "normal",1.75,67);
 
+      d.addCondition("diabetes");
+      d.addCondition("obesity");
+      d.addCondition("asthma");
+
       d.setProfessional(p);
+      
 
       Patient d3 = new Patient(passwordEncoder.encode("pass"), "ze123", "ze@jmail.com", "ze Ribeiro",89,"Male", new Date(System.currentTimeMillis()-48*60*60*1000), "normal",1.83,77);
 
       d3.setProfessional(p);
+      d3.addCondition("diabetes");
 
       Patient d1 = new Patient(passwordEncoder.encode("pass2"), "silvia69", "silv@dmail.com", "Silvia Matos",74,"Female", new Date(System.currentTimeMillis()-24*60*60*1000), "in-danger", 1.66,70);
 
       d1.setProfessional(p);
+      d1.addCondition("obesity");
+
       Patient d2 = new Patient(passwordEncoder.encode("pass3"), "ze321", "ze@dmail.com", "Zé Matos", 75,"Male", new Date(), "normal",1.69,80);
 
       d2.setProfessional(p2);
