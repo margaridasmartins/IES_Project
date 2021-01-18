@@ -111,7 +111,7 @@ public class ProfessionalRestController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('Professional')")
     public Professional replaceProfessional(@RequestBody Professional newProfessional, @PathVariable(value = "id") Long professionalId, HttpServletRequest request)
-            throws ResourceNotFoundException{
+            throws ResourceNotFoundException, UnprocessableEntityException{
 
         Principal principal = request.getUserPrincipal();
         Optional<Professional> op1 = professionalRepository.findByUsername(principal.getName());
@@ -122,6 +122,14 @@ public class ProfessionalRestController {
 
         if (principal.getName().equals("admin") || p.getId()==professionalId){
             if (op.isPresent()) {
+                Optional<User> u1 = userRepository.findByEmail(newProfessional.getEmail());
+                Optional<User> u2 = userRepository.findByUsername(newProfessional.getUsername());
+                if(u2.isPresent() && u2.get().getUsername()!=p.getUsername()){
+                    throw new UnprocessableEntityException("Username already exists");
+                }
+                else if(u1.isPresent() && u1.get().getUsername()!=p.getUsername()){
+                    throw new UnprocessableEntityException("Email already exists");
+                }
                 Professional professional = op.get();
                 newProfessional = (Professional) PersistenceUtils.partialUpdate(professional, newProfessional);
                 return professionalRepository.save(newProfessional);

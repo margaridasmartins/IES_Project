@@ -141,23 +141,55 @@ public class PatientRestController {
     @PutMapping(value="/{id}",produces="application/json", consumes="application/json")
     @PreAuthorize("hasRole('Patient')")
     public Patient replacePatient(@RequestBody Patient newPatient, @PathVariable(value = "id") Long patientId, HttpServletRequest request)
-            throws ResourceNotFoundException{
+            throws ResourceNotFoundException,UnprocessableEntityException{
 
         Principal principal = request.getUserPrincipal();
         Optional<Patient> op1 = patientRepository.findByUsername(principal.getName());
-        Patient p = op1.get();
+        Optional<Professional> op2 = professionalRepository.findByUsername(principal.getName());
 
-        if (principal.getName().equals("admin") || p.getId()==patientId) {
-
+        if(op1.isPresent()){
+            Patient p = op1.get();
+            if (principal.getName().equals("admin") || p.getId()==patientId) {
+                Optional<User> u1 = userRepository.findByEmail(newPatient.getEmail());
+                Optional<User> u2 = userRepository.findByUsername(newPatient.getUsername());
+                if(u2.isPresent() && u2.get().getUsername()!=p.getUsername()){
+                    throw new UnprocessableEntityException("Username already exists");
+                }
+                else if(u1.isPresent() && u1.get().getUsername()!=p.getUsername()){
+                    throw new UnprocessableEntityException("Email already exists");
+                }
+                Optional<Patient> op = patientRepository.findById(patientId);
+                if (op.isPresent()) {
+                    Patient patient = op.get();
+    
+                    newPatient = (Patient) PersistenceUtils.partialUpdate(patient, newPatient);
+                    return patientRepository.save(newPatient);
+                }
+                throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+    
+            } throw new AccessDeniedException("Cannot access this resource");
+        }
+        else{
+            Professional p = op2.get();
             Optional<Patient> op = patientRepository.findById(patientId);
             if (op.isPresent()) {
                 Patient patient = op.get();
+
                 newPatient = (Patient) PersistenceUtils.partialUpdate(patient, newPatient);
+                
+            }
+            else{
+                throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+            }
+            if(newPatient.getProfessional()==p){
+                
                 return patientRepository.save(newPatient);
             }
-            throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
+            throw new AccessDeniedException("Cannot access this resource");
+        }
+        
 
-        } throw new AccessDeniedException("Cannot access this resource");
+        
 
     }
 

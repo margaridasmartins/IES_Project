@@ -24,6 +24,7 @@ public class HeartRate{
 
     // date of the mesure
     @Column(name="date",nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime date;
 
     // Hert Rate values
