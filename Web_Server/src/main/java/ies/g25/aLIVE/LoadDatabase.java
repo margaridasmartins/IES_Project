@@ -47,7 +47,7 @@ class LoadDatabase {
       OxygenLevelRepository oxygenLevelRepository, SugarLevelRepository sugarLevelRepository) {
 
     return args -> {
-      /*
+      
       Professional p = new Professional(passwordEncoder.encode("pass"),"carlitos","cls@jmail.com","Carlitos Sousa",34,"Male","Hospital de Braga","Cardiologia","professional"); 
       Professional p2 = new Professional(passwordEncoder.encode("passita"),"anocas","anaaaa@jmail.com","Anocas Beatriz",44,"Female","Hospital de Aveiro","Medicina Interna","professional");
        
@@ -287,7 +287,7 @@ class LoadDatabase {
           }
           System.out.println("O");
         }
-      }*/
+      }
     };
     
   }
