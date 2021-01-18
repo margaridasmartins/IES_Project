@@ -12,7 +12,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.CreationTimestamp;
+
+import lombok.ToString;
 
 @Entity
 @Table(name="BOODY_TEMP")
@@ -23,8 +27,8 @@ public class BodyTemperature{
     private long id;
 
     // date of the mesure
-    @Column(name="date",nullable = false, updatable = false)
-    @CreationTimestamp
+    @Column(name="date")
+    //@CreationTimestamp
     private LocalDateTime date;
 
     // Blood Temperature values
@@ -33,6 +37,8 @@ public class BodyTemperature{
 
     //Patient Id
     @ManyToOne()
+    @JsonIgnore
+    @ToString.Exclude
     @JoinColumn(name = "patient_id")
     private Patient patient;
 

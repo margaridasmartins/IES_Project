@@ -11,6 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import lombok.ToString;
+
 @Entity
 @Table(name="OXYGEN_LEVEL")
 public class OxygenLevel{
@@ -20,7 +26,8 @@ public class OxygenLevel{
     private long id;
 
     // date of the mesure
-    @Column(name="date",nullable = false, updatable = false)
+    @Column(name="date")
+    //@CreationTimestamp
     private LocalDateTime date;
 
     // Oxygen level percentage values
@@ -29,6 +36,8 @@ public class OxygenLevel{
 
     //Patient Id
     @ManyToOne()
+    @JsonIgnore
+    @ToString.Exclude
     @JoinColumn(name = "patient_id")
     private Patient patient;
 

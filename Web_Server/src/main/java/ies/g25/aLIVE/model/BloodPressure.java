@@ -3,7 +3,6 @@ package ies.g25.aLIVE.model;
 
 import java.time.LocalDateTime;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +12,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.CreationTimestamp;
+
+import lombok.ToString;
 
 @Entity
 @Table(name="BLOOD_PRESSURE")
@@ -24,8 +27,8 @@ public class BloodPressure{
     private long id;
 
     // date of the mesure
-    @Column(name="date",nullable = false, updatable = false)
-    @CreationTimestamp
+    @Column(name="date")
+    //@CreationTimestamp
     private LocalDateTime date;
 
     // Blood Pressure values
@@ -37,6 +40,8 @@ public class BloodPressure{
 
     //Patient Id
     @ManyToOne()
+    @JsonIgnore
+    @ToString.Exclude
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
