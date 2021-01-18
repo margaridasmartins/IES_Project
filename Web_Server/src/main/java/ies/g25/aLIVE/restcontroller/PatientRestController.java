@@ -132,7 +132,7 @@ public class PatientRestController {
                 }
                 pat.setPassword(passwordEncoder.encode(pat.getPassword()));
                 Sensor s1 =new Sensor(pat);
-                sensorRepository.save(s1);
+                //sensorRepository.save(s1);
                 return patientRepository.save(pat);
             }
             catch (Exception e) {
