@@ -86,16 +86,24 @@ function editPatient(data){
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
-        success: function (data, status, jqXHR) {
 
-                 alert("Saved!");
-                 console.log(data)
-             },
-
-             error: function (jqXHR, status) {
-                 // error handler
-                 console.log(jqXHR);
-                 alert('fail' + status.code);
-             }
-      });
+        statusCode: {
+            500: function(xhr){
+                console.log(xhr);
+                alert("Username already exists!");
+                return;
+            },
+            404: function(xhr){
+                alert("Professional email does not exist");
+                return;
+            },
+            422: function(xhr){
+                alert("Error");
+                return;
+            }
+        }
+      }).then(function(data){
+        alert("Saved successfully! Please login again");
+        
+    });
 }
