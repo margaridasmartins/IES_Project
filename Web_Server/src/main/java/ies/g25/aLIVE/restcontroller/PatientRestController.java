@@ -169,8 +169,8 @@ public class PatientRestController {
                 Optional<Patient> op = patientRepository.findById(patientId);
                 if (op.isPresent()) {
                     Patient patient = op.get();
-    
                     newPatient = (Patient) PersistenceUtils.partialUpdate(patient, newPatient);
+                    newPatient.setPassword(passwordEncoder.encode(newPatient.getPassword()));
                     return patientRepository.save(newPatient);
                 }
                 throw new ResourceNotFoundException("Patient not found for this id: " + patientId);

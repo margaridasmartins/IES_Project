@@ -132,6 +132,7 @@ public class ProfessionalRestController {
                 }
                 Professional professional = op.get();
                 newProfessional = (Professional) PersistenceUtils.partialUpdate(professional, newProfessional);
+                newProfessional.setPassword(passwordEncoder.encode(newProfessional.getPassword()));
                 return professionalRepository.save(newProfessional);
             }
             throw new ResourceNotFoundException("Professional not found for this id: " + professionalId);
