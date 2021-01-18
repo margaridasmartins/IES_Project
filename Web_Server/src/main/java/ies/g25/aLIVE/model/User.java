@@ -13,6 +13,8 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.ToString;
 
@@ -28,6 +30,7 @@ public class User {
     private Long id;
 
     @Column(name = "password")
+    @JsonIgnore
     @ToString.Exclude
     private String password;
 

@@ -12,7 +12,7 @@ import random
 from random import randint
 
 #---------------------------------------------------------------------
-
+"""
 class Generator:
 
     def __init__(self, heartbeat):
@@ -126,3 +126,4 @@ if __name__ == "__main__":
 
     #loop close
     loop.close()
+"""
