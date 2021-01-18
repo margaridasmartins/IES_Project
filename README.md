@@ -33,5 +33,5 @@ To access our API documentation access the url http://192.168.160.220:8080/swagg
 | *Username* | *Password* | *Role*    |
 |------------|------------|-----------|
 | carlitos   | pass       | Doctor    |
-| anocas.    | passita    | Doctor    |
+| anocas     | passita    | Doctor    |
 | manel123   | pass1      | Patient   |
