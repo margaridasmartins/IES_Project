@@ -197,7 +197,7 @@
                </div>
                <div class="input-group col-md-3 offset-1 d-flex justify-content-end" >
                   <!-- ORDER BY SELECTION -->
-                  <select class="form-control d-flex align-self-center" id="select_order" onchange="sortAndFilterPositions();">
+                  <select class="form-control d-flex align-self-center" id="select_order" onchange="sortAndFilterPositions();" style="padding-bottom: 1px; padding-top: 1px; padding-left: 6px; padding-right: 6px;">
                      <option value="default">Order by Last Checked</option>
                      <option value="status">Order by Health status</option>
                   </select>
@@ -209,7 +209,7 @@
                </div>
                <div class="input-group col-md-3 offset-1 d-flex justify-content-end" >
                   <!-- FILTER BY SELECTION -->
-                  <select class="form-control d-flex align-self-center" id="select_filter" onchange="sortAndFilterPositions();">
+                  <select class="form-control d-flex align-self-center" id="select_filter" onchange="sortAndFilterPositions();" style="padding-bottom: 1px; padding-top: 1px; padding-left: 6px; padding-right: 6px;">
                      <option value="default">All</option>
                      <option value="asthma">Filter - Asthma</option>
                      <option value="diabetes">Filter - Diabetes</option>
@@ -222,12 +222,6 @@
          <!-- END SEARCH/FILTERING DIV -->
 
          <div class="container" id="patients" style="margin-top: 5%;">
-            <!-- NEW ADDED PATIENTS DIV -->
-            <!--<div class="row" style="margin-top: 5%;" id="newPatientsDiv">
-                  <div class="col-md-12" align="center" >
-                     <h2> New added patients </h2>
-                  </div>
-            </div>-->
             <!-- THE PATIENT -->
             <section id="patientFilter">
 
@@ -250,14 +244,18 @@
                
             </section>
 
-            <button class="btn btn-info btn-lg" type="button" id="PrevBut" disabled=true onclick="movePage(false);">
-               Previous Page
-            </button>
-            <section id="thispage">
-            </section>
-            <button class="btn btn-info btn-lg" type="button" id="NextBut" disabled=true onclick="movePage(true);">
-               Next Page
-            </button>
+            
+            <div class="row">
+               <div class="col-md-12" align="center" >
+                  <button class="btn btn-info btn-lg" type="button" id="PrevBut" disabled=true onclick="movePage(false);"> Previous Page </button>
+                  <button class="btn btn-info btn-lg" type="button" id="NextBut" disabled=true onclick="movePage(true);"> Next Page </button>
+               </div>
+               <div class="col-md-12" >
+                  <section id="thispage" style="text-align: right;">1</section>
+               </div>
+               
+            </div>
+            
 
       <br>
       <!-- COPYRIGHTS -->
