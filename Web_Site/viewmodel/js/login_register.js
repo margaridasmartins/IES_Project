@@ -67,7 +67,7 @@ $("#registerPatient").click(function(){
         statusCode: {
             500: function(xhr){
                 console.log(xhr);
-                $("#registerErrorPat").text("There was an error connecting to the server, please try again!");
+                $("#registerErrorPat").text("Username already exists!");
                 $("#registerErrorPat").fadeIn();
                 return;
             },
@@ -137,7 +137,7 @@ $("#registerProfessional").click(function(){
         statusCode: {
             500: function(xhr){
                 console.log(xhr);
-                $("#registerErrorPat").text("There was an error connecting to the server, please try again!");
+                $("#registerErrorPat").text("Username already exists!");
                 $("#registerErrorPat").fadeIn();
                 return;
             },
