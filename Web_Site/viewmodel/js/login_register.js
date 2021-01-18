@@ -58,11 +58,9 @@ $("#registerPatient").click(function(){
 
     
     $.ajax({
-        //url: "http://192.168.160.217:8080/api/patients"
-        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217"},
         type:"POST",
-        url: "http://localhost:8080/api/patients",
-        headers:{"Access-Control-Allow-Origin":"http://localhost"},
+        url: "http://192.168.160.217:8080/api/patients",
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217"},
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
@@ -130,11 +128,9 @@ $("#registerProfessional").click(function(){
     }
 
     $.ajax({
-        //url: "http://192.168.160.217:8080/api/patients"
-        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217"},
         type:"POST",
-        url: "http://localhost:8080/api/professionals",
-        headers:{"Access-Control-Allow-Origin":"http://localhost"},
+        url: "http://192.168.160.217:8080/api/professionals",
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217"},
         data: JSON.stringify(data_post),
         dataType: "json",
         contentType: "application/json; charset=utf-8",

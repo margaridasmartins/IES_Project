@@ -47,12 +47,11 @@
          var temp1 = cookie_array[2].trim();
          var id_medic = temp1.substring("id=".length,temp1.length);
          var stompClient = null;
-         //var socket = new SockJS('http://192.168.160.217:8080/chat');
-         var socket = new SockJS('http://localhost:8080/chat');
+         var socket = new SockJS('http://192.168.160.217:8080/chat');
          stompClient = Stomp.over(socket);
          var headers = {
             // additional header
-            "Access-Control-Allow-Origin":"http://localhost",
+            "Access-Control-Allow-Origin":"http://192.168.160.217:8080",
             "Authorization":"Bearer "+ jwt
          };
          stompClient.connect(headers, function(frame) {
@@ -62,16 +61,14 @@
                   message= messageOutput.body.split(":");;
                   if (message[1]== id_medic){
                      $.ajax({
-                     //http://192.168.160.217:8080
-                     url: "http://localhost:8080/api/patients/"+ message[0],
-                     headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+                     url: "http://192.168.160.217:8080/api/patients/"+ message[0],
+                     headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080","Authorization":"Bearer "+ jwt},
                      }).done(function (results) {
                         document.getElementById('ModalPatient').innerHTML = " Patient "+ results['fullname']+" is in danger!";
                      });
                      $.ajax({
-                     //http://192.168.160.217:8080
-                     url: "http://localhost:8080/api/patients/"+  message[0]+'/latest',
-                     headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+                     url: "http://192.168.160.217:8080/api/patients/"+  message[0]+'/latest',
+                     headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
                      }).done(function (results) {
                            console.log(results)
                            document.getElementById('modal_latest_bp').innerHTML = '-> '+results[0].low_value;

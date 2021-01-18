@@ -22,11 +22,9 @@ google.charts.setOnLoadCallback(draw_StateChart);
 function draw_StateChart() {
 
     $.ajax({
-        url: "http://localhost:8080/api/professionals/" +  id + "/patients",
-        //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
-        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
+        url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
         headers:{
-            "Access-Control-Allow-Origin":"http://localhost",
+            "Access-Control-Allow-Origin":"http://192.168.160.217",
             "Authorization": "Bearer " + jwt
         },
         statusCode: {
@@ -80,11 +78,9 @@ google.charts.setOnLoadCallback(draw_AgeChart);
 function draw_AgeChart() {
 
     $.ajax({
-        url: "http://localhost:8080/api/professionals/" +  id + "/patients",
-        //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
-        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
+        url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
         headers:{
-            "Access-Control-Allow-Origin":"http://localhost",
+            "Access-Control-Allow-Origin":"http://192.168.160.217",
             "Authorization": "Bearer " + jwt
         },
         statusCode: {
@@ -149,11 +145,9 @@ google.charts.setOnLoadCallback(draw_CheckChart);
 function draw_CheckChart() {
 
     $.ajax({
-        url: "http://localhost:8080/api/professionals/" +  id + "/patients",
-        //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
-        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
+        url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
         headers:{
-            "Access-Control-Allow-Origin":"http://localhost",
+            "Access-Control-Allow-Origin":"http://192.168.160.217",
             "Authorization": "Bearer " + jwt
         },
         statusCode: {
@@ -215,11 +209,9 @@ function draw_HealthChart() {
 
     $.ajax({
         async: false,
-        url: "http://localhost:8080/api/professionals/" +  id + "/patients",
-        //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
-        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
+        url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
         headers:{
-            "Access-Control-Allow-Origin":"http://localhost",
+            "Access-Control-Allow-Origin":"http://192.168.160.217",
             "Authorization": "Bearer " + jwt
         },
         statusCode: {
@@ -257,8 +249,8 @@ function draw_HealthChart() {
             
             $.ajax({
                 async: false,
-                url: 'http://localhost:8080/api/patients/'+p['id']+'/latest',
-                headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+                url: 'http://192.168.160.217:8080/api/patients/'+p['id']+'/latest',
+                headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
                 }).done(function (results) {
         
                     var bpl = results[0].low_value;

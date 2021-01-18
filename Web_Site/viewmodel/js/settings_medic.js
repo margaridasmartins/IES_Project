@@ -14,9 +14,8 @@ $(document).ready(function () {
     })
 
     $.ajax({
-        //http://192.168.160.217:8080
-        url: "http://localhost:8080/api/professionals/"+ id,
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        url: "http://192.168.160.217:8080/api/professionals/"+ id,
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         statusCode: {
             500: function(xhr){
                 return;
@@ -99,8 +98,8 @@ $(document).ready(function () {
 function editPro(data){
     $.ajax({
         type: "PUT",
-        url: "http://localhost:8080/api/professionals/"+id,
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        url: "http://192.168.160.217:8080/api/professionals/"+id,
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json; charset=utf-8",

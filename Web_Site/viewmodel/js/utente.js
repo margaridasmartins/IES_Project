@@ -15,9 +15,8 @@ $(document).ready(function () {
         window.location.replace('index.html'); 
     })
     $.ajax({
-        //http://192.168.160.217:8080
-        url: "http://localhost:8080/api/patients/"+ id,
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        url: "http://192.168.160.217:8080/api/patients/"+ id,
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         statusCode: {
             500: function(xhr){
                 return;
@@ -76,9 +75,8 @@ $(document).ready(function () {
 // LATEST DATA
 function get_latestValues(){
     $.ajax({
-        //http://192.168.160.217:8080
-        url: "http://localhost:8080/api/patients/"+ id+'/latest',
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        url: "http://192.168.160.217:8080/api/patients/"+ id+'/latest',
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         }).done(function (results) {
             console.log(results)
             document.getElementById('latest_bp').innerHTML = '-> '+results[0].low_value;
@@ -129,9 +127,8 @@ function draw_HeartRateChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ id+"/heartrate?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ id+"/heartrate?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
@@ -182,9 +179,8 @@ function draw_BloodPressureChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ id+"/bloodpressure?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ id+"/bloodpressure?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
@@ -243,9 +239,8 @@ function draw_TemperatureChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ id+"/bodytemperature?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ id+"/bodytemperature?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
@@ -297,9 +292,8 @@ function draw_BloodSugarChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ id+"/sugarlevel?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ id+"/sugarlevel?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
@@ -350,9 +344,8 @@ function draw_OxygenSaturationChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ id+"/oxygenlevel?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ id+"/oxygenlevel?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
