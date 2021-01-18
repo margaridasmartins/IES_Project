@@ -66,7 +66,7 @@ public class SensorReceiver {
 
     @Autowired
     public PatientRestController PatientController = new PatientRestController(patientRepository, heartRateRepository,
-            sugarLevelRepository, oxygenLevelRepository, bloodPressureRepository, bodyTemperatureRepository, professionalRepository,userRepository );
+            sugarLevelRepository, oxygenLevelRepository, bloodPressureRepository, bodyTemperatureRepository, professionalRepository, userRepository, sensorRepository );
 
     @Autowired
     public WarningController warningController = new WarningController();
