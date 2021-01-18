@@ -72,7 +72,8 @@ $(document).ready(function () {
             }
 
             editPatient(user)
-            window.location.reload();
+            document.cookie='access_token= & role= & id= ;';
+            window.location.replace('index.html'); 
         })
     })
 });

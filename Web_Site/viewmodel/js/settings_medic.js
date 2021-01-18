@@ -89,7 +89,8 @@ $(document).ready(function () {
             }
 
             editPro(user)
-            window.location.reload();
+            document.cookie='access_token= & role= & id= ;';
+            window.location.replace('index.html'); 
         })
     })
 });
