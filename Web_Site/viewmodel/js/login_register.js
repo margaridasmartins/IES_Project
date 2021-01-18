@@ -64,36 +64,30 @@ $("#registerPatient").click(function(){
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
-        success: function (data, status) {
-            alert("Registed Successfully!");
-            window.location.replace("index.html");
-        },
-        error: function (jqXHR, status) {
-            console.log("entrou");
-            console.log(status);
-            console.log(status.code);
-            if(status.code==500){
-                console.log("entrou");
+        statusCode: {
+            500: function(xhr){
+                console.log(xhr);
                 $("#registerErrorPat").text("There was an error connecting to the server, please try again!");
                 $("#registerErrorPat").fadeIn();
                 return;
-            }
-            else if (status.code==422){
-                console.log("entrou");
+            },
+            404: function(xhr){
+                $("#registerErrorPat").text("Professional email does not exist");
+                $("#registerErrorPat").fadeIn();
+                return;
+            },
+            422: function(xhr){
                 var err = JSON.parse(xhr.responseText);
                 $("#loginError").text(err.Message);
                 $("#loginError").fadeIn();
                 return;
             }
-            else if(status.code==404) {
-                console.log("entrou");
-                $("#registerErrorPat").text("Professional email does not exist");
-                $("#registerErrorPat").fadeIn();
-                return;
-            }
         }
 
-    })
+    }).then(function(user) {
+        alert("Registed Successfully!");
+            window.location.replace("index.html");
+    });
 
   });
 
@@ -140,25 +134,29 @@ $("#registerProfessional").click(function(){
         data: JSON.stringify(data_post),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
-        success: function (data, status) {
-            alert("Registed Successfully!");
-            window.location.replace("index.html");
-        },
-
-        error: function (jqXHR, status) {
-            if(status.code==500){
+        statusCode: {
+            500: function(xhr){
+                console.log(xhr);
                 $("#registerErrorPat").text("There was an error connecting to the server, please try again!");
                 $("#registerErrorPat").fadeIn();
                 return;
-            }
-            else if(status.code==422){
-                var err = JSON.parse(jqXHR.responseText);
+            },
+            404: function(xhr){
+                $("#registerErrorPat").text("Professional email does not exist");
+                $("#registerErrorPat").fadeIn();
+                return;
+            },
+            422: function(xhr){
+                var err = JSON.parse(xhr.responseText);
                 $("#loginError").text(err.Message);
                 $("#loginError").fadeIn();
                 return;
             }
         }
-    })       
 
+    }).then(function(user) {
+        alert("Registed Successfully!");
+            window.location.replace("index.html");
+    });       
         
   });
