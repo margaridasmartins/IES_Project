@@ -2,6 +2,8 @@ var jwt;
 var id;
 var userLogin;
 var myPatientsArray = [];
+var pagecount;
+var currentpage = 0;
 
 $(document).ready(function () {
 
@@ -39,7 +41,12 @@ $(document).ready(function () {
         }
 
     }).then(function(data) {
-    
+        pagecount= data.totalPages;
+
+        if (pagecount>1) {
+            document.getElementById("NextBut").disabled = false;
+        }
+        $("#thispage").append(`${currentpage}`);
         data.data.forEach(p=>{
             myPatientsArray.push(p);
             console.log(p)
@@ -331,4 +338,59 @@ function updateLastCheck(id, patientid) {
   function goToPatient(){
     localStorage.setItem('currentPatient', localStorage.getItem("mPatient"));
     window.location.replace("utente_info.html");
+}
+
+function movePage(forwards){
+    if (forwards) {
+        currentpage++
+        document.getElementById("PrevBut").disabled = false
+    } else {
+        currentpage--
+        if (currentpage=0) {
+            document.getElementById("PrevBut").disabled = true;
+        }
+    }
+
+    $.ajax({
+        url: "http://localhost:8080/api/professionals/" +  id + "/patients?page="+currentpage,
+        //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
+        headers:{
+            "Access-Control-Allow-Origin":"http://localhost",
+            "Authorization": "Bearer " + jwt
+        },
+        statusCode: {
+            500: function(xhr){
+                console.log("There was an error connecting to the server, please try again!");
+                return;
+            },
+            403: function(xhr){
+                console.log("Invalid Credentials!");
+                return;
+            }
+        }
+
+    }).then(function(data) {
+        pagecount= data.totalPages;
+
+        if (pagecount>1 && currentpage!=(pagecount-1)) {
+            document.getElementById("NextBut").disabled = false;
+        } else{
+            document.getElementById("NextBut").disabled = true;
+        }
+        myPatientsArray = [];
+        $("#thispage").empty();
+        $("#thispage").append(`${currentpage}`);
+        $("#patientSection").empty();
+        data.data.forEach(p=>{
+            myPatientsArray.push(p);
+            console.log(p)
+            fillDash(p);
+
+        })
+        console.log(myPatientsArray);
+        
+       
+    });
+
 }
