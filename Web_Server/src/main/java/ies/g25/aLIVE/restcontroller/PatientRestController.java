@@ -131,9 +131,12 @@ public class PatientRestController {
                     throw new UnprocessableEntityException("Email already exists");
                 }
                 pat.setPassword(passwordEncoder.encode(pat.getPassword()));
+                
+                patientRepository.save(pat);
+
                 Sensor s1 =new Sensor(pat);
-                //sensorRepository.save(s1);
-                return patientRepository.save(pat);
+                sensorRepository.save(s1);
+                return pat;
             }
             catch (Exception e) {
                 throw new Exception(e.getMessage() + " entrou");

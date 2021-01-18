@@ -30,7 +30,7 @@ public class User {
     private Long id;
 
     @Column(name = "password")
-    //@JsonIgnore
+    @JsonIgnore
     //@ToString.Exclude
     private String password;
 
