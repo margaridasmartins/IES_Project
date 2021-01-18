@@ -69,18 +69,22 @@ $("#registerPatient").click(function(){
             window.location.replace("index.html");
         },
         error: function (jqXHR, status) {
+            console.log("entrou");
             if(status.code==500){
+                console.log("entrou");
                 $("#registerErrorPat").text("There was an error connecting to the server, please try again!");
                 $("#registerErrorPat").fadeIn();
                 return;
             }
             else if (status.code==422){
+                console.log("entrou");
                 var err = JSON.parse(xhr.responseText);
                 $("#loginError").text(err.Message);
                 $("#loginError").fadeIn();
                 return;
             }
             else if(status.code==404) {
+                console.log("entrou");
                 $("#registerErrorPat").text("Professional email does not exist");
                 $("#registerErrorPat").fadeIn();
                 return;
