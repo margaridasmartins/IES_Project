@@ -20,7 +20,7 @@ $("#registerPatient").click(function(){
     var data_post={}
     
     var name = $("#registerName").val();
-    var username = $("#regUsername").val();
+    var username = $("#registerUsername").val();
     var email = $("#registerEmail").val();
     var age = $("#registerAge").val();
     var gender = $("#registerGender").val();
