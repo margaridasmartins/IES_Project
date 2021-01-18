@@ -20,17 +20,17 @@ $(document).ready(function () {
 google.charts.load('current', {packages: ['corechart']});
 google.charts.setOnLoadCallback(draw_StateChart);
 function draw_StateChart() {
-
-    $.ajax({
-        url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
-        headers:{
-            "Access-Control-Allow-Origin":"http://192.168.160.217",
-            "Authorization": "Bearer " + jwt
-        },
-        statusCode: {
-            500: function(xhr){
-                console.log("There was an error connecting to the server, please try again!");
-                return;
+    i_page=0;
+    pcount =0;
+    var patients =[];
+    do {
+        $.ajax({
+            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+            //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+            //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
+            headers:{
+                "Access-Control-Allow-Origin":"http://192.168.160.217",
+                "Authorization": "Bearer " + jwt
             },
             async: false,
             statusCode: {
@@ -82,16 +82,17 @@ google.charts.load('current', {packages: ['corechart']});
 google.charts.setOnLoadCallback(draw_AgeChart);
 function draw_AgeChart() {
 
-    $.ajax({
-        url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
-        headers:{
-            "Access-Control-Allow-Origin":"http://192.168.160.217",
-            "Authorization": "Bearer " + jwt
-        },
-        statusCode: {
-            500: function(xhr){
-                console.log("There was an error connecting to the server, please try again!");
-                return;
+    i_page=0;
+    pcount =0;
+    var patients =[];
+    do {
+        $.ajax({
+            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+            //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+            //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
+            headers:{
+                "Access-Control-Allow-Origin":"http://192.168.160.217",
+                "Authorization": "Bearer " + jwt
             },
             async: false,
             statusCode: {
@@ -154,17 +155,17 @@ function draw_AgeChart() {
 google.charts.load('current', {packages: ['corechart']});
 google.charts.setOnLoadCallback(draw_CheckChart);
 function draw_CheckChart() {
-
-    $.ajax({
-        url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
-        headers:{
-            "Access-Control-Allow-Origin":"http://192.168.160.217",
-            "Authorization": "Bearer " + jwt
-        },
-        statusCode: {
-            500: function(xhr){
-                console.log("There was an error connecting to the server, please try again!");
-                return;
+    i_page=0;
+    pcount =0;
+    var patients =[];
+    do {
+        $.ajax({
+            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+            //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+            //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
+            headers:{
+                "Access-Control-Allow-Origin":"http://192.168.160.217",
+                "Authorization": "Bearer " + jwt
             },
             async: false,
             statusCode: {
@@ -225,17 +226,17 @@ google.charts.load('current', {packages: ['corechart']});
 google.charts.setOnLoadCallback(draw_HealthChart);
 function draw_HealthChart() {
 
-    $.ajax({
-        async: false,
-        url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
-        headers:{
-            "Access-Control-Allow-Origin":"http://192.168.160.217",
-            "Authorization": "Bearer " + jwt
-        },
-        statusCode: {
-            500: function(xhr){
-                console.log("There was an error connecting to the server, please try again!");
-                return;
+    i_page=0;
+    pcount =0;
+    var patients =[];
+    do {
+        $.ajax({
+            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+            //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+            //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
+            headers:{
+                "Access-Control-Allow-Origin":"http://192.168.160.217",
+                "Authorization": "Bearer " + jwt
             },
             async: false,
             statusCode: {
@@ -271,20 +272,14 @@ function draw_HealthChart() {
     bt_array = [['Body Temperature', 'Number of Patients']];
     bt_vals = {'<35':0, '35-37.5':0, '37.5-38.3':0, '38.3+':0}
 
-        hr_array = [['Heart Rate', 'Number of Patients']];
-        hr_vals = {'<75':0, '75-84':0, '85-99':0, '100-119':0, '120+':0}
-        patients.forEach(p => {
-            
-            $.ajax({
-                async: false,
-                url: 'http://192.168.160.217:8080/api/patients/'+p['id']+'/latest',
-                headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
-                }).done(function (results) {
+    hr_array = [['Heart Rate', 'Number of Patients']];
+    hr_vals = {'<75':0, '75-84':0, '85-99':0, '100-119':0, '120+':0}
+    patients.forEach(p => {
         
         $.ajax({
             async: false,
-            url: 'http://localhost:8080/api/patients/'+p['id']+'/latest',
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: 'http://192.168.160.217:8080/api/patients/'+p['id']+'/latest',
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             }).done(function (results) {
     
                 var bpl = results[0].low_value;
