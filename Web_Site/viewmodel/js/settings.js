@@ -34,6 +34,7 @@ $(document).ready(function () {
         $("#userFullName").text(user['fullname']);
         $("#userId").text(user['username']);
         $("#userEmail").text(user['email']);
+        $("#profilePic").attr("src",'data:image/gif;base64,'+ user['image']);
 
 
         $("#changeUsername").click(function(){
@@ -107,4 +108,39 @@ function editPatient(data){
         alert("Saved successfully! Please login again");
         
     });
+}
+
+function changePhoto(){
+        var data = new FormData();
+        data.append("file", $("#fileSet").files[0]);
+
+        $.ajax({
+            type: 'POST',
+            url: "http://192.168.160.217:8080/api/patients/" + id + "/picture",
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            statusCode: {
+                500: function(xhr){
+                    console.log(xhr);
+                    alert("Username already exists!");
+                    return;
+                },
+                404: function(xhr){
+                    alert("Professional email does not exist");
+                    return;
+                },
+                422: function(xhr){
+                    alert("Error");
+                    return;
+                }
+            }
+            
+        }).then(function(data){
+            alert("Saved successfully! Please login again");
+            window.load('settings.html');
+            
+        });
 }

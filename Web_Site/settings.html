@@ -85,7 +85,7 @@
                   <h2 class="settings-header">Account</h2>
                   <h3>IDENTIFICATION</h3>
                   <p></p>
-                  <img src="images/oldman.png" width="60%">
+                  <img id="proofilePic" width="60%">
                   <p></p>
                   <b>Name: </b>
                   <em id ="userFullName"></em>
@@ -120,6 +120,10 @@
                   <div id="changePass">
                      <input type="password" name="demo-name" id="passSet" value="" placeholder="New Password">
                      <input type="password" name="demo-name" id="passSet2" value="" placeholder="Repeat New Password">
+                  </div>
+                  <div id="changeFoto">
+                     <input type="file" name="demo-name" id="fileSet" value="">
+                     <button class="btn btn-primary" onclick="changePhoto();">Submit Photo</button>
                   </div>
                   <br>
                   <br>
