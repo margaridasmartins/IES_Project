@@ -70,6 +70,8 @@ $("#registerPatient").click(function(){
         },
         error: function (jqXHR, status) {
             console.log("entrou");
+            console.log(status);
+            console.log(status.code);
             if(status.code==500){
                 console.log("entrou");
                 $("#registerErrorPat").text("There was an error connecting to the server, please try again!");
