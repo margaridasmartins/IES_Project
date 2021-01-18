@@ -120,7 +120,7 @@ public class PatientRestController {
         if(p.isPresent()){
             try{
                 Patient pat = patient.getPatient();
-                System.out.println(pat);
+                System.out.println(pat.getUsername());
                 pat.setProfessional(p.get());
                 Optional<User> u1 = userRepository.findByEmail(pat.getEmail());
                 Optional<User> u2 = userRepository.findByUsername(pat.getUsername());
