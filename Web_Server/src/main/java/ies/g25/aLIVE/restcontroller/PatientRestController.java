@@ -120,7 +120,7 @@ public class PatientRestController {
         if(p.isPresent()){
             try{
                 Patient pat = patient.getPatient();
-                System.out.println(pat.getPassword());
+                System.out.println(pat);
                 pat.setProfessional(p.get());
                 Optional<User> u1 = userRepository.findByEmail(pat.getEmail());
                 Optional<User> u2 = userRepository.findByUsername(pat.getUsername());
@@ -136,7 +136,7 @@ public class PatientRestController {
                 return patientRepository.save(pat);
             }
             catch (Exception e) {
-                throw new Exception(e.getMessage() + " entrou aqui");
+                throw new Exception(e.getMessage() + " entrou");
             }
             
         }
