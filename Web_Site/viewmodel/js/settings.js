@@ -113,6 +113,7 @@ function editPatient(data){
 function changePhoto(){
         var data = new FormData();
         data.append("file", $("#fileSet").val());
+        console.log(data);
         //var fileInput = document.getElementById('fileSet');
         //var file = fileInput.files[0];
 
@@ -120,7 +121,7 @@ function changePhoto(){
             type: 'POST',
             url: "http://192.168.160.217:8080/api/patients/" + id + "/picture",
             headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
-            data: ("file", $("#fileSet").val()),
+            data: data,
             cache: false,
             contentType: false,
             //contentType: "multipart/form-data",
