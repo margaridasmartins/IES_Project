@@ -20,7 +20,7 @@ $("#registerPatient").click(function(){
     var data_post={}
     
     var name = $("#registerName").val();
-    var username = $("#regUsername").val();
+    var username = $("#registerUsername").val();
     var email = $("#registerEmail").val();
     var age = $("#registerAge").val();
     var gender = $("#registerGender").val();
@@ -58,38 +58,36 @@ $("#registerPatient").click(function(){
 
     
     $.ajax({
-        //url: "http://192.168.160.217:8080/api/patients"
-        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217"},
         type:"POST",
-        url: "http://localhost:8080/api/patients",
-        headers:{"Access-Control-Allow-Origin":"http://localhost"},
+        url: "http://192.168.160.217:8080/api/patients",
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217"},
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
-        success: function (data, status) {
-            alert("Registed Successfully!");
-            window.location.replace("index.html");
-        },
-        error: function (jqXHR, status) {
-            if(status.code==500){
-                $("#registerErrorPat").text("There was an error connecting to the server, please try again!");
+        statusCode: {
+            500: function(xhr){
+                console.log(xhr);
+                $("#registerErrorPat").text("Username already exists!");
                 $("#registerErrorPat").fadeIn();
                 return;
-            }
-            else if (status.code==422){
+            },
+            404: function(xhr){
+                $("#registerErrorPat").text("Professional email does not exist");
+                $("#registerErrorPat").fadeIn();
+                return;
+            },
+            422: function(xhr){
                 var err = JSON.parse(xhr.responseText);
                 $("#loginError").text(err.Message);
                 $("#loginError").fadeIn();
                 return;
             }
-            else if(status.code==404) {
-                $("#registerErrorPat").text("Professional email does not exist");
-                $("#registerErrorPat").fadeIn();
-                return;
-            }
         }
 
-    })
+    }).then(function(user) {
+        alert("Registed Successfully!");
+            window.location.replace("index.html");
+    });
 
   });
 
@@ -130,33 +128,35 @@ $("#registerProfessional").click(function(){
     }
 
     $.ajax({
-        //url: "http://192.168.160.217:8080/api/patients"
-        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217"},
         type:"POST",
-        url: "http://localhost:8080/api/professionals",
-        headers:{"Access-Control-Allow-Origin":"http://localhost"},
+        url: "http://192.168.160.217:8080/api/professionals",
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217"},
         data: JSON.stringify(data_post),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
-        success: function (data, status) {
-            alert("Registed Successfully!");
-            window.location.replace("index.html");
-        },
-
-        error: function (jqXHR, status) {
-            if(status.code==500){
-                $("#registerErrorPat").text("There was an error connecting to the server, please try again!");
+        statusCode: {
+            500: function(xhr){
+                console.log(xhr);
+                $("#registerErrorPat").text("Username already exists!");
                 $("#registerErrorPat").fadeIn();
                 return;
-            }
-            else if(status.code==422){
-                var err = JSON.parse(jqXHR.responseText);
+            },
+            404: function(xhr){
+                $("#registerErrorPat").text("Professional email does not exist");
+                $("#registerErrorPat").fadeIn();
+                return;
+            },
+            422: function(xhr){
+                var err = JSON.parse(xhr.responseText);
                 $("#loginError").text(err.Message);
                 $("#loginError").fadeIn();
                 return;
             }
         }
-    })       
 
+    }).then(function(user) {
+        alert("Registed Successfully!");
+            window.location.replace("index.html");
+    });       
         
   });

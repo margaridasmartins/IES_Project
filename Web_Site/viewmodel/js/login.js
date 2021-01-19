@@ -24,10 +24,8 @@ $(document).ready(function () {
             return;
         }
         $.ajax({
-            //url: "http://192.168.160.217:8080/api/login?username=" + $("#loginEmail").val().trim() + "&password=" + $("#loginPassword").val().trim(),
-            //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
-            url: "http://localhost:8080/api/login?username=" + $("#loginEmail").val().trim() + "&password=" + $("#loginPassword").val().trim(),
-            headers:{"Access-Control-Allow-Origin":"http://localhost"},
+            url: "http://192.168.160.217:8080/api/login?username=" + $("#loginEmail").val().trim() + "&password=" + $("#loginPassword").val().trim(),
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217"},
             statusCode: {
                 500: function(xhr){
                     $("#loginError").text("There was an error connecting to the server, please try again!");

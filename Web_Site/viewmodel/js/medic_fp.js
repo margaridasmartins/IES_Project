@@ -22,11 +22,9 @@ $(document).ready(function () {
 
 
     $.ajax({
-        url: "http://localhost:8080/api/professionals/" +  id + "/patients",
-        //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
-        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
+        url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
         headers:{
-            "Access-Control-Allow-Origin":"http://localhost",
+            "Access-Control-Allow-Origin":"http://192.168.160.217",
             "Authorization": "Bearer " + jwt
         },
         statusCode: {
@@ -46,7 +44,7 @@ $(document).ready(function () {
         if (pagecount>1) {
             document.getElementById("NextBut").disabled = false;
         }
-        $("#thispage").append(`${currentpage}`);
+        $("#thispage").append(`${currentpage + 1}`);
         data.data.forEach(p=>{
             myPatientsArray.push(p);
             console.log(p)
@@ -190,11 +188,9 @@ function sortAndFilterPositions(){
 // SELECT PATIENT TO SHOW DETAILS
 function selectPatient(id, profid){
     $.ajax({
-        //url: "http://192.168.160.217:8080/api/patients",
-        url: "http://localhost:8080/api/professionals/" + profid + "/patients",
+        url: "http://192.168.160.217:8080/api/professionals/" + profid + "/patients",
         headers:{
-            //"Access-Control-Allow-Origin":"http://192.168.160.217",
-            "Access-Control-Allow-Origin":"http://localhost",
+            "Access-Control-Allow-Origin":"http://192.168.160.217",
             "Authorization": "Bearer " + jwt
         },
         statusCode: {
@@ -227,11 +223,9 @@ function updateLastCheck(id, patientid) {
     $.ajax({
 
         type:"PUT",
-        //url: "http://192.168.160.217:8080/api/professionals/" +  userLogin["id"] + "/patients"
-        url: "http://localhost:8080/api/professionals/" +  id + "/patients/" + patientid,
+        url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients/" + patientid,
         headers:{
-            //"Access-Control-Allow-Origin":"http://192.168.160.217",
-            "Access-Control-Allow-Origin":"http://localhost",
+            "Access-Control-Allow-Origin":"http://192.168.160.217",
             "Authorization": "Bearer " + jwt
         },
         statusCode: {
@@ -275,7 +269,7 @@ function updateLastCheck(id, patientid) {
                                             <div class="card-body">
                                                 <div class="row ">
                                                     <div class="col-md-2 my-auto">
-                                                        <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
+                                                        <img src='data:image/gif;base64,${p.image}' style="max-width:100px; max-height:100px;">
                                                     </div>
                                                     <div class="col-md-3 my-auto"> 
                                                         <b>Name: </b> 
@@ -307,7 +301,7 @@ function updateLastCheck(id, patientid) {
                                             <div class="card-body">
                                                 <div class="row ">
                                                     <div class="col-md-2 my-auto">
-                                                        <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
+                                                        <img src='data:image/gif;base64,${p.image}' style="max-width:100px; max-height:100px;">
                                                     </div>
                                                     <div class="col-md-3 my-auto"> 
                                                         <b>Name: </b> 
@@ -352,11 +346,9 @@ function movePage(forwards){
     }
 
     $.ajax({
-        url: "http://localhost:8080/api/professionals/" +  id + "/patients?page="+currentpage,
-        //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
-        //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
+        url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients?page="+currentpage,
         headers:{
-            "Access-Control-Allow-Origin":"http://localhost",
+            "Access-Control-Allow-Origin":"http://192.168.160.217",
             "Authorization": "Bearer " + jwt
         },
         statusCode: {
@@ -380,7 +372,7 @@ function movePage(forwards){
         }
         myPatientsArray = [];
         $("#thispage").empty();
-        $("#thispage").append(`${currentpage}`);
+        $("#thispage").append(`${currentpage + 1}`);
         $("#patientSection").empty();
         data.data.forEach(p=>{
             myPatientsArray.push(p);

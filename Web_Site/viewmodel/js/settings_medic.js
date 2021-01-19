@@ -14,9 +14,8 @@ $(document).ready(function () {
     })
 
     $.ajax({
-        //http://192.168.160.217:8080
-        url: "http://localhost:8080/api/professionals/"+ id,
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        url: "http://192.168.160.217:8080/api/professionals/"+ id,
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         statusCode: {
             500: function(xhr){
                 return;
@@ -26,6 +25,8 @@ $(document).ready(function () {
             }
         }
     }).then(function(user) {
+
+        $("#profilePic").attr("src",'data:image/gif;base64,'+ user['image']);
         console.log(user)
         $("#changeUserMed").fadeOut();
         $("#changeEmaMed").fadeOut();
@@ -67,6 +68,8 @@ $(document).ready(function () {
             console.log(email)
             console.log(pass1)
             console.log(pass2)
+            
+            user['password'] = null;
 
             if(pass1 != pass2){
                 $("#setErrorMed").text("The passwords don't match!");
@@ -80,6 +83,7 @@ $(document).ready(function () {
                 user['email'] = email;
             }
             if(pass1 != ''){
+                console.log("entrou");
                 user['password'] = pass1;
             }
             if(speciality != ''){
@@ -90,35 +94,85 @@ $(document).ready(function () {
             }
 
             editPro(user)
-            window.location.reload();
+            document.cookie='access_token= & role= & id= ;';
+            window.location.replace('index.html'); 
         })
     })
 });
 
 //PUT Patient
 function editPro(data){
+    console.log(data)
     $.ajax({
         type: "PUT",
-        url: "http://localhost:8080/api/professionals/"+id,
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        url: "http://192.168.160.217:8080/api/professionals/"+id,
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
-        success: function (data, status, jqXHR) {
-
-                 alert("Saved!");
-                 console.log(data)
-             },
-
-             error: function (jqXHR, status) {
-                 // error handler
-                 console.log(jqXHR);
-                 alert('fail' + status.code);
-             }
-      });
+        statusCode: {
+            500: function(xhr){
+                console.log(xhr);
+                alert("Username already exists!");
+                return;
+            },
+            404: function(xhr){
+                alert("Professional email does not exist");
+                return;
+            },
+            422: function(xhr){
+                alert("Error");
+                return;
+            }
+        }
+      }).then(function(data){
+        alert("Saved successfully! Please login again");
+        
+    });
 }
 
 function goToPatient(){
     localStorage.setItem('currentPatient', localStorage.getItem("mPatient"));
     window.location.reload();
+}
+
+function changePhoto(){
+    var data = new FormData();
+    
+    
+    var fileInput = document.getElementById('fileSet');
+    var file = fileInput.files[0];
+    data.append("file", file);
+    console.log(data.entries());
+
+    $.ajax({
+        type: 'POST',
+        url: "http://192.168.160.217:8080/api/professionals/" + id + "/picture",
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
+        data: data,
+        cache: false,
+        contentType: false,
+        //contentType: "multipart/form-data",
+        processData: false,
+        statusCode: {
+            500: function(xhr){
+                console.log(xhr);
+                alert("Error");
+                return;
+            },
+            404: function(xhr){
+                alert("Error");
+                return;
+            },
+            422: function(xhr){
+                alert("Error");
+                return;
+            }
+        }
+        
+    }).then(function(data){
+        alert("Saved successfully! Please login again");
+        window.location.replace('settings_medic.html'); 
+        
+    });
 }

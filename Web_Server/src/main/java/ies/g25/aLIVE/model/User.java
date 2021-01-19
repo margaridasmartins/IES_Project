@@ -30,8 +30,8 @@ public class User {
     private Long id;
 
     @Column(name = "password")
-    @JsonIgnore
-    @ToString.Exclude
+    //@JsonIgnore
+    //@ToString.Exclude
     private String password;
 
     @Column(name = "username",unique = true)

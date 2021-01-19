@@ -28,7 +28,7 @@ public class BodyTemperature{
 
     // date of the mesure
     @Column(name="date")
-    //@CreationTimestamp
+    @CreationTimestamp
     private LocalDateTime date;
 
     // Blood Temperature values

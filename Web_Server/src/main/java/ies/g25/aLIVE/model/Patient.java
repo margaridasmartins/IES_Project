@@ -139,6 +139,10 @@ public class Patient extends User {
         return super.getUsername();
     }
 
+    public String getPassword(){
+        return super.getPassword();
+    }
+
     public void setUsername(String username){
         super.setUsername(username);
     }

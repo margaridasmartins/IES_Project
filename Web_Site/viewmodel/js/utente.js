@@ -15,9 +15,8 @@ $(document).ready(function () {
         window.location.replace('index.html'); 
     })
     $.ajax({
-        //http://192.168.160.217:8080
-        url: "http://localhost:8080/api/patients/"+ id,
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        url: "http://192.168.160.217:8080/api/patients/"+ id,
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         statusCode: {
             500: function(xhr){
                 return;
@@ -76,16 +75,15 @@ $(document).ready(function () {
 // LATEST DATA
 function get_latestValues(){
     $.ajax({
-        //http://192.168.160.217:8080
-        url: "http://localhost:8080/api/patients/"+ id+'/latest',
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        url: "http://192.168.160.217:8080/api/patients/"+ id+'/latest',
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         }).done(function (results) {
             console.log(results)
-            document.getElementById('latest_bp').innerHTML = '-> '+results[0].low_value;
-            document.getElementById('latest_bt').innerHTML = '-> '+results[1].bodyTemp;
-            document.getElementById('latest_hr').innerHTML = '-> '+results[2].heartRate;
-            document.getElementById('latest_sl').innerHTML = '-> '+results[3].sugarLevel;
-            document.getElementById('latest_ol').innerHTML = '-> '+results[4].oxygenLevel;
+            document.getElementById('latest_bp').innerHTML = '-> '+ (results[0].low_value).toFixed(2) + ' | ' + (results[0].high_value).toFixed(2);
+            document.getElementById('latest_bt').innerHTML = '-> '+ (results[1].bodyTemp).toFixed(2);
+            document.getElementById('latest_hr').innerHTML = '-> '+ results[2].heartRate;
+            document.getElementById('latest_sl').innerHTML = '-> '+ (results[3].sugarLevel).toFixed(2);
+            document.getElementById('latest_ol').innerHTML = '-> '+ (results[4].oxygenLevel).toFixed(2);
         })
 }
 
@@ -97,15 +95,15 @@ function loadCharts(){
 
     // Blood Pressure
     google.charts.load('current', {'packages':['bar']});
-    google.charts.setOnLoadCallback(function() { draw_BloodPressureChart("M");});
+    google.charts.setOnLoadCallback(function() { draw_BloodPressureChart("W");});
 
     // Temperatue
     google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(function() { draw_TemperatureChart("M");});
+    google.charts.setOnLoadCallback(function() { draw_TemperatureChart("W");});
 
     // Blood Sugar
     google.charts.load('current', {packages: ['corechart', 'bar']});
-    google.charts.setOnLoadCallback(function() { draw_BloodSugarChart("M")});
+    google.charts.setOnLoadCallback(function() { draw_BloodSugarChart("W")});
 
     // Oxygen Saturation
     google.charts.load('current', {packages: ['corechart', 'bar']});
@@ -129,9 +127,8 @@ function draw_HeartRateChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ id+"/heartrate?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ id+"/heartrate?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
@@ -156,6 +153,7 @@ function draw_HeartRateChart(int_date) {
     
     var options = {
         title: 'Resting Heart Rate',
+        curveType: 'function',
         height: 350,
         hAxis: { title: 'Time' },
         vAxis: { title: 'Heart Raten in BPM' },
@@ -163,8 +161,8 @@ function draw_HeartRateChart(int_date) {
         tooltip: {isHtml: true}
     };
     
-    var chart = new google.visualization.LineChart(document.getElementById('heartrate_chart'));
-    chart.draw(data, options);
+    var chart = new google.charts.Line(document.getElementById('heartrate_chart'));
+    chart.draw(data, google.charts.Line.convertOptions(options));
 }
 
 
@@ -182,9 +180,8 @@ function draw_BloodPressureChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ id+"/bloodpressure?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ id+"/bloodpressure?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
@@ -243,9 +240,8 @@ function draw_TemperatureChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ id+"/bodytemperature?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ id+"/bodytemperature?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
@@ -271,6 +267,7 @@ function draw_TemperatureChart(int_date) {
 
     var options = {
         title: 'Body Temperature',
+        curveType: 'function',
         height: 350,
         hAxis: { title: 'Time' },
         vAxis: { title: 'Temperature, in C*' },
@@ -278,8 +275,8 @@ function draw_TemperatureChart(int_date) {
         tooltip: {isHtml: true}
     };
 
-    var chart = new google.visualization.LineChart(document.getElementById('bodytemperature_chart'));
-    chart.draw(data, options);
+    var chart = new google.charts.Line(document.getElementById('bodytemperature_chart'));
+    chart.draw(data, google.charts.Line.convertOptions(options));
 }
 
 
@@ -297,9 +294,8 @@ function draw_BloodSugarChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ id+"/sugarlevel?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ id+"/sugarlevel?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
@@ -330,8 +326,8 @@ function draw_BloodSugarChart(int_date) {
         legend: { position: "none" },
         tooltip: {isHtml: true}
     };
-    var chart = new google.visualization.ColumnChart(document.getElementById('bloodglucose_chart'));
-    chart.draw(data, options);
+    var chart = new google.charts.Bar(document.getElementById('bloodglucose_chart'));
+    chart.draw(data, google.charts.Bar.convertOptions(options));
 }
 
 
@@ -350,9 +346,8 @@ function draw_OxygenSaturationChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ id+"/oxygenlevel?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ id+"/oxygenlevel?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
@@ -385,7 +380,7 @@ function draw_OxygenSaturationChart(int_date) {
         legend: { position: "none" },
         tooltip: {isHtml: true}
     };
-    var chart = new google.visualization.ColumnChart(document.getElementById('oxygensaturation_chart'));
-    chart.draw(data, options);
+    var chart = new google.charts.Bar(document.getElementById('oxygensaturation_chart'));
+    chart.draw(data, google.charts.Bar.convertOptions(options));
 }
 

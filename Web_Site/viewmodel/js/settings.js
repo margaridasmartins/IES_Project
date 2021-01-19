@@ -14,9 +14,8 @@ $(document).ready(function () {
     })
 
     $.ajax({
-        //http://192.168.160.217:8080
-        url: "http://localhost:8080/api/patients/"+ id,
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        url: "http://192.168.160.217:8080/api/patients/"+ id,
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         statusCode: {
             500: function(xhr){
                 return;
@@ -35,6 +34,7 @@ $(document).ready(function () {
         $("#userFullName").text(user['fullname']);
         $("#userId").text(user['username']);
         $("#userEmail").text(user['email']);
+        $("#profilePic").attr("src",'data:image/gif;base64,'+ user['image']);
 
 
         $("#changeUsername").click(function(){
@@ -57,6 +57,8 @@ $(document).ready(function () {
             console.log(pass1)
             console.log(pass2)
 
+            user['password'] = null;
+
             if(pass1 != pass2){
                 $("#setError").text("The passwords don't match!");
                 $("#setError").fadeIn();
@@ -73,7 +75,8 @@ $(document).ready(function () {
             }
 
             editPatient(user)
-            window.location.reload();
+            document.cookie='access_token= & role= & id= ;';
+            window.location.replace('index.html'); 
         })
     })
 });
@@ -82,21 +85,70 @@ $(document).ready(function () {
 function editPatient(data){
     $.ajax({
         type: "PUT",
-        url: "http://localhost:8080/api/patients/"+id,
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        url: "http://192.168.160.217:8080/api/patients/"+id,
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
-        success: function (data, status, jqXHR) {
 
-                 alert("Saved!");
-                 console.log(data)
-             },
+        statusCode: {
+            500: function(xhr){
+                console.log(xhr);
+                alert("Username already exists!");
+                return;
+            },
+            404: function(xhr){
+                alert("Professional email does not exist");
+                return;
+            },
+            422: function(xhr){
+                alert("Error");
+                return;
+            }
+        }
+      }).then(function(data){
+        alert("Saved successfully! Please login again");
+        
+    });
+}
 
-             error: function (jqXHR, status) {
-                 // error handler
-                 console.log(jqXHR);
-                 alert('fail' + status.code);
-             }
-      });
+function changePhoto(){
+        var data = new FormData();
+        
+        
+        var fileInput = document.getElementById('fileSet');
+        var file = fileInput.files[0];
+        data.append("file", file);
+        console.log(data.entries());
+
+        $.ajax({
+            type: 'POST',
+            url: "http://192.168.160.217:8080/api/patients/" + id + "/picture",
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
+            data: data,
+            cache: false,
+            contentType: false,
+            //contentType: "multipart/form-data",
+            processData: false,
+            statusCode: {
+                500: function(xhr){
+                    console.log(xhr);
+                    alert("Error");
+                    return;
+                },
+                404: function(xhr){
+                    alert("Error");
+                    return;
+                },
+                422: function(xhr){
+                    alert("Error");
+                    return;
+                }
+            }
+            
+        }).then(function(data){
+            alert("Saved successfully! Please login again");
+            window.location.replace('settings.html'); 
+            
+        });
 }

@@ -3,6 +3,7 @@ package ies.g25.aLIVE.rabbitmq;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +67,7 @@ public class SensorReceiver {
 
     @Autowired
     public PatientRestController PatientController = new PatientRestController(patientRepository, heartRateRepository,
-            sugarLevelRepository, oxygenLevelRepository, bloodPressureRepository, bodyTemperatureRepository, professionalRepository,userRepository );
+            sugarLevelRepository, oxygenLevelRepository, bloodPressureRepository, bodyTemperatureRepository, professionalRepository, userRepository, sensorRepository );
 
     @Autowired
     public WarningController warningController = new WarningController();
@@ -270,14 +271,20 @@ public class SensorReceiver {
         } else if (risk < 15) {
             status = "unhealthy";
         } else {
-            if(!p.getCurrentstate().equals("in-danger")){
-                try {
-                    warningController.send(String.valueOf(p.getId())+":"+String.valueOf(p.getProfessional().getId()));
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                status="in-danger";
+            status="in-danger";
+
+            if(p.getCurrentstate() != null && !p.getCurrentstate().equals("in-danger")){
+
+
+                    try {
+                        warningController.send(String.valueOf(p.getId())+":"+String.valueOf(p.getProfessional().getId()));
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    
+                    
+
             }
         }
 

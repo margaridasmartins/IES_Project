@@ -22,9 +22,8 @@ $(document).ready(function () {
 
 
     $.ajax({
-        //http://192.168.160.217:8080
-        url: "http://localhost:8080/api/patients/"+ currid,
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer " + jwt},
+        url: "http://192.168.160.217:8080/api/patients/"+ currid,
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer " + jwt},
         statusCode: {
             500: function(xhr){
                 console.log(xhr);
@@ -38,6 +37,8 @@ $(document).ready(function () {
     }).then(function(user) {
         
        currentPatient = user;
+
+       $("#profilePic").attr("src",'data:image/gif;base64,'+ currentPatient['image']);
 
        $("#latestInf").fadeOut();
 
@@ -89,14 +90,14 @@ $(document).ready(function () {
            }
            currentPatient['weight'] = $("#patientNewWeight").val();
            currentPatient['height'] = $("#patientNewHeight").val();
-           localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
+           //localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
    
            $("#patientNewWeight").fadeOut();
            $("#patientNewHeight").fadeOut();
            $("#editInformationDone").fadeOut();
            $("#editInformation").fadeIn();
            editPatient(currentPatient);
-           window.location.reload();
+           window.location.replace("utente_info.html");
        }); 
    
        // ADD DISEASE
@@ -117,12 +118,12 @@ $(document).ready(function () {
                return;
            }
            currentPatient['med_conditions'].push($("#patientNewDisease").val());
-           localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
+           //localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
    
            $("#patientNewDisease").fadeOut();
            $("#addDiseaseDone").fadeOut();
            editPatient(currentPatient);
-           window.location.reload();
+           window.location.replace("utente_info.html");
        }); 
        // REMOVE DISEASE
        $("#removeDisease").click(function(){
@@ -145,11 +146,11 @@ $(document).ready(function () {
            var old = $("#patientRemovedDisease").val();
            var index = currentPatient['med_conditions'].indexOf(old);
            currentPatient['med_conditions'].splice(index, 1);
-           localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
+           //localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
            $("#patientRemovedDisease").fadeOut();
            $("#removeDiseaseDone").fadeOut();
            editPatient(currentPatient);
-           window.location.reload();
+           window.location.replace("utente_info.html");
        }); 
    
        // ADD MEDICATION
@@ -170,12 +171,12 @@ $(document).ready(function () {
                return;
            }
            currentPatient['medication'].push($("#patientNewMedication").val());
-           localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
+           //localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
    
            $("#patientNewMedication").fadeOut();
            $("#addMedicationDone").fadeOut();
            editPatient(currentPatient);
-           window.location.reload();
+           window.location.replace("utente_info.html");
        });
        // REMOVE MEDICATION
        $("#removeMedication").click(function(){
@@ -198,24 +199,22 @@ $(document).ready(function () {
            var old = $("#patientRemovedDisease").val();
            var index = currentPatient['medication'].indexOf(old);
            currentPatient['medication'].splice(index, 1);
-           localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
+           //localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
            $("#patientRemovedMedication").fadeOut();
            $("#removeMedicationDone").fadeOut();
            editPatient(currentPatient);
-           window.location.reload();
+           window.location.replace("utente_info.html");
        }); 
    
-        loadCharts()
-
-   
-       // Functionality not implemented yet
-       $(".notImplemented").click(function () {
-           alert("Sorry, but this functionality has not been implemented yet! :(");
-       });
-   
        $("#latestInfo").click(function(){
-           $("#latestInf").fadeToggle("slow");
-       })
+            $("#latestInf").fadeToggle("slow");
+        }) 
+       
+       
+       get_latestValues();
+        loadCharts();
+   
+       
 
 
     });
@@ -224,19 +223,19 @@ $(document).ready(function () {
 });
 
 // LATEST DATA
-window.onload = function get_latestValues(){
+function get_latestValues(){
     $.ajax({
 
-        url: 'http://localhost:8080/api/patients/'+ currid +'/latest',
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        url: 'http://192.168.160.217:8080/api/patients/'+ currid +'/latest',
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         }).done(function (results) {
             console.log(results)
 
-            document.getElementById('latest_bp').innerHTML = '-> '+results[0].low_value;
-            document.getElementById('latest_bt').innerHTML = '-> '+results[1].bodyTemp;
-            document.getElementById('latest_hr').innerHTML = '-> '+results[2].heartRate;
-            document.getElementById('latest_sl').innerHTML = '-> '+results[3].sugarLevel;
-            document.getElementById('latest_ol').innerHTML = '-> '+results[4].oxygenLevel;
+            document.getElementById('latest_bp').innerHTML = '-> '+ (results[0].low_value).toFixed(2) + ' | ' + (results[0].high_value).toFixed(2);
+            document.getElementById('latest_bt').innerHTML = '-> '+ (results[1].bodyTemp).toFixed(2);
+            document.getElementById('latest_hr').innerHTML = '-> '+ results[2].heartRate;
+            document.getElementById('latest_sl').innerHTML = '-> '+ (results[3].sugarLevel).toFixed(2);
+            document.getElementById('latest_ol').innerHTML = '-> '+ (results[4].oxygenLevel).toFixed(2);
         })
 }
 
@@ -244,8 +243,8 @@ window.onload = function get_latestValues(){
 function editPatient(data){
     $.ajax({
         type: "PUT",
-        url: "http://localhost:8080/api/patients/"+ currid,
-        headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+        url: "http://192.168.160.217:8080/api/patients/"+ currid,
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
@@ -306,9 +305,8 @@ function draw_HeartRateChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ currid+"/heartrate?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ currid+"/heartrate?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
@@ -333,16 +331,17 @@ function draw_HeartRateChart(int_date) {
     
     var options = {
         title: 'Resting Heart Rate',
+        curveType: 'function',
         height: 350,
-        width: $(window).width()*0.70,
+        //width: $(window).width()*0.70,
         hAxis: { title: 'Time' },
         vAxis: { title: 'Heart Raten in BPM' },
         legend: { position: "none" },
         tooltip: {isHtml: true}
     };
     
-    var chart = new google.visualization.LineChart(document.getElementById('heartrate_chart'));
-    chart.draw(data, options);
+    var chart = new google.charts.Line(document.getElementById('heartrate_chart'));
+    chart.draw(data, google.charts.Line.convertOptions(options));
 }
 
 
@@ -360,9 +359,8 @@ function draw_BloodPressureChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ currid+"/bloodpressure?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ currid+"/bloodpressure?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
@@ -392,7 +390,7 @@ function draw_BloodPressureChart(int_date) {
             subtitle: 'Diastolic'
         },
         height: 350,
-        width: $(window).width()*0.70,
+        //width: $(window).width()*0.70,
         hAxis: { 
             title: 'Time',
             minValue: start_date,
@@ -422,9 +420,8 @@ function draw_TemperatureChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ currid+"/bodytemperature?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ currid+"/bodytemperature?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
@@ -450,16 +447,17 @@ function draw_TemperatureChart(int_date) {
 
     var options = {
         title: 'Body Temperature',
+        curveType: 'function',
         height: 350,
-        width: $(window).width()*0.70,
+        //width: $(window).width()*0.70,
         hAxis: { title: 'Time' },
         vAxis: { title: 'Temperature, in C*' },
         legend: { position: "none" },
         tooltip: {isHtml: true}
     };
 
-    var chart = new google.visualization.LineChart(document.getElementById('bodytemperature_chart'));
-    chart.draw(data, options);
+    var chart = new google.charts.Line(document.getElementById('bodytemperature_chart'));
+    chart.draw(data, google.charts.Line.convertOptions(options));
 }
 
 
@@ -477,9 +475,8 @@ function draw_BloodSugarChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ currid+"/sugarlevel?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ currid+"/sugarlevel?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
@@ -505,14 +502,14 @@ function draw_BloodSugarChart(int_date) {
     var options = {
         title: "Blood Glucose Level",
         height: 350,
-        width: $(window).width()*0.70,
+        //width: $(window).width()*0.70,
         hAxis: { title: 'Time' },
         vAxis: { title: 'Blood Glucose, in mg/dL' },
         legend: { position: "none" },
         tooltip: {isHtml: true}
     };
-    var chart = new google.visualization.ColumnChart(document.getElementById('bloodglucose_chart'));
-    chart.draw(data, options);
+    var chart = new google.charts.Bar(document.getElementById('bloodglucose_chart'));
+    chart.draw(data, google.charts.Bar.convertOptions(options));
 }
 
 
@@ -531,9 +528,8 @@ function draw_OxygenSaturationChart(int_date) {
     pcount =0;
     do {
         $.ajax({
-            //http://192.168.160.217:8080
-            url: "http://localhost:8080/api/patients/"+ currid+"/oxygenlevel?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: "http://192.168.160.217:8080/api/patients/"+ currid+"/oxygenlevel?start_date="+start_date+"&end_date="+end_date+"&page="+i_page,
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             dataType: 'json',
             async: false
          }).done(function (r) {
@@ -561,14 +557,15 @@ function draw_OxygenSaturationChart(int_date) {
     var options = {
         title: "Oxygen Saturation",
         height: 350,
-        width: $(window).width()*0.70,
+        //width: $(window).width()*0.70,
         hAxis: { title: 'Time' },
         vAxis: { title: 'Oxygen Saturation, in %' },
         legend: { position: "none" },
         tooltip: {isHtml: true}
     };
-    var chart = new google.visualization.ColumnChart(document.getElementById('oxygensaturation_chart'));
-    chart.draw(data, options);
+    var chart = new google.charts.Bar(document.getElementById('oxygensaturation_chart'));
+    chart.draw(data, google.charts.Bar.convertOptions(options));
+
 }
 
 function goToPatient(){

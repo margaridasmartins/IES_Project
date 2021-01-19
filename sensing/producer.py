@@ -12,21 +12,21 @@ import random
 from random import randint
 
 #---------------------------------------------------------------------
-"""
+
 class Generator:
 
     def __init__(self, heartbeat):
         self.hearbeat = heartbeat
         # rabbit connections // os.getenv('RABBITMQ_IP')
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_IP')))
-        #self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+        #self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_IP')))
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.160.217', port=5672))
         self.channel = self.connection.channel()
         self.sensor_id = 1
 
     async def get_sensors(self):
         while True:
-            sensors = requests.get('http://'+os.getenv('SERVER_IP')+':8080/api/sensors/ids')
-            #sensors = requests.get('http://localhost:8080/api/sensors/ids')
+            #sensors = requests.get('http://'+os.getenv('SERVER_IP')+':8080/api/sensors/ids')
+            sensors = requests.get('http://192.168.160.217:8080/api/sensors/ids')
             lst = sensors.json()
             print(os.getenv('RABBITMQ_IP'))
             print(os.getenv('SERVER_IP'))
@@ -56,7 +56,7 @@ class Generator:
             diastolic = np.random.randn(1) * sigma + diastolic_mu            
             json_text = {'id': self.sensor_id, 'systolic': round(float(systolic),2), 'diastolic': round(float(diastolic),2)}
             self.channel.basic_publish(exchange='logs', routing_key='blood_pressure', body= json.dumps(json_text))
-            await asyncio.sleep(2)
+            await asyncio.sleep(20)
 
     
     async def gen_body_temp(self):
@@ -67,7 +67,7 @@ class Generator:
             temperature = np.random.randn(1) * sigma + mu        
             json_text = {'id': self.sensor_id, 'temperature': round(float(temperature),2)}
             self.channel.basic_publish(exchange='logs', routing_key='body_temp', body= json.dumps(json_text))
-            await asyncio.sleep(2)
+            await asyncio.sleep(20)
 
     
     async def gen_sugar_level(self):
@@ -78,7 +78,7 @@ class Generator:
             sugar = np.random.randn(1) * sigma + mu
             json_text = {'id': self.sensor_id, 'sugar': float(sugar)}
             self.channel.basic_publish(exchange='logs', routing_key='sugar_level', body= json.dumps(json_text))
-            await asyncio.sleep(2)
+            await asyncio.sleep(20)
 
     async def gen_oxygen_level(self):
         vals = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
@@ -126,4 +126,3 @@ if __name__ == "__main__":
 
     #loop close
     loop.close()
-"""

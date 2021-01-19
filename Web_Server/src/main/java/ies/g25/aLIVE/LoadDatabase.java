@@ -23,6 +23,7 @@ import ies.g25.aLIVE.model.Patient;
 import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.model.Sensor;
 import ies.g25.aLIVE.model.SugarLevel;
+import ies.g25.aLIVE.model.User;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
 import ies.g25.aLIVE.repository.HeartRateRepository;
@@ -31,6 +32,7 @@ import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.ProfessionalRepository;
 import ies.g25.aLIVE.repository.SensorRepository;
 import ies.g25.aLIVE.repository.SugarLevelRepository;
+import ies.g25.aLIVE.repository.UserRepository;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -44,9 +46,17 @@ class LoadDatabase {
   CommandLineRunner initDatabase(PatientRepository Prep, SensorRepository Srep, ProfessionalRepository Pro,
       PasswordEncoder passwordEncoder, BloodPressureRepository bloodPressureRepository,
       BodyTemperatureRepository bodyTemperatureRepository, HeartRateRepository heartRateRepository,
-      OxygenLevelRepository oxygenLevelRepository, SugarLevelRepository sugarLevelRepository) {
+      OxygenLevelRepository oxygenLevelRepository, SugarLevelRepository sugarLevelRepository, UserRepository userRepository) {
 
     return args -> {
+
+      //Optional<Patient> op = Prep.findById(Long.valueOf(23));
+      //Optional<Professional> op1 = Pro.findById(Long.valueOf(24));
+      //Patient p = op.get();
+      //Professional prof = op1.get();
+      //p.setProfessional(prof);
+      //Prep.save(p);
+      /*
       
       Professional p = new Professional(passwordEncoder.encode("pass"),"carlitos","cls@jmail.com","Carlitos Sousa",34,"Male","Hospital de Braga","Cardiologia","professional"); 
       Professional p2 = new Professional(passwordEncoder.encode("passita"),"anocas","anaaaa@jmail.com","Anocas Beatriz",44,"Female","Hospital de Aveiro","Medicina Interna","professional");
@@ -288,6 +298,7 @@ class LoadDatabase {
           System.out.println("O");
         }
       }
+      */
     };
     
   }

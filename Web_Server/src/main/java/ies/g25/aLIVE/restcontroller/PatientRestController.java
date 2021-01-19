@@ -62,6 +62,7 @@ import ies.g25.aLIVE.repository.HeartRateRepository;
 import ies.g25.aLIVE.repository.OxygenLevelRepository;
 import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.ProfessionalRepository;
+import ies.g25.aLIVE.repository.SensorRepository;
 import ies.g25.aLIVE.repository.SugarLevelRepository;
 import ies.g25.aLIVE.repository.UserRepository;
 
@@ -80,6 +81,7 @@ public class PatientRestController {
     public ProfessionalRepository professionalRepository;
     public OxygenLevelRepository oxygenLevelRepository;
     public UserRepository userRepository;
+    public SensorRepository sensorRepository;
 
     @Autowired
     public PasswordEncoder passwordEncoder;
@@ -88,7 +90,7 @@ public class PatientRestController {
     public PatientRestController(PatientRepository patientRepository, HeartRateRepository heartRateRepository,
             SugarLevelRepository sugarLevelRepository, OxygenLevelRepository oxygenLevelRepository, 
             BloodPressureRepository bloodPressureRepository, BodyTemperatureRepository bodyTemperatureRepository, 
-            ProfessionalRepository professionalRepository, UserRepository userRepository) {
+            ProfessionalRepository professionalRepository, UserRepository userRepository, SensorRepository sensorRepository) {
         this.patientRepository = patientRepository;
         this.heartRateRepository = heartRateRepository;
         this.sugarLevelRepository = sugarLevelRepository;
@@ -97,6 +99,7 @@ public class PatientRestController {
         this.bodyTemperatureRepository = bodyTemperatureRepository;
         this.professionalRepository = professionalRepository;
         this.userRepository= userRepository;
+        this.sensorRepository = sensorRepository;
     }
 
     @GetMapping(produces="application/json")
@@ -117,6 +120,7 @@ public class PatientRestController {
         if(p.isPresent()){
             try{
                 Patient pat = patient.getPatient();
+                System.out.println(pat.getUsername());
                 pat.setProfessional(p.get());
                 Optional<User> u1 = userRepository.findByEmail(pat.getEmail());
                 Optional<User> u2 = userRepository.findByUsername(pat.getUsername());
@@ -127,11 +131,15 @@ public class PatientRestController {
                     throw new UnprocessableEntityException("Email already exists");
                 }
                 pat.setPassword(passwordEncoder.encode(pat.getPassword()));
+                
+                patientRepository.save(pat);
+
                 Sensor s1 =new Sensor(pat);
-                return patientRepository.save(pat);
+                sensorRepository.save(s1);
+                return pat;
             }
             catch (Exception e) {
-                throw new Exception(e.getMessage());
+                throw new Exception(e.getMessage() + " entrou");
             }
             
         }
@@ -161,8 +169,12 @@ public class PatientRestController {
                 Optional<Patient> op = patientRepository.findById(patientId);
                 if (op.isPresent()) {
                     Patient patient = op.get();
-    
+
+                    if(newPatient.getPassword() != null)
+                        newPatient.setPassword(passwordEncoder.encode(newPatient.getPassword()));
+                    
                     newPatient = (Patient) PersistenceUtils.partialUpdate(patient, newPatient);
+                    
                     return patientRepository.save(newPatient);
                 }
                 throw new ResourceNotFoundException("Patient not found for this id: " + patientId);
@@ -214,7 +226,7 @@ public class PatientRestController {
 
     }
 
-    @PostMapping(value="/{id}/picture", produces="application/json", consumes = "multipart/file")
+    @PostMapping(value="/{id}/picture", produces="application/json")
     @PreAuthorize("hasRole('Patient')")
     public Patient updatePhoto(@PathVariable(value = "id") Long patientId, @RequestParam("file") MultipartFile file, HttpServletRequest request)
             throws ResourceNotFoundException, IOException {

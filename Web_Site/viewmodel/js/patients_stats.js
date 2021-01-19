@@ -25,11 +25,11 @@ function draw_StateChart() {
     var patients =[];
     do {
         $.ajax({
-            url: "http://localhost:8080/api/professionals/" +  id + "/patients",
+            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients?page=" + i_page,
             //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
             //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
             headers:{
-                "Access-Control-Allow-Origin":"http://localhost",
+                "Access-Control-Allow-Origin":"http://192.168.160.217",
                 "Authorization": "Bearer " + jwt
             },
             async: false,
@@ -48,7 +48,7 @@ function draw_StateChart() {
             patients=patients.concat(r.data);
             i_page+=1;
          })
-    } while (i_page<pcount);
+    } while (i_page < pcount);
 
     data_array = [['State', 'Number of Patients']];
     states_array = [];
@@ -87,11 +87,11 @@ function draw_AgeChart() {
     var patients =[];
     do {
         $.ajax({
-            url: "http://localhost:8080/api/professionals/" +  id + "/patients",
+            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients?page=" + i_page,
             //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
             //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
             headers:{
-                "Access-Control-Allow-Origin":"http://localhost",
+                "Access-Control-Allow-Origin":"http://192.168.160.217",
                 "Authorization": "Bearer " + jwt
             },
             async: false,
@@ -160,11 +160,11 @@ function draw_CheckChart() {
     var patients =[];
     do {
         $.ajax({
-            url: "http://localhost:8080/api/professionals/" +  id + "/patients",
+            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients?page=" + i_page,
             //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
             //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
             headers:{
-                "Access-Control-Allow-Origin":"http://localhost",
+                "Access-Control-Allow-Origin":"http://192.168.160.217",
                 "Authorization": "Bearer " + jwt
             },
             async: false,
@@ -231,11 +231,11 @@ function draw_HealthChart() {
     var patients =[];
     do {
         $.ajax({
-            url: "http://localhost:8080/api/professionals/" +  id + "/patients",
+            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients?page=" + i_page,
             //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
             //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
             headers:{
-                "Access-Control-Allow-Origin":"http://localhost",
+                "Access-Control-Allow-Origin":"http://192.168.160.217",
                 "Authorization": "Bearer " + jwt
             },
             async: false,
@@ -278,8 +278,8 @@ function draw_HealthChart() {
         
         $.ajax({
             async: false,
-            url: 'http://localhost:8080/api/patients/'+p['id']+'/latest',
-            headers:{"Access-Control-Allow-Origin":"http://localhost","Authorization":"Bearer "+ jwt},
+            url: 'http://192.168.160.217:8080/api/patients/'+p['id']+'/latest',
+            headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             }).done(function (results) {
     
                 var bpl = results[0].low_value;

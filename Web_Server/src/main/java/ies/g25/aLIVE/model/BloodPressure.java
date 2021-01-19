@@ -28,7 +28,7 @@ public class BloodPressure{
 
     // date of the mesure
     @Column(name="date")
-    //@CreationTimestamp
+    @CreationTimestamp
     private LocalDateTime date;
 
     // Blood Pressure values
