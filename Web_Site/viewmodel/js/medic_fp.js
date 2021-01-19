@@ -372,7 +372,7 @@ function movePage(forwards){
         }
         myPatientsArray = [];
         $("#thispage").empty();
-        $("#thispage").append(`${currentpage}`);
+        $("#thispage").append(`${currentpage - 1}`);
         $("#patientSection").empty();
         data.data.forEach(p=>{
             myPatientsArray.push(p);

@@ -90,14 +90,14 @@ $(document).ready(function () {
            }
            currentPatient['weight'] = $("#patientNewWeight").val();
            currentPatient['height'] = $("#patientNewHeight").val();
-           localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
+           //localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
    
            $("#patientNewWeight").fadeOut();
            $("#patientNewHeight").fadeOut();
            $("#editInformationDone").fadeOut();
            $("#editInformation").fadeIn();
            editPatient(currentPatient);
-           window.location.reload();
+           window.location.replace("utente_info.html");
        }); 
    
        // ADD DISEASE
@@ -118,12 +118,12 @@ $(document).ready(function () {
                return;
            }
            currentPatient['med_conditions'].push($("#patientNewDisease").val());
-           localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
+           //localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
    
            $("#patientNewDisease").fadeOut();
            $("#addDiseaseDone").fadeOut();
            editPatient(currentPatient);
-           window.location.reload();
+           window.location.replace("utente_info.html");
        }); 
        // REMOVE DISEASE
        $("#removeDisease").click(function(){
@@ -146,11 +146,11 @@ $(document).ready(function () {
            var old = $("#patientRemovedDisease").val();
            var index = currentPatient['med_conditions'].indexOf(old);
            currentPatient['med_conditions'].splice(index, 1);
-           localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
+           //localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
            $("#patientRemovedDisease").fadeOut();
            $("#removeDiseaseDone").fadeOut();
            editPatient(currentPatient);
-           window.location.reload();
+           window.location.replace("utente_info.html");
        }); 
    
        // ADD MEDICATION
@@ -171,12 +171,12 @@ $(document).ready(function () {
                return;
            }
            currentPatient['medication'].push($("#patientNewMedication").val());
-           localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
+           //localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
    
            $("#patientNewMedication").fadeOut();
            $("#addMedicationDone").fadeOut();
            editPatient(currentPatient);
-           window.location.reload();
+           window.location.replace("utente_info.html");
        });
        // REMOVE MEDICATION
        $("#removeMedication").click(function(){
@@ -199,11 +199,11 @@ $(document).ready(function () {
            var old = $("#patientRemovedDisease").val();
            var index = currentPatient['medication'].indexOf(old);
            currentPatient['medication'].splice(index, 1);
-           localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
+           //localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
            $("#patientRemovedMedication").fadeOut();
            $("#removeMedicationDone").fadeOut();
            editPatient(currentPatient);
-           window.location.reload();
+           window.location.replace("utente_info.html");
        }); 
    
         loadCharts()
@@ -233,11 +233,11 @@ window.onload = function get_latestValues(){
         }).done(function (results) {
             console.log(results)
 
-            document.getElementById('latest_bp').innerHTML = '-> '+results[0].low_value;
-            document.getElementById('latest_bt').innerHTML = '-> '+results[1].bodyTemp;
-            document.getElementById('latest_hr').innerHTML = '-> '+results[2].heartRate;
-            document.getElementById('latest_sl').innerHTML = '-> '+results[3].sugarLevel;
-            document.getElementById('latest_ol').innerHTML = '-> '+results[4].oxygenLevel;
+            document.getElementById('latest_bp').innerHTML = '-> '+ (results[0].low_value).toFixed(2);
+            document.getElementById('latest_bt').innerHTML = '-> '+ (results[1].bodyTemp).toFixed(2);
+            document.getElementById('latest_hr').innerHTML = '-> '+ results[2].heartRate;
+            document.getElementById('latest_sl').innerHTML = '-> '+ (results[3].sugarLevel).toFixed(2);
+            document.getElementById('latest_ol').innerHTML = '-> '+ (results[4].oxygenLevel).toFixed(2);
         })
 }
 
