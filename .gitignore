@@ -1,4 +1,3 @@
-target/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -217,9 +216,6 @@ instance/
 # Sphinx documentation
 docs/_build/
 doc/_build/
-
-# PyBuilder
-target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
