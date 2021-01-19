@@ -32,7 +32,7 @@ class Generator:
             print(os.getenv('SERVER_IP'))
             high = lst[len(lst) - 1]
             self.sensor_id = randint(1, high)
-            await asyncio.sleep(5)
+            await asyncio.sleep(2)
     
 
     async def gen_heart_beats(self, heartbeat=80):
