@@ -48,7 +48,7 @@ function draw_StateChart() {
             patients=patients.concat(r.data);
             i_page+=1;
          })
-    } while (i_page -1 < pcount);
+    } while (i_page + 1 < pcount);
 
     data_array = [['State', 'Number of Patients']];
     states_array = [];
