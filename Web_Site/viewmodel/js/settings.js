@@ -113,6 +113,8 @@ function editPatient(data){
 function changePhoto(){
         var data = new FormData();
         data.append("file", $("#fileSet").val());
+        //var fileInput = document.getElementById('fileSet');
+        //var file = fileInput.files[0];
 
         $.ajax({
             type: 'POST',
@@ -120,7 +122,7 @@ function changePhoto(){
             headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
             data: data,
             cache: false,
-            contentType: false,
+            contentType: "multipart/form-data",
             processData: false,
             statusCode: {
                 500: function(xhr){
