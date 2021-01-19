@@ -162,7 +162,7 @@ function draw_HeartRateChart(int_date) {
     };
     
     var chart = new google.charts.Line(document.getElementById('heartrate_chart'));
-    chart.draw(data, options);
+    chart.draw(data, google.charts.Line.convertOptions(options));
 }
 
 
