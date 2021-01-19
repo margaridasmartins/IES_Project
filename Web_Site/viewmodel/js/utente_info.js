@@ -333,6 +333,7 @@ function draw_HeartRateChart(int_date) {
     
     var options = {
         title: 'Resting Heart Rate',
+        curveType: 'function',
         height: 350,
         width: $(window).width()*0.70,
         hAxis: { title: 'Time' },
@@ -448,6 +449,7 @@ function draw_TemperatureChart(int_date) {
 
     var options = {
         title: 'Body Temperature',
+        curveType: 'function',
         height: 350,
         width: $(window).width()*0.70,
         hAxis: { title: 'Time' },

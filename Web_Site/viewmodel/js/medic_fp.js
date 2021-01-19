@@ -44,7 +44,7 @@ $(document).ready(function () {
         if (pagecount>1) {
             document.getElementById("NextBut").disabled = false;
         }
-        $("#thispage").append(`${currentpage}`);
+        $("#thispage").append(`${currentpage + 1}`);
         data.data.forEach(p=>{
             myPatientsArray.push(p);
             console.log(p)
@@ -372,7 +372,7 @@ function movePage(forwards){
         }
         myPatientsArray = [];
         $("#thispage").empty();
-        $("#thispage").append(`${currentpage - 1}`);
+        $("#thispage").append(`${currentpage + 1}`);
         $("#patientSection").empty();
         data.data.forEach(p=>{
             myPatientsArray.push(p);

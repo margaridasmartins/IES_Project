@@ -79,11 +79,11 @@ function get_latestValues(){
         headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         }).done(function (results) {
             console.log(results)
-            document.getElementById('latest_bp').innerHTML = '-> '+results[0].low_value;
-            document.getElementById('latest_bt').innerHTML = '-> '+results[1].bodyTemp;
-            document.getElementById('latest_hr').innerHTML = '-> '+results[2].heartRate;
-            document.getElementById('latest_sl').innerHTML = '-> '+results[3].sugarLevel;
-            document.getElementById('latest_ol').innerHTML = '-> '+results[4].oxygenLevel;
+            document.getElementById('latest_bp').innerHTML = '-> '+ (results[0].low_value).toFixed(2);
+            document.getElementById('latest_bt').innerHTML = '-> '+ (results[1].bodyTemp).toFixed(2);
+            document.getElementById('latest_hr').innerHTML = '-> '+ results[2].heartRate;
+            document.getElementById('latest_sl').innerHTML = '-> '+ (results[3].sugarLevel).toFixed(2);
+            document.getElementById('latest_ol').innerHTML = '-> '+ (results[4].oxygenLevel).toFixed(2);
         })
 }
 
@@ -153,6 +153,7 @@ function draw_HeartRateChart(int_date) {
     
     var options = {
         title: 'Resting Heart Rate',
+        curveType: 'function',
         height: 350,
         hAxis: { title: 'Time' },
         vAxis: { title: 'Heart Raten in BPM' },
@@ -160,7 +161,7 @@ function draw_HeartRateChart(int_date) {
         tooltip: {isHtml: true}
     };
     
-    var chart = new google.visualization.LineChart(document.getElementById('heartrate_chart'));
+    var chart = new google.charts.Line(document.getElementById('heartrate_chart'));
     chart.draw(data, options);
 }
 
@@ -266,6 +267,7 @@ function draw_TemperatureChart(int_date) {
 
     var options = {
         title: 'Body Temperature',
+        curveType: 'function',
         height: 350,
         hAxis: { title: 'Time' },
         vAxis: { title: 'Temperature, in C*' },
