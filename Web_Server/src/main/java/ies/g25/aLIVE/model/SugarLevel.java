@@ -28,7 +28,7 @@ public class SugarLevel{
 
     // date of the mesure
     @Column(name="date")
-    //@CreationTimestamp
+    CreationTimestamp
     private LocalDateTime date;
 
     // Sugar level values

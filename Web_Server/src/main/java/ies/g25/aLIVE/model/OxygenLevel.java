@@ -27,7 +27,7 @@ public class OxygenLevel{
 
     // date of the mesure
     @Column(name="date")
-    //@CreationTimestamp
+    @CreationTimestamp
     private LocalDateTime date;
 
     // Oxygen level percentage values

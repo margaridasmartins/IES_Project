@@ -34,8 +34,6 @@ import ies.g25.aLIVE.websocket.WarningController;
 
 public class SensorReceiver {
 
-    public ArrayList<Long> array = new ArrayList<>();
-
     @Autowired
     public SensorRepository sensorRepository;
 
@@ -277,9 +275,6 @@ public class SensorReceiver {
 
             if(p.getCurrentstate() != null && !p.getCurrentstate().equals("in-danger")){
 
-                if(!array.contains(p.getId())){
-
-                    array.add(p.getId());
 
                     try {
                         warningController.send(String.valueOf(p.getId())+":"+String.valueOf(p.getProfessional().getId()));
@@ -288,8 +283,6 @@ public class SensorReceiver {
                         e.printStackTrace();
                     }
                     
-
-                    }
                     
 
             }
