@@ -100,6 +100,7 @@ $(document).ready(function () {
 
 //PUT Patient
 function editPro(data){
+    console.log(data)
     $.ajax({
         type: "PUT",
         url: "http://192.168.160.217:8080/api/professionals/"+id,
