@@ -3,6 +3,7 @@ package ies.g25.aLIVE.rabbitmq;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,8 @@ import ies.g25.aLIVE.restcontroller.SensorRestController;
 import ies.g25.aLIVE.websocket.WarningController;
 
 public class SensorReceiver {
+
+    public ArrayList<Long> array = new ArrayList<>();
 
     @Autowired
     public SensorRepository sensorRepository;
@@ -270,7 +273,10 @@ public class SensorReceiver {
         } else if (risk < 15) {
             status = "unhealthy";
         } else {
-            if(!p.getCurrentstate().equals("in-danger")){
+            if(!p.getCurrentstate().equals("in-danger") && !array.contains(p.getId())){
+
+                array.add(p.getId());
+
                 try {
                     warningController.send(String.valueOf(p.getId())+":"+String.valueOf(p.getProfessional().getId()));
                 } catch (Exception e) {
