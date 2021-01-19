@@ -206,7 +206,6 @@ $(document).ready(function () {
            window.location.replace("utente_info.html");
        }); 
        
-        get_latestValues();
         loadCharts();
 
 
@@ -216,7 +215,7 @@ $(document).ready(function () {
 });
 
 // LATEST DATA
-function get_latestValues(){
+window.onload = function get_latestValues(){
     $.ajax({
 
         url: 'http://192.168.160.217:8080/api/patients/'+ currid +'/latest',
