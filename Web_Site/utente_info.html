@@ -32,56 +32,12 @@
       <!-- Websockets -->
       <script src="viewmodel/js/sockjs-0.3.4.js"></script>
       <script src="viewmodel/js/stomp.js"></script>
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
    
-      <script type="text/javascript">
-
-         cookie_array= document.cookie.split("&");
-         var temp = cookie_array[0].trim();
-         var jwt = temp.substring("access_token=".length,temp.length);
-         var temp1 = cookie_array[2].trim();
-         var id_medic = temp1.substring("id=".length,temp1.length);
-         var stompClient = null;
-         var socket = new SockJS('http://192.168.160.217:8080/chat');
-         stompClient = Stomp.over(socket);
-         var headers = {
-            // additional header
-            "Access-Control-Allow-Origin":"http://192.168.160.217",
-            "Authorization":"Bearer "+ jwt
-         };
-         stompClient.connect(headers, function(frame) {
-
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/healthstatus/messages', function(messageOutput) {   
-                  message= messageOutput.body.split(":");;
-                  if (message[1]== id_medic){
-                     console.log("entrei");
-                     $.ajax({
-                     url: "http://192.168.160.217:8080/api/patients/"+ message[0],
-                     headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
-                     }).done(function (results) {
-                        document.getElementById('ModalPatient').innerHTML = " Patient "+ results['fullname']+" is in danger!";
-                     });
-                     $.ajax({
-                     url: "http://192.168.160.217:8080/api/patients/"+  message[0]+'/latest',
-                     headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
-                     }).done(function (results) {
-                           console.log(results)
-                           document.getElementById('modal_latest_bp').innerHTML = '-> '+results[0].low_value;
-                           document.getElementById('modal_latest_bt').innerHTML = '-> '+results[1].bodyTemp;
-                           document.getElementById('modal_latest_hr').innerHTML = '-> '+results[2].heartRate;
-                           document.getElementById('modal_latest_sl').innerHTML = '-> '+results[3].sugarLevel;
-                           document.getElementById('modal_latest_ol').innerHTML = '-> '+results[4].oxygenLevel;
-                           localStorage.setItem("mPatient",message[0]);
-                           $('#myModal').modal("show");
-                     });
-                  }
-            });
-         });
-
-      </script>
+      
       <!-- [if lt IE 9] -->
       <!-- GOOGLE CHARTS -->
-      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      
    </head>
 
    <body class="clinic_version">
@@ -433,6 +389,52 @@
       <script src="js/custom.js"></script>
       <!-- DASHBOARD JS -->
       <script src="viewmodel/js/utente_info.js"></script>
+      <script type="text/javascript">
+
+         cookie_array= document.cookie.split("&");
+         var temp = cookie_array[0].trim();
+         var jwt = temp.substring("access_token=".length,temp.length);
+         var temp1 = cookie_array[2].trim();
+         var id_medic = temp1.substring("id=".length,temp1.length);
+         var stompClient = null;
+         var socket = new SockJS('http://192.168.160.217:8080/chat');
+         stompClient = Stomp.over(socket);
+         var headers = {
+            // additional header
+            "Access-Control-Allow-Origin":"http://192.168.160.217",
+            "Authorization":"Bearer "+ jwt
+         };
+         stompClient.connect(headers, function(frame) {
+
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/healthstatus/messages', function(messageOutput) {   
+                  message= messageOutput.body.split(":");;
+                  if (message[1]== id_medic){
+                     console.log("entrei");
+                     $.ajax({
+                     url: "http://192.168.160.217:8080/api/patients/"+ message[0],
+                     headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
+                     }).done(function (results) {
+                        document.getElementById('ModalPatient').innerHTML = " Patient "+ results['fullname']+" is in danger!";
+                     });
+                     $.ajax({
+                     url: "http://192.168.160.217:8080/api/patients/"+  message[0]+'/latest',
+                     headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
+                     }).done(function (results) {
+                           console.log(results)
+                           document.getElementById('modal_latest_bp').innerHTML = '-> '+results[0].low_value;
+                           document.getElementById('modal_latest_bt').innerHTML = '-> '+results[1].bodyTemp;
+                           document.getElementById('modal_latest_hr').innerHTML = '-> '+results[2].heartRate;
+                           document.getElementById('modal_latest_sl').innerHTML = '-> '+results[3].sugarLevel;
+                           document.getElementById('modal_latest_ol').innerHTML = '-> '+results[4].oxygenLevel;
+                           localStorage.setItem("mPatient",message[0]);
+                           $('#myModal').modal("show");
+                     });
+                  }
+            });
+         });
+
+      </script>
 
    </body>
 </html>
