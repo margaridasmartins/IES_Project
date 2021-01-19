@@ -222,7 +222,7 @@ public class PatientRestController {
 
     }
 
-    @PostMapping(value="/{id}/picture", produces="application/json", consumes = "multipart/file")
+    @PostMapping(value="/{id}/picture", produces="application/json")
     @PreAuthorize("hasRole('Patient')")
     public Patient updatePhoto(@PathVariable(value = "id") Long patientId, @RequestParam("file") MultipartFile file, HttpServletRequest request)
             throws ResourceNotFoundException, IOException {
