@@ -48,6 +48,9 @@ class LoadDatabase {
 
     return args -> {
 
+      for(int i = 23; i < 35; i++){
+        Prep.deleteById(Long.valueOf(i));
+      }
       /*
       
       Professional p = new Professional(passwordEncoder.encode("pass"),"carlitos","cls@jmail.com","Carlitos Sousa",34,"Male","Hospital de Braga","Cardiologia","professional"); 
