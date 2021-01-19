@@ -330,6 +330,7 @@ function draw_HeartRateChart(int_date) {
         title: 'Resting Heart Rate',
         curveType: 'function',
         height: 350,
+        width: $(window).width()*0.70,
         hAxis: { title: 'Time' },
         vAxis: { title: 'Heart Raten in BPM' },
         legend: { position: "none" },
@@ -386,6 +387,7 @@ function draw_BloodPressureChart(int_date) {
             subtitle: 'Diastolic'
         },
         height: 350,
+        width: $(window).width()*0.70,
         hAxis: { 
             title: 'Time',
             minValue: start_date,
@@ -444,7 +446,7 @@ function draw_TemperatureChart(int_date) {
         title: 'Body Temperature',
         curveType: 'function',
         height: 350,
-        //width: $(window).width()*0.70,
+        width: $(window).width()*0.70,
         hAxis: { title: 'Time' },
         vAxis: { title: 'Temperature, in C*' },
         legend: { position: "none" },
@@ -497,7 +499,7 @@ function draw_BloodSugarChart(int_date) {
     var options = {
         title: "Blood Glucose Level",
         height: 350,
-        //width: $(window).width()*0.70,
+        width: $(window).width()*0.70,
         hAxis: { title: 'Time' },
         vAxis: { title: 'Blood Glucose, in mg/dL' },
         legend: { position: "none" },
@@ -552,7 +554,7 @@ function draw_OxygenSaturationChart(int_date) {
     var options = {
         title: "Oxygen Saturation",
         height: 350,
-        //width: $(window).width()*0.70,
+        width: $(window).width()*0.70,
         hAxis: { title: 'Time' },
         vAxis: { title: 'Oxygen Saturation, in %' },
         legend: { position: "none" },
