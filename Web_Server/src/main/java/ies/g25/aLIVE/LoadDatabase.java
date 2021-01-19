@@ -47,6 +47,15 @@ class LoadDatabase {
       OxygenLevelRepository oxygenLevelRepository, SugarLevelRepository sugarLevelRepository) {
 
     return args -> {
+      Optional<Professional> op = Pro.findById(Long.valueOf(1));
+      Professional p = op.get();
+      System.out.println(p.getUsername());
+      System.out.println(p.getPassword());
+      p.setUsername("carlitos");
+      p.setPassword("pass");
+      Pro.save(p);
+
+
       /*
       
       Professional p = new Professional(passwordEncoder.encode("pass"),"carlitos","cls@jmail.com","Carlitos Sousa",34,"Male","Hospital de Braga","Cardiologia","professional"); 
