@@ -184,7 +184,7 @@
                   <h2 class="settings-header">Account</h2>
                   <h3>IDENTIFICATION</h3>
                   <p></p>
-                  <img src="viewmodel/images/person1.jpg" alt="John" width="60%">
+                  <img id="profilePic" alt="John" width="60%">
                   <p></p>
                   <b>Name: </b>
                   <em id ="userFullName"></em>
@@ -244,6 +244,11 @@
                   </div>
                   <div id="changePlaceMed">
                      <input type="text" id="workplaceMed" value="" placeholder="New Workplace">
+                  </div>
+                  <br><br>
+                  <div id="changeFoto" class="alignitems">
+                     <input type="file" name="demo-name" id="fileSet">
+                     <button class="btn btn-primary" onclick="changePhoto();">Submit Photo</button>
                   </div>
                   <br><br>
                   <p class="text-danger mt-5 mb-0 d-none" id="setErrorMed"></p>

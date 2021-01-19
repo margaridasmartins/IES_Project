@@ -38,6 +38,8 @@ $(document).ready(function () {
         
        currentPatient = user;
 
+       $("#profilePic").attr("src",'data:image/gif;base64,'+ currentPatient['image']);
+
        $("#latestInf").fadeOut();
 
        console.log(currentPatient);

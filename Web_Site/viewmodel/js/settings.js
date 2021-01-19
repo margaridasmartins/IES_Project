@@ -131,11 +131,11 @@ function changePhoto(){
             statusCode: {
                 500: function(xhr){
                     console.log(xhr);
-                    alert("Username already exists!");
+                    alert("Error");
                     return;
                 },
                 404: function(xhr){
-                    alert("Professional email does not exist");
+                    alert("Error");
                     return;
                 },
                 422: function(xhr){
@@ -146,7 +146,7 @@ function changePhoto(){
             
         }).then(function(data){
             alert("Saved successfully! Please login again");
-            window.load('settings.html');
+            window.location.replace('settings.html'); 
             
         });
 }

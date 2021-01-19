@@ -25,6 +25,8 @@ $(document).ready(function () {
             }
         }
     }).then(function(user) {
+
+        $("#profilePic").attr("src",'data:image/gif;base64,'+ user['image']);
         console.log(user)
         $("#changeUserMed").fadeOut();
         $("#changeEmaMed").fadeOut();
@@ -128,4 +130,45 @@ function editPro(data){
 function goToPatient(){
     localStorage.setItem('currentPatient', localStorage.getItem("mPatient"));
     window.location.reload();
+}
+
+function changePhoto(){
+    var data = new FormData();
+    
+    
+    var fileInput = document.getElementById('fileSet');
+    var file = fileInput.files[0];
+    data.append("file", file);
+    console.log(data.entries());
+
+    $.ajax({
+        type: 'POST',
+        url: "http://192.168.160.217:8080/api/professionals/" + id + "/picture",
+        headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
+        data: data,
+        cache: false,
+        contentType: false,
+        //contentType: "multipart/form-data",
+        processData: false,
+        statusCode: {
+            500: function(xhr){
+                console.log(xhr);
+                alert("Error");
+                return;
+            },
+            404: function(xhr){
+                alert("Error");
+                return;
+            },
+            422: function(xhr){
+                alert("Error");
+                return;
+            }
+        }
+        
+    }).then(function(data){
+        alert("Saved successfully! Please login again");
+        window.location.replace('settings_medic.html'); 
+        
+    });
 }

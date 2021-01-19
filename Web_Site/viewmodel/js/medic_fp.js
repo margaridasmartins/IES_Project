@@ -269,7 +269,7 @@ function updateLastCheck(id, patientid) {
                                             <div class="card-body">
                                                 <div class="row ">
                                                     <div class="col-md-2 my-auto">
-                                                        <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
+                                                        <img src='data:image/gif;base64,${p.image}' style="max-width:100px; max-height:100px;">
                                                     </div>
                                                     <div class="col-md-3 my-auto"> 
                                                         <b>Name: </b> 
@@ -301,7 +301,7 @@ function updateLastCheck(id, patientid) {
                                             <div class="card-body">
                                                 <div class="row ">
                                                     <div class="col-md-2 my-auto">
-                                                        <img src="./images/old_man.jpeg" style="max-width:100px; max-height:100px;">
+                                                        <img src='data:image/gif;base64,${p.image}' style="max-width:100px; max-height:100px;">
                                                     </div>
                                                     <div class="col-md-3 my-auto"> 
                                                         <b>Name: </b> 
