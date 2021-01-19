@@ -1,17 +1,5 @@
 $(document).ready(function () {
 
-    /* // If user is logged in already, redirect to app
-    if (localStorage.getItem('login')!=null)
-        window.location.replace('user.html'); */
-
-    /*
-    // Load users database
-    $.getJSON("http://itskikat.github.io/ies_itskikat/DB/users.json", function(json) {
-        console.log(json)
-        localStorage.setItem('users', JSON.stringify(json));
-    });
-    */
-
     localStorage.setItem('users',JSON.stringify([{
         "email": "user@teste.pt", "password": "teste", "username": "johndoe123","type":"patient"},{
         "email": "medic@teste.pt", "password":"teste", "username": "medic","type":"medic"
@@ -25,7 +13,6 @@ $(document).ready(function () {
         $("#loginError").hide();
         // Get data from "db"
         users = JSON.parse(localStorage.getItem('users'));
-        console.log(users)
         if (users==null) {
             $("#loginError").text("There was an error connecting to the server, please try again!");
             $("#loginError").fadeIn();

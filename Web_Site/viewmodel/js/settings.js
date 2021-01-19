@@ -25,7 +25,6 @@ $(document).ready(function () {
             }
         }
     }).then(function(user) {
-        console.log(user)
         $("#changeUser").fadeOut();
         $("#changeEma").fadeOut();
         $("#changePass").fadeOut();
@@ -52,10 +51,6 @@ $(document).ready(function () {
             var email = $("#emailSet").val();
             var pass1 = $("#passSet").val();
             var pass2 = $("#passSet2").val();
-            console.log(username)
-            console.log(email)
-            console.log(pass1)
-            console.log(pass2)
 
             user['password'] = null;
 
@@ -93,7 +88,7 @@ function editPatient(data){
 
         statusCode: {
             500: function(xhr){
-                console.log(xhr);
+
                 alert("Username already exists!");
                 return;
             },
@@ -119,7 +114,6 @@ function changePhoto(){
         var fileInput = document.getElementById('fileSet');
         var file = fileInput.files[0];
         data.append("file", file);
-        console.log(data.entries());
 
         $.ajax({
             type: 'POST',
@@ -132,7 +126,6 @@ function changePhoto(){
             processData: false,
             statusCode: {
                 500: function(xhr){
-                    console.log(xhr);
                     alert("Error");
                     return;
                 },

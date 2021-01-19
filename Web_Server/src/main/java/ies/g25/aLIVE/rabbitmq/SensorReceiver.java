@@ -279,7 +279,6 @@ public class SensorReceiver {
                     try {
                         warningController.send(String.valueOf(p.getId())+":"+String.valueOf(p.getProfessional().getId()));
                     } catch (Exception e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                     

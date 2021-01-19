@@ -27,7 +27,6 @@ $(document).ready(function () {
     }).then(function(user) {
 
         $("#profilePic").attr("src",'data:image/gif;base64,'+ user['image']);
-        console.log(user)
         $("#changeUserMed").fadeOut();
         $("#changeEmaMed").fadeOut();
         $("#changePassMed").fadeOut();
@@ -64,10 +63,6 @@ $(document).ready(function () {
             var pass2 = $("#passSetMed2").val();
             var speciality = $("#specialityMed").val();
             var workplace = $("#workplaceMed").val();
-            console.log(username)
-            console.log(email)
-            console.log(pass1)
-            console.log(pass2)
             
             user['password'] = null;
 
@@ -83,7 +78,6 @@ $(document).ready(function () {
                 user['email'] = email;
             }
             if(pass1 != ''){
-                console.log("entrou");
                 user['password'] = pass1;
             }
             if(speciality != ''){
@@ -102,7 +96,6 @@ $(document).ready(function () {
 
 //PUT Patient
 function editPro(data){
-    console.log(data)
     $.ajax({
         type: "PUT",
         url: "http://192.168.160.217:8080/api/professionals/"+id,
@@ -112,7 +105,6 @@ function editPro(data){
         contentType: "application/json; charset=utf-8",
         statusCode: {
             500: function(xhr){
-                console.log(xhr);
                 alert("Username already exists!");
                 return;
             },
@@ -143,7 +135,6 @@ function changePhoto(){
     var fileInput = document.getElementById('fileSet');
     var file = fileInput.files[0];
     data.append("file", file);
-    console.log(data.entries());
 
     $.ajax({
         type: 'POST',
@@ -156,7 +147,6 @@ function changePhoto(){
         processData: false,
         statusCode: {
             500: function(xhr){
-                console.log(xhr);
                 alert("Error");
                 return;
             },

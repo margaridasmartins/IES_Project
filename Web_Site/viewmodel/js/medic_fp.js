@@ -13,7 +13,6 @@ $(document).ready(function () {
     var temp = cookie_array[2].trim();
     id = temp.substring("id=".length,temp.length);
   
-    console.log(jwt)
     
     $("#logOut").click(function(){
         document.cookie='access_token= & role= & id= ;';
@@ -29,11 +28,9 @@ $(document).ready(function () {
         },
         statusCode: {
             500: function(xhr){
-                console.log("There was an error connecting to the server, please try again!");
                 return;
             },
             403: function(xhr){
-                console.log("Invalid Credentials!");
                 return;
             }
         }
@@ -47,11 +44,9 @@ $(document).ready(function () {
         $("#thispage").append(`${currentpage + 1}`);
         data.data.forEach(p=>{
             myPatientsArray.push(p);
-            console.log(p)
             fillDash(p);
 
         })
-        console.log(myPatientsArray);
         
        
     });
@@ -67,7 +62,6 @@ function sortAndFilterPositions(){
     var filter = input.value.toUpperCase();
 
     if (strOrder == "status"){
-        console.log("status");
         document.getElementById("patientSection").innerHTML = ""; 
         myPatientsArray.sort(function(a, b){
             var sort_array = ['healthy', 'normal', 'unhealthy', 'in-danger']
@@ -76,16 +70,13 @@ function sortAndFilterPositions(){
     };
 
     if (strOrder == "default"){
-        console.log("last");
         document.getElementById("patientSection").innerHTML = ""; 
         myPatientsArray.sort(function(a, b){
-            console.log(new Date(a['lastCheck']).getTime() - new Date(b['lastCheck']).getTime())
             return new Date(a['lastCheck']).getTime() - new Date(b['lastCheck']).getTime()
         });
     };
 
     if (strFilter == "default"){
-        console.log("default");
 
         myPatientsArray.forEach(p => {
             patientName = p['fullname'].toUpperCase();
@@ -105,7 +96,6 @@ function sortAndFilterPositions(){
         };
 
     if (strFilter == "diabetes"){
-        console.log("diabetes"); 
 
         myPatientsArray.forEach(p => {
             p['med_conditions'].forEach(mc => {
@@ -131,7 +121,6 @@ function sortAndFilterPositions(){
         };
 
     if (strFilter == "obesity"){
-        console.log("obesity");
         myPatientsArray.forEach(p => {
             p['med_conditions'].forEach(mc => {
                 patientName = p['fullname'].toUpperCase();
@@ -157,7 +146,6 @@ function sortAndFilterPositions(){
     };
 
     if (strFilter == "asthma"){
-        console.log("Asthma");
         myPatientsArray.forEach(p => {
             p['med_conditions'].forEach(mc => {
                 patientName = p['fullname'].toUpperCase();
@@ -195,11 +183,9 @@ function selectPatient(id, profid){
         },
         statusCode: {
             500: function(xhr){
-                console.log("There was an error connecting to the server, please try again!");
                 return;
             },
             403: function(xhr){
-                console.log("Invalid Credentials!");
                 return;
             }
         }
@@ -230,16 +216,13 @@ function updateLastCheck(id, patientid) {
         },
         statusCode: {
             500: function(xhr){
-                console.log("There was an error connecting to the server, please try again!");
                 return;
             },
             403: function(xhr){
-                console.log("Invalid Credentials!");
                 return;
             }
         }
     }).then(function(data) {
-        console.log(data);
     });
   };
 
@@ -353,11 +336,9 @@ function movePage(forwards){
         },
         statusCode: {
             500: function(xhr){
-                console.log("There was an error connecting to the server, please try again!");
                 return;
             },
             403: function(xhr){
-                console.log("Invalid Credentials!");
                 return;
             }
         }
@@ -376,11 +357,9 @@ function movePage(forwards){
         $("#patientSection").empty();
         data.data.forEach(p=>{
             myPatientsArray.push(p);
-            console.log(p)
             fillDash(p);
 
         })
-        console.log(myPatientsArray);
         
        
     });

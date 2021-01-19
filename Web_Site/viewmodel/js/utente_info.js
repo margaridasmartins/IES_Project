@@ -12,8 +12,6 @@ $(document).ready(function () {
     id = temp.substring("id=".length,temp.length);
 
     currid = localStorage.getItem('currentPatient');
-    console.log(currid);
-    console.log(jwt)
 
     $("#logOut").click(function(){
         document.cookie='access_token= & role= & id= ;';
@@ -26,11 +24,9 @@ $(document).ready(function () {
         headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer " + jwt},
         statusCode: {
             500: function(xhr){
-                console.log(xhr);
                 return;
             },
             403: function(xhr){
-                console.log("not permited");
                 return;
             }
         }
@@ -41,10 +37,6 @@ $(document).ready(function () {
        $("#profilePic").attr("src",'data:image/gif;base64,'+ currentPatient['image']);
 
        $("#latestInf").fadeOut();
-
-       console.log(currentPatient);
-       console.log(currentPatient['fullname']);
-   
    
        
        // Add content to HTML
@@ -60,12 +52,10 @@ $(document).ready(function () {
        $("#patientHeight").text(currentPatient['height']);
        var condArray = currentPatient['med_conditions'];
        $.each(condArray, function(index, value) {
-           //console.log(value);
            $("#patientConditionList").append("<li>" + value + "</li>");
        });
        var medicationArray = currentPatient['medication'];
        $.each(medicationArray, function(index, value) {
-           //console.log(value);
            $("#patientMedicationList").append("<li>" + value + "</li>");
        });
    
@@ -77,11 +67,11 @@ $(document).ready(function () {
            $("#editInformation").attr('style', 'display: none;');
            $("#editInformationDone").fadeIn();
            // Get data from "db"
-           console.log(currentPatient)
+
        }); 
        $("#editInformationDone").click(function(){
            // Get data from "db"
-           console.log(currentPatient)
+
            // Validate user data
            if ($("#patientNewWeight").val().trim()=="" || $("#patientNewHeight").val().trim()=="") {
                $("#editInformationError").text("Please enter new data");
@@ -106,11 +96,9 @@ $(document).ready(function () {
            $("#addDisease").attr('style', 'display: none;');
            $("#addDiseaseDone").fadeIn();
            // Get data from "db"
-           console.log(currentPatient)
        }); 
        $("#addDiseaseDone").click(function(){
            // Get data from "db"
-           console.log(currentPatient)
            // Validate user data
            if ($("#patientNewDisease").val().trim()=="") {
                $("#addDiseaseError").text("Please enter new data");
@@ -131,11 +119,9 @@ $(document).ready(function () {
            $("#removeDisease").attr('style', 'display: none;');
            $("#removeDiseaseDone").fadeIn();
            // Get data from "db"
-           console.log(currentPatient)
        }); 
        $("#removeDiseaseDone").click(function(){
            // Get data from "db"
-           console.log(currentPatient)
            // Validate user data
            if ($("#patientRemovedDisease").val().trim()=="") {
                $("#removeDiseaseError").text("Please enter new data");
@@ -159,11 +145,9 @@ $(document).ready(function () {
            $("#addMedication").attr('style', 'display: none;');
            $("#addMedicationDone").fadeIn();
            // Get data from "db"
-           console.log(currentPatient)
        }); 
        $("#addMedicationDone").click(function(){
            // Get data from "db"
-           console.log(currentPatient)
            // Validate user data
            if ($("#patientNewMedication").val().trim()=="") {
                $("#addMedicationError").text("Please enter new data");
@@ -184,11 +168,9 @@ $(document).ready(function () {
            $("#removeMedication").attr('style', 'display: none;');
            $("#removeMedicationDone").fadeIn();
            // Get data from "db"
-           console.log(currentPatient)
        }); 
        $("#removeMedicationDone").click(function(){
            // Get data from "db"
-           console.log(currentPatient)
            // Validate user data
            if ($("#patientRemovedMedication").val().trim()=="") {
                $("#removeMedicationError").text("Please enter new data");
@@ -229,7 +211,6 @@ function get_latestValues(){
         url: 'http://192.168.160.217:8080/api/patients/'+ currid +'/latest',
         headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         }).done(function (results) {
-            console.log(results)
 
             document.getElementById('latest_bp').innerHTML = '-> '+ (results[0].low_value).toFixed(2) + ' | ' + (results[0].high_value).toFixed(2);
             document.getElementById('latest_bt').innerHTML = '-> '+ (results[1].bodyTemp).toFixed(2);
@@ -251,12 +232,10 @@ function editPatient(data){
         success: function (data, status, jqXHR) {
 
                  alert(status);
-                 console.log(data)
              },
 
              error: function (jqXHR, status) {
                  // error handler
-                 console.log(jqXHR);
                  alert('fail' + status.code);
              }
       });
@@ -323,7 +302,6 @@ function draw_HeartRateChart(int_date) {
         var date = elem['date'].split("-");
         var hours=date[2].split("T")[1].split(":")
         var value = elem['heartRate'];
-        //console.log(date, value);
         data.addRows([
             [new Date(date[0], date[1]-1, date[2].split("T")[0],hours[0],hours[1]), value]
         ]);
@@ -378,7 +356,6 @@ function draw_BloodPressureChart(int_date) {
         var date = elem['date'].split("-");
         var high_value = elem['high_value'];
         var low_value = elem['low_value'];
-        //console.log(date, value_diast, value_sys);
         data.addRows([
             [new Date(date[0], date[1]-1, date[2].split("T")[0],date[2].split("T")[1].split(":")[0]), low_value, high_value]
         ]);
@@ -439,7 +416,6 @@ function draw_TemperatureChart(int_date) {
     results.forEach(element =>{
         var date = element['date'].split("-");
         var value = element['bodyTemp'];
-        //console.log(date, value);
         data.addRows([
             [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
         ]);
@@ -493,7 +469,6 @@ function draw_BloodSugarChart(int_date) {
     results.forEach(element =>{
         var date = element['date'].split("-");
         var value = element['sugarLevel'];
-        //console.log(date, value);
         data.addRows([
             [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
         ]);
@@ -548,7 +523,6 @@ function draw_OxygenSaturationChart(int_date) {
         var date = element['date'].split("-");
         var value = element['oxygenLevel'];
         var hours=date[2].split("T")[1].split(":")
-        //console.log(date, value);
         data.addRows([
             [new Date(date[0], date[1]-1, date[2].split("T")[0],hours[0],hours[1]), value]
         ]);

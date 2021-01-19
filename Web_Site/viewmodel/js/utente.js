@@ -26,7 +26,6 @@ $(document).ready(function () {
             }
         }
     }).then(function(user) {
-        console.log(user)
         userLogin=user
     
         $("#latestInf").fadeOut();
@@ -47,13 +46,11 @@ $(document).ready(function () {
         $("#userPhoto").attr("src",'data:image/gif;base64,'+ userLogin['image']);
         var condArray = userLogin['med_conditions'];
         $.each(condArray, function(index, value) {
-            //console.log(value);
             $("#userConditionList").append("<li>" + value + "</li>");
         });
 
         var medicationArray = userLogin['medication'];
         $.each(medicationArray, function(index, value) {
-            //console.log(value);
             $("#userMedicationList").append("<li>" + value + "</li>");
         });
 
@@ -78,7 +75,6 @@ function get_latestValues(){
         url: "http://192.168.160.217:8080/api/patients/"+ id+'/latest',
         headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         }).done(function (results) {
-            console.log(results)
             document.getElementById('latest_bp').innerHTML = '-> '+ (results[0].low_value).toFixed(2) + ' | ' + (results[0].high_value).toFixed(2);
             document.getElementById('latest_bt').innerHTML = '-> '+ (results[1].bodyTemp).toFixed(2);
             document.getElementById('latest_hr').innerHTML = '-> '+ results[2].heartRate;
@@ -145,7 +141,6 @@ function draw_HeartRateChart(int_date) {
         var date = elem['date'].split("-");
         var hours=date[2].split("T")[1].split(":")
         var value = elem['heartRate'];
-        //console.log(date, value);
         data.addRows([
             [new Date(date[0], date[1]-1, date[2].split("T")[0],hours[0],hours[1]), value]
         ]);
@@ -199,7 +194,6 @@ function draw_BloodPressureChart(int_date) {
         var date = elem['date'].split("-");
         var high_value = elem['high_value'];
         var low_value = elem['low_value'];
-        //console.log(date, value_diast, value_sys);
         data.addRows([
             [new Date(date[0], date[1]-1, date[2].split("T")[0],date[2].split("T")[1].split(":")[0]), low_value, high_value]
         ]);
@@ -259,7 +253,6 @@ function draw_TemperatureChart(int_date) {
     results.forEach(element =>{
         var date = element['date'].split("-");
         var value = element['bodyTemp'];
-        //console.log(date, value);
         data.addRows([
             [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
         ]);
@@ -312,7 +305,6 @@ function draw_BloodSugarChart(int_date) {
     results.forEach(element =>{
         var date = element['date'].split("-");
         var value = element['sugarLevel'];
-        //console.log(date, value);
         data.addRows([
             [new Date(date[0], date[1]-1, date[2].split("T")[0]), value]
         ]);
@@ -366,7 +358,6 @@ function draw_OxygenSaturationChart(int_date) {
         var date = element['date'].split("-");
         var value = element['oxygenLevel'];
         var hours=date[2].split("T")[1].split(":")
-        //console.log(date, value);
         data.addRows([
             [new Date(date[0], date[1]-1, date[2].split("T")[0],hours[0],hours[1]), value]
         ]);

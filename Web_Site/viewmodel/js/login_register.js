@@ -66,7 +66,6 @@ $("#registerPatient").click(function(){
         contentType: "application/json; charset=utf-8",
         statusCode: {
             500: function(xhr){
-                console.log(xhr);
                 $("#registerErrorPat").text("Username already exists!");
                 $("#registerErrorPat").fadeIn();
                 return;
@@ -136,7 +135,6 @@ $("#registerProfessional").click(function(){
         contentType: "application/json; charset=utf-8",
         statusCode: {
             500: function(xhr){
-                console.log(xhr);
                 $("#registerErrorPat").text("Username already exists!");
                 $("#registerErrorPat").fadeIn();
                 return;

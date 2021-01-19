@@ -35,11 +35,9 @@ function draw_StateChart() {
             async: false,
             statusCode: {
                 500: function(xhr){
-                    console.log("There was an error connecting to the server, please try again!");
                     return;
                 },
                 403: function(xhr){
-                    console.log("Invalid Credentials!");
                     return;
                 }
             }
@@ -97,11 +95,9 @@ function draw_AgeChart() {
             async: false,
             statusCode: {
                 500: function(xhr){
-                    console.log("There was an error connecting to the server, please try again!");
                     return;
                 },
                 403: function(xhr){
-                    console.log("Invalid Credentials!");
                     return;
                 }
             }
@@ -170,11 +166,9 @@ function draw_CheckChart() {
             async: false,
             statusCode: {
                 500: function(xhr){
-                    console.log("There was an error connecting to the server, please try again!");
                     return;
                 },
                 403: function(xhr){
-                    console.log("Invalid Credentials!");
                     return;
                 }
             }
@@ -241,11 +235,9 @@ function draw_HealthChart() {
             async: false,
             statusCode: {
                 500: function(xhr){
-                    console.log("There was an error connecting to the server, please try again!");
                     return;
                 },
                 403: function(xhr){
-                    console.log("Invalid Credentials!");
                     return;
                 }
             }

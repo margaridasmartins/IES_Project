@@ -3,7 +3,6 @@ $(document).ready(function () {
 
     if(document.cookie!=''){
         cookie_array= document.cookie.split("&");
-        console.log(document.cookie)
         var temp = cookie_array[1].trim();
         user_rule = temp.substring("role=".length,temp.length);
         if (user_rule == 'Patient'){
@@ -45,7 +44,6 @@ $(document).ready(function () {
             role_value = user['role'];
             id = user['id'];
             document.cookie='access_token='+jwt_value+'&'+ 'role='+role_value+'&'+'id='+id+';';
-            console.log(document.cookie)
             if (user['role']=="Patient"){
                 window.location.replace("utente.html");
             }

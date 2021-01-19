@@ -17,19 +17,14 @@ class Generator:
 
     def __init__(self, heartbeat):
         self.hearbeat = heartbeat
-        # rabbit connections // os.getenv('RABBITMQ_IP')
-        #self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_IP')))
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.160.217', port=5672))
         self.channel = self.connection.channel()
         self.sensor_id = 1
 
     async def get_sensors(self):
         while True:
-            #sensors = requests.get('http://'+os.getenv('SERVER_IP')+':8080/api/sensors/ids')
             sensors = requests.get('http://192.168.160.217:8080/api/sensors/ids')
             lst = sensors.json()
-            print(os.getenv('RABBITMQ_IP'))
-            print(os.getenv('SERVER_IP'))
             high = lst[len(lst) - 1]
             self.sensor_id = randint(1, high)
             await asyncio.sleep(2)
