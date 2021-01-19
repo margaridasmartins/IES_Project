@@ -120,7 +120,7 @@ function changePhoto(){
             type: 'POST',
             url: "http://192.168.160.217:8080/api/patients/" + id + "/picture",
             headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
-            data: data,
+            data: ("file", $("#fileSet").val()),
             cache: false,
             contentType: false,
             //contentType: "multipart/form-data",

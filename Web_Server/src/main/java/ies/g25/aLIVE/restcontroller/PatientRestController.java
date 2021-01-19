@@ -224,7 +224,7 @@ public class PatientRestController {
 
     @PostMapping(value="/{id}/picture", produces="application/json")
     @PreAuthorize("hasRole('Patient')")
-    public Patient updatePhoto(@PathVariable(value = "id") Long patientId, @RequestBody MultipartFile file, HttpServletRequest request)
+    public Patient updatePhoto(@PathVariable(value = "id") Long patientId, @RequestParam("file") MultipartFile file, HttpServletRequest request)
             throws ResourceNotFoundException, IOException {
 
         Principal principal = request.getUserPrincipal();
