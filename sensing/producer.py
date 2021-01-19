@@ -18,8 +18,8 @@ class Generator:
     def __init__(self, heartbeat):
         self.hearbeat = heartbeat
         # rabbit connections // os.getenv('RABBITMQ_IP')
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_IP')))
-        #self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.160.217'))
+        #self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_IP')))
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.160.217', port=5672))
         self.channel = self.connection.channel()
         self.sensor_id = 1
 
