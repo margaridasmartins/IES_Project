@@ -69,7 +69,7 @@ $(document).ready(function () {
             console.log(pass1)
             console.log(pass2)
             
-            user['password'] = null
+            delete user['password'];
 
             if(pass1 != pass2){
                 $("#setErrorMed").text("The passwords don't match!");

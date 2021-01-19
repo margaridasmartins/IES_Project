@@ -57,8 +57,6 @@ $(document).ready(function () {
             console.log(pass1)
             console.log(pass2)
 
-            user['password'] = null
-
             if(pass1 != pass2){
                 $("#setError").text("The passwords don't match!");
                 $("#setError").fadeIn();
