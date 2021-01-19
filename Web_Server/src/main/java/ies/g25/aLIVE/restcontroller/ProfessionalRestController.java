@@ -131,8 +131,11 @@ public class ProfessionalRestController {
                     throw new UnprocessableEntityException("Email already exists");
                 }
                 Professional professional = op.get();
+                if(newProfessional.getPassword() != null)
+                    newProfessional.setPassword(passwordEncoder.encode(newProfessional.getPassword()));
+
                 newProfessional = (Professional) PersistenceUtils.partialUpdate(professional, newProfessional);
-                newProfessional.setPassword(passwordEncoder.encode(newProfessional.getPassword()));
+                
                 return professionalRepository.save(newProfessional);
             }
             throw new ResourceNotFoundException("Professional not found for this id: " + professionalId);
