@@ -23,6 +23,7 @@ import ies.g25.aLIVE.model.Patient;
 import ies.g25.aLIVE.model.Professional;
 import ies.g25.aLIVE.model.Sensor;
 import ies.g25.aLIVE.model.SugarLevel;
+import ies.g25.aLIVE.model.User;
 import ies.g25.aLIVE.repository.BloodPressureRepository;
 import ies.g25.aLIVE.repository.BodyTemperatureRepository;
 import ies.g25.aLIVE.repository.HeartRateRepository;
@@ -31,6 +32,7 @@ import ies.g25.aLIVE.repository.PatientRepository;
 import ies.g25.aLIVE.repository.ProfessionalRepository;
 import ies.g25.aLIVE.repository.SensorRepository;
 import ies.g25.aLIVE.repository.SugarLevelRepository;
+import ies.g25.aLIVE.repository.UserRepository;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -44,12 +46,14 @@ class LoadDatabase {
   CommandLineRunner initDatabase(PatientRepository Prep, SensorRepository Srep, ProfessionalRepository Pro,
       PasswordEncoder passwordEncoder, BloodPressureRepository bloodPressureRepository,
       BodyTemperatureRepository bodyTemperatureRepository, HeartRateRepository heartRateRepository,
-      OxygenLevelRepository oxygenLevelRepository, SugarLevelRepository sugarLevelRepository) {
+      OxygenLevelRepository oxygenLevelRepository, SugarLevelRepository sugarLevelRepository, UserRepository userRepository) {
 
     return args -> {
 
       for(int i = 23; i < 35; i++){
-        Prep.deleteById(Long.valueOf(i));
+        Optional<User> op = userRepository.findById(Long.valueOf(i));
+        if (op.isPresent())
+          userRepository.deleteById(Long.valueOf(i));
       }
       /*
       
