@@ -81,6 +81,7 @@ $(document).ready(function () {
                 user['email'] = email;
             }
             if(pass1 != ''){
+                console.log("entrou");
                 user['password'] = pass1;
             }
             if(speciality != ''){
@@ -92,7 +93,7 @@ $(document).ready(function () {
 
             editPro(user)
             document.cookie='access_token= & role= & id= ;';
-            window.location.replace('index.html'); 
+            //window.location.replace('index.html'); 
         })
     })
 });
