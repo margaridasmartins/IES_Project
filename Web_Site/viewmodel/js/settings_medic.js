@@ -68,8 +68,8 @@ $(document).ready(function () {
             console.log(email)
             console.log(pass1)
             console.log(pass2)
-
-            var dic = {};
+            
+            user['password'] = null
 
             if(pass1 != pass2){
                 $("#setErrorMed").text("The passwords don't match!");
@@ -77,25 +77,25 @@ $(document).ready(function () {
                 return;
             }
             if(username != ''){
-                dic['username'] = username;
+                user['username'] = username;
             }
             if(email != ''){
-                dic['email'] = email;
+                user['email'] = email;
             }
             if(pass1 != ''){
                 console.log("entrou");
-                dic['password'] = pass1;
+                user['password'] = pass1;
             }
             if(speciality != ''){
-                dic['speciality'] = speciality;
+                user['speciality'] = speciality;
             }
             if(workplace != ''){
-                dic['workplace'] = workplace;
+                user['workplace'] = workplace;
             }
 
-            editPro(dic)
+            editPro(user)
             document.cookie='access_token= & role= & id= ;';
-            window.location.replace('index.html'); 
+            //window.location.replace('index.html'); 
         })
     })
 });

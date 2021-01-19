@@ -57,7 +57,7 @@ $(document).ready(function () {
             console.log(pass1)
             console.log(pass2)
 
-            var dic = {};
+            user['password'] = null
 
             if(pass1 != pass2){
                 $("#setError").text("The passwords don't match!");
@@ -65,16 +65,16 @@ $(document).ready(function () {
                 return;
             }
             if(username != ''){
-                dic['username'] = username;
+                user['username'] = username;
             }
             if(email != ''){
-                dic['email'] = email;
+                user['email'] = email;
             }
             if(pass1 != ''){
-                dic['password'] = pass1;
+                user['password'] = pass1;
             }
 
-            editPatient(dic)
+            editPatient(user)
             document.cookie='access_token= & role= & id= ;';
             window.location.replace('index.html'); 
         })
