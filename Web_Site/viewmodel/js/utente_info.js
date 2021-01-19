@@ -335,7 +335,6 @@ function draw_HeartRateChart(int_date) {
         title: 'Resting Heart Rate',
         curveType: 'function',
         height: 350,
-        width: $(window).width()*0.70,
         hAxis: { title: 'Time' },
         vAxis: { title: 'Heart Raten in BPM' },
         legend: { position: "none" },
@@ -392,7 +391,6 @@ function draw_BloodPressureChart(int_date) {
             subtitle: 'Diastolic'
         },
         height: 350,
-        width: $(window).width()*0.70,
         hAxis: { 
             title: 'Time',
             minValue: start_date,

@@ -95,15 +95,15 @@ function loadCharts(){
 
     // Blood Pressure
     google.charts.load('current', {'packages':['bar']});
-    google.charts.setOnLoadCallback(function() { draw_BloodPressureChart("M");});
+    google.charts.setOnLoadCallback(function() { draw_BloodPressureChart("W");});
 
     // Temperatue
     google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(function() { draw_TemperatureChart("M");});
+    google.charts.setOnLoadCallback(function() { draw_TemperatureChart("W");});
 
     // Blood Sugar
     google.charts.load('current', {packages: ['corechart', 'bar']});
-    google.charts.setOnLoadCallback(function() { draw_BloodSugarChart("M")});
+    google.charts.setOnLoadCallback(function() { draw_BloodSugarChart("W")});
 
     // Oxygen Saturation
     google.charts.load('current', {packages: ['corechart', 'bar']});
