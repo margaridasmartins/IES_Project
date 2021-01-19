@@ -43,7 +43,7 @@ class Generator:
             hb = np.random.randn(1) * sigma + mu
             json_text = {'id': self.sensor_id, 'heartbeat': int(hb)}
             self.channel.basic_publish(exchange='logs', routing_key='heart_beat', body= json.dumps(json_text))
-            await asyncio.sleep(10)
+            await asyncio.sleep(2)
 
 
     async def gen_blood_pressure(self):
@@ -56,7 +56,7 @@ class Generator:
             diastolic = np.random.randn(1) * sigma + diastolic_mu            
             json_text = {'id': self.sensor_id, 'systolic': round(float(systolic),2), 'diastolic': round(float(diastolic),2)}
             self.channel.basic_publish(exchange='logs', routing_key='blood_pressure', body= json.dumps(json_text))
-            await asyncio.sleep(20)
+            await asyncio.sleep(5)
 
     
     async def gen_body_temp(self):
@@ -67,7 +67,7 @@ class Generator:
             temperature = np.random.randn(1) * sigma + mu        
             json_text = {'id': self.sensor_id, 'temperature': round(float(temperature),2)}
             self.channel.basic_publish(exchange='logs', routing_key='body_temp', body= json.dumps(json_text))
-            await asyncio.sleep(20)
+            await asyncio.sleep(5)
 
     
     async def gen_sugar_level(self):
@@ -78,7 +78,7 @@ class Generator:
             sugar = np.random.randn(1) * sigma + mu
             json_text = {'id': self.sensor_id, 'sugar': float(sugar)}
             self.channel.basic_publish(exchange='logs', routing_key='sugar_level', body= json.dumps(json_text))
-            await asyncio.sleep(20)
+            await asyncio.sleep(5)
 
     async def gen_oxygen_level(self):
         vals = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
@@ -89,7 +89,7 @@ class Generator:
             oxygen = 100 - (random.choices(vals,weights)[0]+(random.random()**2))
             json_text = {'id': self.sensor_id, 'oxygen': float(oxygen)}
             self.channel.basic_publish(exchange='logs', routing_key='oxygen_level', body= json.dumps(json_text))
-            await asyncio.sleep(10)
+            await asyncio.sleep(2)
 
     
 
