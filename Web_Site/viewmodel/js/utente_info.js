@@ -205,8 +205,13 @@ $(document).ready(function () {
            editPatient(currentPatient);
            window.location.replace("utente_info.html");
        }); 
-       
+   
+        get_latestValues();
         loadCharts();
+   
+       $("#latestInfo").click(function(){
+           $("#latestInf").fadeToggle("slow");
+       })
 
 
     });
@@ -215,7 +220,7 @@ $(document).ready(function () {
 });
 
 // LATEST DATA
-window.onload = function get_latestValues(){
+function get_latestValues(){
     $.ajax({
 
         url: 'http://192.168.160.217:8080/api/patients/'+ currid +'/latest',
