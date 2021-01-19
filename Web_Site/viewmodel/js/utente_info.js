@@ -342,8 +342,8 @@ function draw_HeartRateChart(int_date) {
         tooltip: {isHtml: true}
     };
     
-    var chart = new google.visualization.LineChart(document.getElementById('heartrate_chart'));
-    chart.draw(data, options);
+    var chart = new google.charts.Line(document.getElementById('heartrate_chart'));
+    chart.draw(data, google.charts.Line.convertOptions(options));
 }
 
 
@@ -458,8 +458,8 @@ function draw_TemperatureChart(int_date) {
         tooltip: {isHtml: true}
     };
 
-    var chart = new google.visualization.LineChart(document.getElementById('bodytemperature_chart'));
-    chart.draw(data, options);
+    var chart = new google.charts.Line(document.getElementById('bodytemperature_chart'));
+    chart.draw(data, google.charts.Line.convertOptions(options));
 }
 
 
@@ -510,8 +510,8 @@ function draw_BloodSugarChart(int_date) {
         legend: { position: "none" },
         tooltip: {isHtml: true}
     };
-    var chart = new google.visualization.ColumnChart(document.getElementById('bloodglucose_chart'));
-    chart.draw(data, options);
+    var chart = new google.charts.Bar(document.getElementById('bloodglucose_chart'));
+    chart.draw(data, google.charts.Bar.convertOptions(options));
 }
 
 
@@ -565,8 +565,9 @@ function draw_OxygenSaturationChart(int_date) {
         legend: { position: "none" },
         tooltip: {isHtml: true}
     };
-    var chart = new google.visualization.ColumnChart(document.getElementById('oxygensaturation_chart'));
-    chart.draw(data, options);
+    var chart = new google.charts.Bar(document.getElementById('oxygensaturation_chart'));
+    chart.draw(data, google.charts.Bar.convertOptions(options));
+
 }
 
 function goToPatient(){
