@@ -205,18 +205,9 @@ $(document).ready(function () {
            editPatient(currentPatient);
            window.location.replace("utente_info.html");
        }); 
-   
-        loadCharts()
-
-   
-       // Functionality not implemented yet
-       $(".notImplemented").click(function () {
-           alert("Sorry, but this functionality has not been implemented yet! :(");
-       });
-   
-       $("#latestInfo").click(function(){
-           $("#latestInf").fadeToggle("slow");
-       })
+       
+        get_latestValues();
+        loadCharts();
 
 
     });
@@ -233,7 +224,7 @@ window.onload = function get_latestValues(){
         }).done(function (results) {
             console.log(results)
 
-            document.getElementById('latest_bp').innerHTML = '-> '+ (results[0].low_value).toFixed(2);
+            document.getElementById('latest_bp').innerHTML = '-> '+ (results[0].low_value).toFixed(2) + ' | ' + (results[0].high_value).toFixed(2);
             document.getElementById('latest_bt').innerHTML = '-> '+ (results[1].bodyTemp).toFixed(2);
             document.getElementById('latest_hr').innerHTML = '-> '+ results[2].heartRate;
             document.getElementById('latest_sl').innerHTML = '-> '+ (results[3].sugarLevel).toFixed(2);

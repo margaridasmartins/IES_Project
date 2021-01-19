@@ -79,7 +79,7 @@ function get_latestValues(){
         headers:{"Access-Control-Allow-Origin":"http://192.168.160.217","Authorization":"Bearer "+ jwt},
         }).done(function (results) {
             console.log(results)
-            document.getElementById('latest_bp').innerHTML = '-> '+ (results[0].low_value).toFixed(2);
+            document.getElementById('latest_bp').innerHTML = '-> '+ (results[0].low_value).toFixed(2) + ' | ' + (results[0].high_value).toFixed(2);
             document.getElementById('latest_bt').innerHTML = '-> '+ (results[1].bodyTemp).toFixed(2);
             document.getElementById('latest_hr').innerHTML = '-> '+ results[2].heartRate;
             document.getElementById('latest_sl').innerHTML = '-> '+ (results[3].sugarLevel).toFixed(2);
