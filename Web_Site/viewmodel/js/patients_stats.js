@@ -25,7 +25,7 @@ function draw_StateChart() {
     var patients =[];
     do {
         $.ajax({
-            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients?page=" + i_page,
             //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
             //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
             headers:{
@@ -48,7 +48,7 @@ function draw_StateChart() {
             patients=patients.concat(r.data);
             i_page+=1;
          })
-    } while (i_page + 1 < pcount);
+    } while (i_page < pcount);
 
     data_array = [['State', 'Number of Patients']];
     states_array = [];
@@ -87,7 +87,7 @@ function draw_AgeChart() {
     var patients =[];
     do {
         $.ajax({
-            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients?page=" + i_page,
             //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
             //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
             headers:{
@@ -160,7 +160,7 @@ function draw_CheckChart() {
     var patients =[];
     do {
         $.ajax({
-            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients?page=" + i_page,
             //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
             //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
             headers:{
@@ -231,7 +231,7 @@ function draw_HealthChart() {
     var patients =[];
     do {
         $.ajax({
-            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
+            url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients?page=" + i_page,
             //url: "http://192.168.160.217:8080/api/professionals/" +  id + "/patients",
             //headers:{"Access-Control-Allow-Origin":"http://192.168.160.217:8080"},
             headers:{
