@@ -273,17 +273,25 @@ public class SensorReceiver {
         } else if (risk < 15) {
             status = "unhealthy";
         } else {
-            if(!p.getCurrentstate().equals("in-danger") && !array.contains(p.getId())){
+            status="in-danger";
 
-                array.add(p.getId());
+            if(p.getCurrentstate() != null && !p.getCurrentstate().equals("in-danger")){
 
-                try {
-                    warningController.send(String.valueOf(p.getId())+":"+String.valueOf(p.getProfessional().getId()));
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                status="in-danger";
+                if(!array.contains(p.getId())){
+
+                    array.add(p.getId());
+
+                    try {
+                        warningController.send(String.valueOf(p.getId())+":"+String.valueOf(p.getProfessional().getId()));
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    
+
+                    }
+                    
+
             }
         }
 
