@@ -206,12 +206,15 @@ $(document).ready(function () {
            window.location.replace("utente_info.html");
        }); 
    
-        get_latestValues();
+       $("#latestInfo").click(function(){
+            $("#latestInf").fadeToggle("slow");
+        }) 
+       
+       
+       get_latestValues();
         loadCharts();
    
-       $("#latestInfo").click(function(){
-           $("#latestInf").fadeToggle("slow");
-       })
+       
 
 
     });
