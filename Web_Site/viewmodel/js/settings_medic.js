@@ -69,31 +69,33 @@ $(document).ready(function () {
             console.log(pass1)
             console.log(pass2)
 
+            var dic = {};
+
             if(pass1 != pass2){
                 $("#setErrorMed").text("The passwords don't match!");
                 $("#setErrorMed").fadeIn();
                 return;
             }
             if(username != ''){
-                user['username'] = username;
+                dic['username'] = username;
             }
             if(email != ''){
-                user['email'] = email;
+                dic['email'] = email;
             }
             if(pass1 != ''){
                 console.log("entrou");
-                user['password'] = pass1;
+                dic['password'] = pass1;
             }
             if(speciality != ''){
-                user['speciality'] = speciality;
+                dic['speciality'] = speciality;
             }
             if(workplace != ''){
-                user['workplace'] = workplace;
+                dic['workplace'] = workplace;
             }
 
-            editPro(user)
+            editPro(dic)
             document.cookie='access_token= & role= & id= ;';
-            //window.location.replace('index.html'); 
+            window.location.replace('index.html'); 
         })
     })
 });

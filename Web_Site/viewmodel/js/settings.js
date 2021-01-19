@@ -57,22 +57,24 @@ $(document).ready(function () {
             console.log(pass1)
             console.log(pass2)
 
+            var dic = {};
+
             if(pass1 != pass2){
                 $("#setError").text("The passwords don't match!");
                 $("#setError").fadeIn();
                 return;
             }
             if(username != ''){
-                user['username'] = username;
+                dic['username'] = username;
             }
             if(email != ''){
-                user['email'] = email;
+                dic['email'] = email;
             }
             if(pass1 != ''){
-                user['password'] = pass1;
+                dic['password'] = pass1;
             }
 
-            editPatient(user)
+            editPatient(dic)
             document.cookie='access_token= & role= & id= ;';
             window.location.replace('index.html'); 
         })
