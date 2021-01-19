@@ -50,12 +50,12 @@ class LoadDatabase {
 
     return args -> {
 
-      Optional<Patient> op = Prep.findById(Long.valueOf(23));
-      Optional<Professional> op1 = Pro.findById(Long.valueOf(24));
-      Patient p = op.get();
-      Professional prof = op1.get();
-      p.setProfessional(prof);
-      Prep.save(p);
+      //Optional<Patient> op = Prep.findById(Long.valueOf(23));
+      //Optional<Professional> op1 = Pro.findById(Long.valueOf(24));
+      //Patient p = op.get();
+      //Professional prof = op1.get();
+      //p.setProfessional(prof);
+      //Prep.save(p);
       /*
       
       Professional p = new Professional(passwordEncoder.encode("pass"),"carlitos","cls@jmail.com","Carlitos Sousa",34,"Male","Hospital de Braga","Cardiologia","professional"); 
