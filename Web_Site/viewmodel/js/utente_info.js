@@ -216,7 +216,7 @@ $(document).ready(function () {
 });
 
 // LATEST DATA
-window.onload = function get_latestValues(){
+function get_latestValues(){
     $.ajax({
 
         url: 'http://192.168.160.217:8080/api/patients/'+ currid +'/latest',
