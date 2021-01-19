@@ -52,7 +52,7 @@ class LoadDatabase {
       System.out.println(p.getUsername());
       System.out.println(p.getPassword());
       p.setUsername("carlitos");
-      p.setPassword("pass");
+      p.setPassword(passwordEncoder.encode("pass"));
       Pro.save(p);
 
 
