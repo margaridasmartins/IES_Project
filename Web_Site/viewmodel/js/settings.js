@@ -112,7 +112,7 @@ function editPatient(data){
 
 function changePhoto(){
         var data = new FormData();
-        data.append("file", $("#fileSet").files[0]);
+        data.append("file", $("#fileSet").val());
 
         $.ajax({
             type: 'POST',
