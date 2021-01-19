@@ -56,7 +56,7 @@ class Generator:
             diastolic = np.random.randn(1) * sigma + diastolic_mu            
             json_text = {'id': self.sensor_id, 'systolic': round(float(systolic),2), 'diastolic': round(float(diastolic),2)}
             self.channel.basic_publish(exchange='logs', routing_key='blood_pressure', body= json.dumps(json_text))
-            await asyncio.sleep(120)
+            await asyncio.sleep(20)
 
     
     async def gen_body_temp(self):
@@ -67,7 +67,7 @@ class Generator:
             temperature = np.random.randn(1) * sigma + mu        
             json_text = {'id': self.sensor_id, 'temperature': round(float(temperature),2)}
             self.channel.basic_publish(exchange='logs', routing_key='body_temp', body= json.dumps(json_text))
-            await asyncio.sleep(120)
+            await asyncio.sleep(20)
 
     
     async def gen_sugar_level(self):
@@ -78,7 +78,7 @@ class Generator:
             sugar = np.random.randn(1) * sigma + mu
             json_text = {'id': self.sensor_id, 'sugar': float(sugar)}
             self.channel.basic_publish(exchange='logs', routing_key='sugar_level', body= json.dumps(json_text))
-            await asyncio.sleep(120)
+            await asyncio.sleep(20)
 
     async def gen_oxygen_level(self):
         vals = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
