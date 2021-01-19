@@ -95,7 +95,7 @@ $(document).ready(function () {
 
             editPro(user)
             document.cookie='access_token= & role= & id= ;';
-            //window.location.replace('index.html'); 
+            window.location.replace('index.html'); 
         })
     })
 });
